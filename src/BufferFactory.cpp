@@ -8,6 +8,7 @@
 #include "BufferFactory.hpp"
 
 void BufferFactory::deleteBuffer(float *buffer){
+    
     if (buffer != nullptr) {
         delete buffer;
         buffer = nullptr;

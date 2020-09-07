@@ -2,7 +2,11 @@
 #define VSTPLUGIN_HPP
 
 #include "../vstsdk2.4/public.sdk/source/vst2.x/audioeffectx.h"
+#include "BufferFactory.hpp"
+#include "Oscillator.hpp"
 
+
+#include <memory>
 
 #define PROGS_COUNT 5
 
@@ -58,15 +62,6 @@ class VstPlugin : public AudioEffectX
     //Presets
     Preset programs[PROGS_COUNT];
 
-    //wavetable
-    float *sawtooth;
-    float *pulse;
-    const int WAVETABLE_SIZE = 2048;
-    float pwm; // determina la simmetria dell'onda quadra
-    double freqTable[128];
-    double cursorTable;
-    double fScale;
-
     //plugin
     void initPlugin();
 
@@ -74,11 +69,9 @@ class VstPlugin : public AudioEffectX
     void deleteDelayLines();
     void createDelayLines();
 
-    //wavetables
-    void createWavetables();
-    void deleteWavetables();
-    void createFrequencyTable();
-
+    //oscillators
+    Oscillator oscillator;
+    
     //presets
     void initPresets();
 

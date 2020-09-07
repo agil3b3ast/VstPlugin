@@ -1,6 +1,5 @@
 #include "VstPlugin.hpp"
-#include "BufferFactory.hpp"
-#include <memory>
+
 
 //-------------------------------------------------------------------------------------------------------
 AudioEffect* createEffectInstance(audioMasterCallback audioMaster)
@@ -10,7 +9,7 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster)
 
 //-------------------------------------------------------------------------------------------------------
 VstPlugin::VstPlugin(audioMasterCallback audioMaster)
-: AudioEffectX(audioMaster, PROGS_COUNT, ParamCOUNT)	// n program, n parameters
+: AudioEffectX(audioMaster, PROGS_COUNT, ParamCOUNT), oscillator(getSampleRate())	// n program, n parameters
 {
     setNumInputs(2);		// stereo in
     setNumOutputs(2);		// stereo out
@@ -38,14 +37,7 @@ void VstPlugin::initPlugin()
     wetDry  = 0.5; // 0 full dry, 1 full wet
 
     createDelayLines();
-
-    pwm = 0.3;
-    cursorTable = 0;
-    fScale = WAVETABLE_SIZE/getSampleRate();
-    createWavetables();
-    createFrequencyTable();
-
-
+    
     initPresets();
     setProgram(0);
 }
@@ -86,59 +78,6 @@ void VstPlugin::initPresets(){
     programs[4].feedbackR = 0;
     programs[4].wetDry = 0.5;
     strcpy(programs[4].name, "Full Left Delay");
-}
-
-//-------------------------------------------------------------------------------------------------------
-void VstPlugin::createFrequencyTable()
-{
-    const double k = 1.059463094359;
-    double a = 6.875; // A
-    a *= k; // Bb
-    a *= k; // B
-    a *= k; // C
-
-    for (int i = 0; i<128; i++){
-        freqTable[i] = a;
-        a *= k; //next frequency note
-    }
-
-}
-
-//-------------------------------------------------------------------------------------------------------
-void VstPlugin::createWavetables()
-{
-    float numberOfBytes = WAVETABLE_SIZE*sizeof(float);
-
-    sawtooth = (float *) malloc(numberOfBytes);
-    memset(sawtooth,0,numberOfBytes);
-
-    pulse = (float *) malloc(numberOfBytes);
-    memset(pulse,0,numberOfBytes);
-
-
-    for(int i=0; i<WAVETABLE_SIZE; i++){
-        float max_size = pwm*WAVETABLE_SIZE;
-        if (i<max_size)
-            pulse[i] = 0;
-        else
-            pulse[i] = 1;
-
-        sawtooth[i] = 2*((float)i/(float) WAVETABLE_SIZE) - 1;
-    }
-
-}
-
-//-------------------------------------------------------------------------------------------------------
-void VstPlugin::deleteWavetables(){
-    if (sawtooth != nullptr) {
-        delete sawtooth;
-        sawtooth = nullptr;
-    }
-
-    if (pulse != nullptr) {
-        delete pulse;
-        pulse = nullptr;
-    }
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -251,7 +190,7 @@ void VstPlugin::setSampleRate (float sampleRate)
 VstPlugin::~VstPlugin()
 {
     deleteDelayLines();
-    deleteWavetables();
+    oscillator.~Oscillator(); //de-allocate wavetables
 }
 
 //-----------------------------------------------------------------------------------------
