@@ -1,4 +1,5 @@
 #include "VstPlugin.hpp"
+#include "BufferFactory.hpp"
 #include <memory>
 
 //-------------------------------------------------------------------------------------------------------
@@ -36,7 +37,7 @@ void VstPlugin::initPlugin()
 
     wetDry  = 0.5; // 0 full dry, 1 full wet
 
-    createBuffers();
+    createDelayLines();
 
     pwm = 0.3;
     cursorTable = 0;
@@ -141,18 +142,15 @@ void VstPlugin::deleteWavetables(){
 }
 
 //-------------------------------------------------------------------------------------------------------
-void VstPlugin::createBuffers()
+void VstPlugin::createDelayLines()
 {
     float delayLineInSec = 1; //1 seconds of audio
     float currentSampleRate = getSampleRate();
     float numberOfSamples = delayLineInSec*currentSampleRate;
     float numberOfBytes = numberOfSamples*sizeof(float);
 
-    bufferDelayL = (float *) malloc(numberOfBytes);
-    memset(bufferDelayL,0,numberOfBytes);
-
-    bufferDelayR = (float *) malloc(numberOfBytes);
-    memset(bufferDelayR,0,numberOfBytes);
+    bufferDelayL = BufferFactory::createBuffer(numberOfBytes);
+    bufferDelayR = BufferFactory::createBuffer(numberOfBytes);
 
     delayCursorL = 0;
     delayCursorR = 0;
@@ -234,16 +232,9 @@ void VstPlugin::processDoubleReplacing (double** inputs, double** outputs, VstIn
 }
 
 //-------------------------------------------------------------------------------------------------------
-void VstPlugin::deleteBuffers(){
-    if (bufferDelayL != nullptr) {
-        delete bufferDelayL;
-        bufferDelayL = nullptr;
-    }
-
-    if (bufferDelayR != nullptr) {
-        delete bufferDelayR;
-        bufferDelayR = nullptr;
-    }
+void VstPlugin::deleteDelayLines(){
+    BufferFactory::deleteBuffer(bufferDelayL);
+    BufferFactory::deleteBuffer(bufferDelayR);
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -251,15 +242,15 @@ void VstPlugin::setSampleRate (float sampleRate)
 {
     //Chiamo setSampleRate definita nella classe parent
     AudioEffect::setSampleRate(sampleRate);
-    deleteBuffers();
-    createBuffers();
+    deleteDelayLines();
+    createDelayLines();
 
 }
 
 //-------------------------------------------------------------------------------------------------------
 VstPlugin::~VstPlugin()
 {
-    deleteBuffers();
+    deleteDelayLines();
     deleteWavetables();
 }
 

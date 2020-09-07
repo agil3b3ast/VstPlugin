@@ -36,6 +36,8 @@ set(VSTSDK_PLUGIN_SOURCE
 set(VSTPLUGIN_SOURCE
     src/VstPlugin.cpp
     src/VstPlugin.hpp
+    src/BufferFactory.cpp
+    src/BufferFactory.hpp
     #resources/again.rc
     #resources/vstplug.def
     ${VSTSDK_PLUGIN_SOURCE}

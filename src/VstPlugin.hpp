@@ -71,8 +71,8 @@ class VstPlugin : public AudioEffectX
     void initPlugin();
 
     //delay
-    void deleteBuffers();
-    void createBuffers();
+    void deleteDelayLines();
+    void createDelayLines();
 
     //wavetables
     void createWavetables();
