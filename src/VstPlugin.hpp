@@ -54,15 +54,6 @@ class VstPlugin : public AudioEffectX
 
     float wetDry;
 
-    //MIDI
-    int midiNoteNumber;
-    int midiNoteVelocity;
-    int midiNoteDelta;
-    bool isNoteOn;
-
-    int midiControlNumber;
-    int midiControlValue;
-    int midiControlDelta;
 
     //Presets
     Preset programs[PROGS_COUNT];
@@ -76,19 +67,19 @@ class VstPlugin : public AudioEffectX
     double cursorTable;
     double fScale;
 
+    //plugin
     void initPlugin();
 
+    //delay
     void deleteBuffers();
     void createBuffers();
 
-    void noteOn(int note, int velocity, int deltaEvent);
-    void noteOff(int note, int velocity, int deltaEvent);
-    void controlChange(int controlNumber, int controlValue, int deltaEvent);
-
+    //wavetables
     void createWavetables();
     void deleteWavetables();
     void createFrequencyTable();
 
+    //presets
     void initPresets();
 
 public:
@@ -98,7 +89,7 @@ public:
 
 	// Processing
 	void processReplacing(float** inputs, float** outputs, VstInt32 sampleFrames) override;
-    void processDelay(float** inputs, VstInt32 sampleFrames);
+    void processDelay(float** inputs, float** outputs, VstInt32 sampleFrames);
     void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames) override;
     void setParameter (VstInt32 index, float value) override;
     float getParameter (VstInt32 index) override;
@@ -113,8 +104,6 @@ public:
     void getParameterName (VstInt32 index, char* text) override;
 
     void setSampleRate (float sampleRate) override;
-
-    VstInt32 processEvents (VstEvents* events) override;
 
     void setProgram (VstInt32 program) override;
     void getProgramName (char* name) override;

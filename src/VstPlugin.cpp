@@ -11,11 +11,11 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster)
 VstPlugin::VstPlugin(audioMasterCallback audioMaster)
 : AudioEffectX(audioMaster, PROGS_COUNT, ParamCOUNT)	// n program, n parameters
 {
-    setNumInputs(0);		// stereo in
+    setNumInputs(2);		// stereo in
     setNumOutputs(2);		// stereo out
     setUniqueID('vMis');	// identify
     canDoubleReplacing(true);
-    isSynth(true);
+    isSynth(false);
 
     initPlugin();
 
@@ -35,15 +35,6 @@ void VstPlugin::initPlugin()
     maxFeedback = 0.99;
 
     wetDry  = 0.5; // 0 full dry, 1 full wet
-
-    midiNoteNumber = 0;
-    midiNoteVelocity = 0;
-    midiNoteDelta = 0;
-    isNoteOn = false;
-
-    midiControlNumber = 0;
-    midiControlValue = 0;
-    midiControlDelta = 0;
 
     createBuffers();
 
@@ -94,79 +85,6 @@ void VstPlugin::initPresets(){
     programs[4].feedbackR = 0;
     programs[4].wetDry = 0.5;
     strcpy(programs[4].name, "Full Left Delay");
-}
-
-//funzioni eventi MIDI
-
-//-------------------------------------------------------------------------------------------------------
-void VstPlugin::controlChange(int controlNumber, int controlValue, int deltaEvent){
-    midiControlNumber = controlNumber;
-    midiControlValue = controlValue;
-    midiControlDelta = deltaEvent;
-}
-
-//-------------------------------------------------------------------------------------------------------
-void VstPlugin::noteOn(int note, int velocity, int deltaEvent){
-    midiNoteNumber = note;
-    midiNoteVelocity = velocity;
-    midiNoteDelta = deltaEvent;
-    isNoteOn = true;
-    cursorTable = 0;
-}
-
-
-//-------------------------------------------------------------------------------------------------------
-void VstPlugin::noteOff(int note, int velocity, int deltaEvent){
-    midiNoteNumber = note;
-    midiNoteVelocity = velocity;
-    midiNoteDelta = deltaEvent;
-    isNoteOn = false;
-}
-
-//-------------------------------------------------------------------------------------------------------
-
-VstInt32 VstPlugin::processEvents (VstEvents* events)
-{   //processa eventi VST
-    for (int i=0; i<events->numEvents;i++){
-        VstEvent *event = events->events[i];
-        if (event->type== kVstMidiType){
-            VstMidiEvent *midiEvent = (VstMidiEvent *) event;
-
-            char *midiData = midiEvent->midiData;
-
-            char statusByte = midiData[0];
-            char dataByte1 = midiData[1];
-            char dataByte2 = midiData[2];
-
-
-            char channelMidi = (statusByte & 0xF) + 1;
-            VstInt32 midiMessageType = statusByte & 0xF0;
-
-            if(midiMessageType == 0x90){ // note on
-                int note = dataByte1;
-                int velocity = dataByte2;
-                int deltaFrame = midiEvent->deltaFrames;
-
-                if (velocity == 0)
-                    noteOff(note, velocity, deltaFrame);
-                else
-                    noteOn(note, velocity, deltaFrame);
-            } else if (midiMessageType == 0x80){ // note off
-                int note = dataByte1;
-                int velocity = dataByte2;
-                int deltaFrame = midiEvent->deltaFrames;
-
-                noteOff(note, velocity, deltaFrame);
-            } else if (midiMessageType == 0xB0){ // control change
-                int controlNumber = dataByte1;
-                int controlValue = dataByte2;
-                int deltaFrame = midiEvent->deltaFrames;
-                controlChange(controlNumber, controlValue, deltaFrame);
-            }
-
-        }
-    }
-    return 1;
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -244,12 +162,15 @@ void VstPlugin::createBuffers()
 }
 
 //-----------------------------------------------------------------------------------------
-void VstPlugin::processDelay(float** inputs, VstInt32 sampleFrames)
+void VstPlugin::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames)
 {
     // PROCESS SINGLE PRECISION - processa audio
 
     float *buffL = inputs[0]; // buffer input left
     float *buffR = inputs[1]; // buffer input right
+    
+    float *buffOutL = outputs[0]; // buffer output left
+    float *buffOutR = outputs[1]; // buffer output right
 
     for(int i=0; i<sampleFrames;i++){
 
@@ -271,8 +192,8 @@ void VstPlugin::processDelay(float** inputs, VstInt32 sampleFrames)
             delayCursorR = 0;
         }
 
-        buffL[i] = gainL*(wetDry*buffL[i]+(1-wetDry)*oldestSampleL);
-        buffR[i] = gainR*(wetDry*buffR[i]+(1-wetDry)*oldestSampleR);
+        buffOutL[i] = gainL*(wetDry*buffL[i]+(1-wetDry)*oldestSampleL);
+        buffOutR[i] = gainR*(wetDry*buffR[i]+(1-wetDry)*oldestSampleR);
 
     }
 
@@ -287,70 +208,11 @@ void VstPlugin::processReplacing(float** inputs, float** outputs, VstInt32 sampl
     //float *inL = inputs[0]; // buffer input left
     //float *inR = inputs[1]; // buffer input right
 
-    float *outL = outputs[0]; // buffer output left
-    float *outR = outputs[1]; // buffer output right
-
-
-    //PROCESS SYNTH
-    if (isNoteOn){ // NOTE ON
-        if(midiNoteDelta > sampleFrames){ //evento è di un buffer successivo
-            memset(outL, 0, sampleFrames*sizeof(float));
-            memset(outR, 0, sampleFrames*sizeof(float));
-            midiNoteDelta = midiNoteDelta - sampleFrames;
-            return;
-        }
-
-        double frequencyInHz = freqTable[midiNoteNumber];
-        double stepValue = frequencyInHz*fScale;
-        double gainVelocity = (double) midiNoteVelocity/(double)127;
-
-        int midiNoteDeltaCached = midiNoteDelta;
-        if (midiNoteDelta > 0){
-            memset(outL, 0, midiNoteDelta*sizeof(float));
-            memset(outR, 0, midiNoteDelta*sizeof(float));
-            midiNoteDelta = 0;
-        }
-
-        for (int i=midiNoteDeltaCached;i<sampleFrames;i++){
-            outL[i] = gainVelocity*sawtooth[(int) cursorTable];
-            outR[i] = gainVelocity*pulse[(int) cursorTable];
-
-            cursorTable = cursorTable + stepValue;
-            if (cursorTable > (WAVETABLE_SIZE-1))
-                cursorTable = cursorTable - WAVETABLE_SIZE;
-        }
-    }
-    else{ // NOTE OFF
-        if (midiNoteDelta == 0){//se NOTE OFF subito, metto tutto il buffer a zero
-            memset(outL, 0, sampleFrames*sizeof(float));
-            memset(outR, 0, sampleFrames*sizeof(float));
-            return;
-        }
-
-        double frequencyInHz = freqTable[midiNoteNumber];
-        double stepValue = frequencyInHz*fScale;
-        double gainVelocity = (double) midiNoteVelocity/(double)127;
-
-        for (int i=0; i<sampleFrames;i++){
-            if (i<midiNoteDelta){// prima di NOTE OFF scrivo segnale
-                outL[i] = gainVelocity*sawtooth[(int) cursorTable];
-                outR[i] = gainVelocity*pulse[(int) cursorTable];
-
-                cursorTable = cursorTable + stepValue;
-                if (cursorTable > (WAVETABLE_SIZE-1))
-                    cursorTable = cursorTable - WAVETABLE_SIZE;
-            }
-            else{// dopo NOTE OFF metto buffer a zero
-                outL[i] = 0;
-                outR[i] = 0;
-            }
-        }
-
-        midiNoteDelta = 0;
-    }
+    //float *outL = outputs[0]; // buffer output left
+    //float *outR = outputs[1]; // buffer output right
 
     //PROCESS EFX
-    processDelay(outputs, sampleFrames);
+    processDelay(inputs, outputs, sampleFrames);
 
 
 }
