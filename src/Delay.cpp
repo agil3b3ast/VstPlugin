@@ -7,7 +7,7 @@
 
 #include "Delay.hpp"
 
-Delay::Delay(float sampleRate){
+Delay::Delay(float sampleRate): gainStereo(){
     delFeedbackL = 0.5;
     delFeedbackR = 0.5;
     
@@ -18,8 +18,6 @@ Delay::Delay(float sampleRate){
     this->sampleRate = sampleRate;
     
     // gain
-    gainL = 1.0;
-    gainR = 1.0;
     
     createDelayLines();
 }
@@ -31,14 +29,9 @@ Delay::~Delay(){
 
 //-------------------------------------------------------------------------------------------------------
 
-void Delay::setGainL(float gainL){
-    this->gainL = gainL;
-}
-
-//-------------------------------------------------------------------------------------------------------
-
-void Delay::setGainR(float gainR){
-    this->gainR = gainR;
+void Delay::setDelayGain(float gainL, float gainR){
+    gainStereo.setGainL(gainL);
+    gainStereo.setGainR(gainR);
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -81,14 +74,8 @@ void Delay::setWetDry(float wetDry){
 
 //-------------------------------------------------------------------------------------------------------
 
-float Delay::getGainL(){
-    return gainL;
-}
-
-//-------------------------------------------------------------------------------------------------------
-
-float Delay::getGainR(){
-    return gainR;
+GainStereo Delay::getDelayGain(){
+    return gainStereo;
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -161,6 +148,8 @@ void Delay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames)
     float *buffOutL = outputs[0]; // buffer output left
     float *buffOutR = outputs[1]; // buffer output right
     
+    float wetDryBalance;
+    
     for(int i=0; i<sampleFrames;i++){
         
         float oldestSampleL = bufferDelayL[delayCursorL];
@@ -180,10 +169,15 @@ void Delay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames)
         if (delayCursorR >= delayCurrentSizeR){
             delayCursorR = 0;
         }
+
+        wetDryBalance = wetDry*buffL[i]+(1-wetDry)*oldestSampleL;
+        gainStereo.processGainL(&wetDryBalance);
+        buffOutL[i] = wetDryBalance;
         
-        //TODO 
-        buffOutL[i] = gainL*(wetDry*buffL[i]+(1-wetDry)*oldestSampleL);
-        buffOutR[i] = gainR*(wetDry*buffR[i]+(1-wetDry)*oldestSampleR);
+        wetDryBalance = wetDry*buffR[i]+(1-wetDry)*oldestSampleR;
+        gainStereo.processGainR(&wetDryBalance);
+        buffOutR[i] = wetDryBalance;
+
         
     }
     

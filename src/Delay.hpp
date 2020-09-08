@@ -10,6 +10,7 @@
 
 #include "../vstsdk2.4/public.sdk/source/vst2.x/audioeffect.h"
 #include "BufferFactory.hpp"
+#include "GainStereo.hpp"
 
 
 //-------------------------------------------------------------------------------------------------------
@@ -34,11 +35,9 @@ class Delay
     float wetDry;
     
     float sampleRate;
-    
-    //TODO remove gain
-    float gainL;
-    float gainR;
-    
+
+    //gain
+    GainStereo gainStereo;
 
     
 public:
@@ -51,8 +50,6 @@ public:
     void createDelayLines();
     
     //getters
-    float getGainL();
-    float getGainR();
     
     int getDelayCurrentSizeL();
     int getDelayCurrentSizeR();
@@ -65,11 +62,14 @@ public:
     float getWetDry();
     
     float getMaxFeedback();
+    
+    GainStereo getDelayGain();
 
     
     //setters
-    void setGainL(float gainL);
-    void setGainR(float gainR);
+    
+    void setDelayGain(float gainL, float gainR);
+
     
     void setDelayCurrentSizeL(int delayCurrentSizeL);
     void setDelayCurrentSizeR(int delayCurrentSizeR);

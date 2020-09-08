@@ -42,6 +42,8 @@ set(VSTPLUGIN_SOURCE
     src/Delay.hpp
     src/Oscillator.cpp
     src/Oscillator.hpp
+    src/GainStereo.cpp
+    src/GainStereo.hpp
     #resources/again.rc
     #resources/vstplug.def
     ${VSTSDK_PLUGIN_SOURCE}

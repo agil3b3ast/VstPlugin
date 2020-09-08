@@ -104,8 +104,8 @@ void VstPlugin::processDoubleReplacing (double** inputs, double** outputs, VstIn
     double *outR = outputs[1]; // buffer output right
 
     for(int i=0; i<sampleFrames;i++){
-        outL[i] = inL[i]*delay.getGainL();
-        outR[i] = inR[i]*delay.getGainR();
+        outL[i] = inL[i]*delay.getDelayGain().getGainL();
+        outR[i] = inR[i]*delay.getDelayGain().getGainR();
     }
 }
 
@@ -136,10 +136,10 @@ void VstPlugin::setSampleRate (float sampleRate)
 void VstPlugin::setParameter (VstInt32 index, float value){
     switch (index) {
         case GainLeft:
-            delay.setGainL(value);
+            delay.setDelayGain(value,delay.getDelayGain().getGainR());
             break;
         case GainRight:
-            delay.setGainR(value);
+            delay.setDelayGain(delay.getDelayGain().getGainL(),value);
             break;
         case DelaySizeL:
             delay.setDelayCurrentSizeL(value*delay.getDelayMaxSize());
@@ -166,10 +166,10 @@ float VstPlugin::getParameter (VstInt32 index){
     float valueToReturn = 0.0;
     switch (index) {
         case GainLeft:
-            valueToReturn = delay.getGainL();
+            valueToReturn = delay.getDelayGain().getGainL();
             break;
         case GainRight:
-            valueToReturn = delay.getGainR();
+            valueToReturn = delay.getDelayGain().getGainR();
             break;
         case DelaySizeL:
             valueToReturn = (float) delay.getDelayCurrentSizeL()/ (float) delay.getDelayMaxSize();
@@ -249,10 +249,10 @@ void VstPlugin::getParameterDisplay (VstInt32 index, char* text) {
 
     switch (index) {
         case GainLeft:
-            dB2string(delay.getGainL(), text, kVstMaxParamStrLen);
+            dB2string(delay.getDelayGain().getGainL(), text, kVstMaxParamStrLen);
             break;
         case GainRight:
-            dB2string(delay.getGainR(), text, kVstMaxParamStrLen);
+            dB2string(delay.getDelayGain().getGainR(), text, kVstMaxParamStrLen);
             break;
         case DelaySizeL:
             float2string(delay.getDelayCurrentSizeL()/getSampleRate(), text, kVstMaxParamStrLen);
