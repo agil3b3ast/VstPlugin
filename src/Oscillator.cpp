@@ -16,11 +16,39 @@ Oscillator::Oscillator(float sampleRate){
     fScale = WAVETABLE_SIZE/sampleRate;
     createWavetables();
     createFrequencyTable();
+    stepValue = frequencyInHz*fScale;
+    amount = 1.0;
+    maxAmount = 1;
+
+    currentWavetable = sine;
+    
 }
 
 //-------------------------------------------------------------------------------------------------------
 Oscillator::~Oscillator(){
     deleteWavetables();
+}
+
+//-------------------------------------------------------------------------------------------------------
+void Oscillator::setMaxAmount(int maxAmount){
+    this->maxAmount = maxAmount;
+}
+
+//-------------------------------------------------------------------------------------------------------
+void Oscillator::setCurrentWavetable(unsigned char currentWavetable){
+    switch (currentWavetable) {
+        case Sine:
+            this->currentWavetable = sine;
+            break;
+        case Saw:
+            this->currentWavetable = sawtooth;
+            break;
+        case Pulse:
+            this->currentWavetable = pulse;
+            break;
+        default:
+            break;
+    }
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -84,27 +112,64 @@ void Oscillator::deleteWavetables(){
 }
 
 //-------------------------------------------------------------------------------------------------------
-void Oscillator::processOscillator(float** outputs, VstInt32 sampleFrames){
+void Oscillator::processOscillator(float** outputs, unsigned char feature, VstInt32 sampleFrames){
     float *outL = outputs[0]; // buffer output left
     float *outR = outputs[1]; // buffer output right
-
-    double stepValue = frequencyInHz*fScale;
     
     for(int i=0; i<sampleFrames;i++){
-
-        genSignal(&outL[i], sawtooth);
-        genSignal(&outR[i], pulse);
-
-        cursorTable = cursorTable + stepValue;
-        if (cursorTable > (WAVETABLE_SIZE-1))
-            cursorTable = cursorTable - WAVETABLE_SIZE;
+        processOscillatorSingle(&outL[i], feature, sampleFrames);
+        processOscillatorSingle(&outR[i], feature, sampleFrames);
     }
 
 }
 
 //-------------------------------------------------------------------------------------------------------
-void Oscillator::genSignal(float* sample, float *wavetable){
-    *sample = wavetable[(int) cursorTable];
+template <typename inputToMod> void Oscillator::processOscillatorSingle(inputToMod input, unsigned char feature, VstInt32 sampleFrames){
+
+        if (input == nullptr){
+            std::cerr << "An input must be provided!\n";
+            return;
+        }
+
+        switch (feature) {
+            case Gen:
+                genSignal(input, currentWavetable);
+                break;
+            //TODO add to modulator
+            /*case RingMod:
+                ringModSignal(input, currentWavetable);
+                break;
+            case NumMod:
+                numMod(input, currentWavetable);
+                break;*/
+            default:
+                break;
+        }
+    
 }
 
+//-------------------------------------------------------------------------------------------------------
+void Oscillator::genSignal(float* output, float *wavetable){
+    *output = wavetable[(int) cursorTable];
+    incrementCursorTable();
+}
 
+//-------------------------------------------------------------------------------------------------------
+//TODO add to modulator
+/*void Oscillator::ringModSignal(float *sample, float *wavetable){
+    *sample = *sample * wavetable[(int) cursorTable] * amount; //ring mod
+    incrementCursorTable();
+}
+
+//-------------------------------------------------------------------------------------------------------
+void Oscillator::numMod(int *number, float *wavetable){
+    *number = *number * wavetable[(int) cursorTable] * amount * maxAmount; //mod a numeric parameter
+    incrementCursorTable();
+}*/
+
+//-------------------------------------------------------------------------------------------------------
+void Oscillator::incrementCursorTable(){
+    cursorTable = cursorTable + stepValue;
+    if (cursorTable > (WAVETABLE_SIZE-1))
+        cursorTable = cursorTable - WAVETABLE_SIZE;
+}
