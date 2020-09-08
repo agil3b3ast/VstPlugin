@@ -9,7 +9,7 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster)
 
 //-------------------------------------------------------------------------------------------------------
 VstPlugin::VstPlugin(audioMasterCallback audioMaster)
-: AudioEffectX(audioMaster, PROGS_COUNT, ParamCOUNT), oscillator(getSampleRate())	// n program, n parameters
+: AudioEffectX(audioMaster, PROGS_COUNT, ParamCOUNT), oscillator(getSampleRate()), delay(getSampleRate())	// n program, n parameters
 {
     setNumInputs(2);		// stereo in
     setNumOutputs(2);		// stereo out
@@ -26,17 +26,10 @@ void VstPlugin::initPlugin()
 {
     //Nostra funzione che fa da init, chiamata nel costruttore
 
-    gainL = 1.0;
-    gainR = 1.0;
+    //gain is inside delay
 
-    delFeedbackL = 0.5;
-    delFeedbackR = 0.5;
+    // INIT DELAY
 
-    maxFeedback = 0.99;
-
-    wetDry  = 0.5; // 0 full dry, 1 full wet
-
-    createDelayLines();
     
     initPresets();
     setProgram(0);
@@ -80,61 +73,7 @@ void VstPlugin::initPresets(){
     strcpy(programs[4].name, "Full Left Delay");
 }
 
-//-------------------------------------------------------------------------------------------------------
-void VstPlugin::createDelayLines()
-{
-    float delayLineInSec = 1; //1 seconds of audio
-    float currentSampleRate = getSampleRate();
-    float numberOfSamples = delayLineInSec*currentSampleRate;
-    float numberOfBytes = numberOfSamples*sizeof(float);
 
-    bufferDelayL = BufferFactory::createBuffer(numberOfBytes);
-    bufferDelayR = BufferFactory::createBuffer(numberOfBytes);
-
-    delayCursorL = 0;
-    delayCursorR = 0;
-    delayMaxSize = numberOfSamples;
-    delayCurrentSizeL = delayMaxSize/2;
-    delayCurrentSizeR = delayMaxSize/2;
-}
-
-//-----------------------------------------------------------------------------------------
-void VstPlugin::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames)
-{
-    // PROCESS SINGLE PRECISION - processa audio
-
-    float *buffL = inputs[0]; // buffer input left
-    float *buffR = inputs[1]; // buffer input right
-    
-    float *buffOutL = outputs[0]; // buffer output left
-    float *buffOutR = outputs[1]; // buffer output right
-
-    for(int i=0; i<sampleFrames;i++){
-
-        float oldestSampleL = bufferDelayL[delayCursorL];
-        float oldestSampleR = bufferDelayR[delayCursorR];
-
-
-        bufferDelayL[delayCursorL] = buffL[i]+oldestSampleR*delFeedbackL;
-        bufferDelayR[delayCursorR] = buffR[i]+oldestSampleL*delFeedbackR;
-
-        delayCursorL++;
-        delayCursorR++;
-
-        if (delayCursorL >= delayCurrentSizeL){
-            delayCursorL = 0;
-        }
-
-        if (delayCursorR >= delayCurrentSizeR){
-            delayCursorR = 0;
-        }
-
-        buffOutL[i] = gainL*(wetDry*buffL[i]+(1-wetDry)*oldestSampleL);
-        buffOutR[i] = gainR*(wetDry*buffR[i]+(1-wetDry)*oldestSampleR);
-
-    }
-
-}
 
 
 //-----------------------------------------------------------------------------------------
@@ -149,8 +88,8 @@ void VstPlugin::processReplacing(float** inputs, float** outputs, VstInt32 sampl
     //float *outR = outputs[1]; // buffer output right
 
     //PROCESS EFX
-    processDelay(inputs, outputs, sampleFrames);
-
+    delay.processDelay(inputs, outputs, sampleFrames);
+    
 
 }
 
@@ -165,57 +104,57 @@ void VstPlugin::processDoubleReplacing (double** inputs, double** outputs, VstIn
     double *outR = outputs[1]; // buffer output right
 
     for(int i=0; i<sampleFrames;i++){
-        outL[i] = inL[i]*gainL;
-        outR[i] = inR[i]*gainR;
+        outL[i] = inL[i]*delay.getGainL();
+        outR[i] = inR[i]*delay.getGainR();
     }
 }
 
-//-------------------------------------------------------------------------------------------------------
-void VstPlugin::deleteDelayLines(){
-    BufferFactory::deleteBuffer(bufferDelayL);
-    BufferFactory::deleteBuffer(bufferDelayR);
-}
+
 
 //-------------------------------------------------------------------------------------------------------
 void VstPlugin::setSampleRate (float sampleRate)
 {
     //Chiamo setSampleRate definita nella classe parent
     AudioEffect::setSampleRate(sampleRate);
-    deleteDelayLines();
-    createDelayLines();
+    delay.deleteDelayLines();
+    delay.createDelayLines();
 
 }
 
 //-------------------------------------------------------------------------------------------------------
-VstPlugin::~VstPlugin()
+
+ VstPlugin::~VstPlugin()
 {
-    deleteDelayLines();
-    oscillator.~Oscillator(); //de-allocate wavetables
+    /* NON PIU NECESSARIO VISTO CHE OGNI CLASSE HA IL SUO DISTRUTTORE CHE VIENE INVOCATO
+    delay.~Delay(); //de-allocate delay lines
+    oscillator.~Oscillator(); //de-allocate wavetable
+     */
 }
+
 
 //-----------------------------------------------------------------------------------------
 void VstPlugin::setParameter (VstInt32 index, float value){
     switch (index) {
         case GainLeft:
-            gainL=value;
+            delay.setGainL(value);
             break;
         case GainRight:
-            gainR=value;
+            delay.setGainR(value);
             break;
         case DelaySizeL:
-            delayCurrentSizeL=value*delayMaxSize;
+            delay.setDelayCurrentSizeL(value*delay.getDelayMaxSize());
             break;
         case DelaySizeR:
-            delayCurrentSizeR=value*delayMaxSize;
+            delay.setDelayCurrentSizeR(value*delay.getDelayMaxSize());
             break;
         case DelayFeedbackL:
-            delFeedbackL=value*maxFeedback;
+            delay.setDelFeedbackL(value*delay.getMaxFeedback());
             break;
         case DelayFeedbackR:
-            delFeedbackR=value*maxFeedback;
+            delay.setDelFeedbackR(value*delay.getMaxFeedback());
             break;
         case WetDry:
-            wetDry=value;
+            delay.setWetDry(value);
             break;
         default:
             break;
@@ -227,25 +166,25 @@ float VstPlugin::getParameter (VstInt32 index){
     float valueToReturn = 0.0;
     switch (index) {
         case GainLeft:
-            valueToReturn = gainL;
+            valueToReturn = delay.getGainL();
             break;
         case GainRight:
-            valueToReturn = gainR;
+            valueToReturn = delay.getGainR();
             break;
         case DelaySizeL:
-            valueToReturn = (float) delayCurrentSizeL/ (float) delayMaxSize;
+            valueToReturn = (float) delay.getDelayCurrentSizeL()/ (float) delay.getDelayMaxSize();
             break;
         case DelaySizeR:
-            valueToReturn = (float) delayCurrentSizeR/ (float) delayMaxSize;
+            valueToReturn = (float) delay.getDelayCurrentSizeR()/ (float) delay.getDelayMaxSize();
             break;
         case DelayFeedbackL:
-            valueToReturn = delFeedbackL/maxFeedback;
+            valueToReturn = delay.getDelFeedbackL()/delay.getMaxFeedback();
             break;
         case DelayFeedbackR:
-            valueToReturn = delFeedbackR/maxFeedback;
+            valueToReturn = delay.getDelFeedbackR()/delay.getMaxFeedback();
             break;
         case WetDry:
-            valueToReturn = wetDry;
+            valueToReturn = delay.getWetDry();
             break;
         default:
             break;
@@ -256,7 +195,7 @@ float VstPlugin::getParameter (VstInt32 index){
 //-----------------------------------------------------------------------------------------
 
 bool VstPlugin::getEffectName (char* name){
-    vst_strncpy(name, "Gain Stereo", kVstMaxEffectNameLen);
+    vst_strncpy(name, "Vst Plugin", kVstMaxEffectNameLen);
     return true;
 };
 //-----------------------------------------------------------------------------------------
@@ -302,6 +241,7 @@ void VstPlugin::getParameterLabel (VstInt32 index, char* label){
     }
 
 };
+
 //-----------------------------------------------------------------------------------------
 
 void VstPlugin::getParameterDisplay (VstInt32 index, char* text) {
@@ -309,30 +249,31 @@ void VstPlugin::getParameterDisplay (VstInt32 index, char* text) {
 
     switch (index) {
         case GainLeft:
-            dB2string(gainL, text, kVstMaxParamStrLen);
+            dB2string(delay.getGainL(), text, kVstMaxParamStrLen);
             break;
         case GainRight:
-            dB2string(gainR, text, kVstMaxParamStrLen);
+            dB2string(delay.getGainR(), text, kVstMaxParamStrLen);
             break;
         case DelaySizeL:
-            float2string(delayCurrentSizeL/getSampleRate(), text, kVstMaxParamStrLen);
+            float2string(delay.getDelayCurrentSizeL()/getSampleRate(), text, kVstMaxParamStrLen);
             break;
         case DelaySizeR:
-            float2string(delayCurrentSizeR/getSampleRate(), text, kVstMaxParamStrLen);
+            float2string(delay.getDelayCurrentSizeR()/getSampleRate(), text, kVstMaxParamStrLen);
             break;
         case DelayFeedbackL:
-            float2string(delFeedbackL, text, kVstMaxParamStrLen);
+            float2string(delay.getDelFeedbackL(), text, kVstMaxParamStrLen);
             break;
         case DelayFeedbackR:
-            float2string(delFeedbackR, text, kVstMaxParamStrLen);
+            float2string(delay.getDelFeedbackR(), text, kVstMaxParamStrLen);
             break;
         case WetDry:
-            float2string(wetDry, text, kVstMaxParamStrLen);
+            float2string(delay.getWetDry(), text, kVstMaxParamStrLen);
             break;
         default:
             break;
     }
 };
+
 //-----------------------------------------------------------------------------------------
 
 void VstPlugin::getParameterName (VstInt32 index, char* text) {

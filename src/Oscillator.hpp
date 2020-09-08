@@ -9,7 +9,7 @@
 #define Oscillator_hpp
 
 #include "BufferFactory.hpp"
-#include "audioeffect.h"
+#include "../vstsdk2.4/public.sdk/source/vst2.x/audioeffect.h"
 
 #include <cmath>
 

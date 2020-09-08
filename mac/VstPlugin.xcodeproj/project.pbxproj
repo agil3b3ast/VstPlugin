@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6C6B61C52507E40800FFC50D /* Delay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C6B61C32507E40800FFC50D /* Delay.cpp */; };
 		6C8DDCEC2506365A0034F113 /* BufferFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C8DDCEA2506365A0034F113 /* BufferFactory.cpp */; };
-		6CCA66F32506785000A617F0 /* Oscillator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6CCA66F12506785000A617F0 /* Oscillator.cpp */; };
+		6CFC71432507F1FA004B7BF6 /* Oscillator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6CFC71412507F1FA004B7BF6 /* Oscillator.cpp */; };
 		DC029D6D2486DA3D001964D9 /* VstPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC029D6B2486DA3D001964D9 /* VstPlugin.cpp */; };
 		DC71300D22022E0D0021F163 /* audioeffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC71300822022E0D0021F163 /* audioeffect.cpp */; };
 		DC71300E22022E0D0021F163 /* audioeffectx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC71300922022E0D0021F163 /* audioeffectx.cpp */; };
@@ -17,10 +18,12 @@
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		6C6B61C32507E40800FFC50D /* Delay.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Delay.cpp; path = ../src/Delay.cpp; sourceTree = "<group>"; };
+		6C6B61C42507E40800FFC50D /* Delay.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Delay.hpp; path = ../src/Delay.hpp; sourceTree = "<group>"; };
 		6C8DDCEA2506365A0034F113 /* BufferFactory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BufferFactory.cpp; path = ../src/BufferFactory.cpp; sourceTree = "<group>"; };
 		6C8DDCEB2506365A0034F113 /* BufferFactory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = BufferFactory.hpp; path = ../src/BufferFactory.hpp; sourceTree = "<group>"; };
-		6CCA66F12506785000A617F0 /* Oscillator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Oscillator.cpp; sourceTree = "<group>"; };
-		6CCA66F22506785000A617F0 /* Oscillator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Oscillator.hpp; sourceTree = "<group>"; };
+		6CFC71412507F1FA004B7BF6 /* Oscillator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Oscillator.cpp; path = ../src/Oscillator.cpp; sourceTree = "<group>"; };
+		6CFC71422507F1FA004B7BF6 /* Oscillator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Oscillator.hpp; path = ../src/Oscillator.hpp; sourceTree = "<group>"; };
 		8D01CCD20486CAD60068D4B7 /* Vst-Plugin.vst */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Vst-Plugin.vst"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC029D6B2486DA3D001964D9 /* VstPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VstPlugin.cpp; path = ../src/VstPlugin.cpp; sourceTree = "<group>"; };
 		DC029D6C2486DA3D001964D9 /* VstPlugin.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VstPlugin.hpp; path = ../src/VstPlugin.hpp; sourceTree = "<group>"; };
@@ -96,8 +99,10 @@
 		F4FF51C30929F9AA00DDED7A /* src */ = {
 			isa = PBXGroup;
 			children = (
-				6CCA66F12506785000A617F0 /* Oscillator.cpp */,
-				6CCA66F22506785000A617F0 /* Oscillator.hpp */,
+				6CFC71412507F1FA004B7BF6 /* Oscillator.cpp */,
+				6CFC71422507F1FA004B7BF6 /* Oscillator.hpp */,
+				6C6B61C32507E40800FFC50D /* Delay.cpp */,
+				6C6B61C42507E40800FFC50D /* Delay.hpp */,
 				DC029D6B2486DA3D001964D9 /* VstPlugin.cpp */,
 				DC029D6C2486DA3D001964D9 /* VstPlugin.hpp */,
 				6C8DDCEA2506365A0034F113 /* BufferFactory.cpp */,
@@ -206,11 +211,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				6C8DDCEC2506365A0034F113 /* BufferFactory.cpp in Sources */,
+				6C6B61C52507E40800FFC50D /* Delay.cpp in Sources */,
 				DC71300E22022E0D0021F163 /* audioeffectx.cpp in Sources */,
 				DC71300D22022E0D0021F163 /* audioeffect.cpp in Sources */,
 				DC71300F22022E0D0021F163 /* vstplugmain.cpp in Sources */,
+				6CFC71432507F1FA004B7BF6 /* Oscillator.cpp in Sources */,
 				DC029D6D2486DA3D001964D9 /* VstPlugin.cpp in Sources */,
-				6CCA66F32506785000A617F0 /* Oscillator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

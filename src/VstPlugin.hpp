@@ -4,6 +4,8 @@
 #include "../vstsdk2.4/public.sdk/source/vst2.x/audioeffectx.h"
 #include "BufferFactory.hpp"
 #include "Oscillator.hpp"
+#include "Delay.hpp"
+
 
 
 #include <memory>
@@ -37,26 +39,7 @@ enum EfxParameter {
 class VstPlugin : public AudioEffectX
 {
 
-    float gainL;
-    float gainR;
-
-    //delay
-    float *bufferDelayL;
-    float *bufferDelayR;
-
-    int delayCursorL;
-    int delayCursorR;
-
-    int delayMaxSize;
-    int delayCurrentSizeL;
-    int delayCurrentSizeR;
-
-    float delFeedbackL;
-    float delFeedbackR;
-
-    float maxFeedback;
-
-    float wetDry;
+    //gain is inside delay
 
 
     //Presets
@@ -65,12 +48,11 @@ class VstPlugin : public AudioEffectX
     //plugin
     void initPlugin();
 
-    //delay
-    void deleteDelayLines();
-    void createDelayLines();
-
     //oscillators
     Oscillator oscillator;
+    
+    //delay
+    Delay delay;
     
     //presets
     void initPresets();
@@ -82,7 +64,6 @@ public:
 
 	// Processing
 	void processReplacing(float** inputs, float** outputs, VstInt32 sampleFrames) override;
-    void processDelay(float** inputs, float** outputs, VstInt32 sampleFrames);
     void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames) override;
     void setParameter (VstInt32 index, float value) override;
     float getParameter (VstInt32 index) override;

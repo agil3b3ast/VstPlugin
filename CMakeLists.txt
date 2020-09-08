@@ -38,6 +38,10 @@ set(VSTPLUGIN_SOURCE
     src/VstPlugin.hpp
     src/BufferFactory.cpp
     src/BufferFactory.hpp
+    src/Delay.cpp
+    src/Delay.hpp
+    src/Oscillator.cpp
+    src/Oscillator.hpp
     #resources/again.rc
     #resources/vstplug.def
     ${VSTSDK_PLUGIN_SOURCE}
