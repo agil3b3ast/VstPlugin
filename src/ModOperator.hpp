@@ -18,6 +18,7 @@ class ModOperator{
     
     float amount; //vale da 0 a 1
     int maxAmount;
+    int minAmount;
     
 public:
     explicit ModOperator(Oscillator *oscillator);
@@ -29,9 +30,17 @@ public:
     //setters
     void setOscillator(Oscillator *oscillator);
     void setMaxAmount(int maxAmount);
+    void setMinAmount(int minAmount);
     
     //templates
-    template <typename inputToMod> void processModOperator(inputToMod input);
+    template <typename inputToMod, typename outputToMod> void processModOperator(inputToMod input, outputToMod *output){
+        
+        if (input == nullptr){
+            std::cerr << "An input must be provided!\n";
+            return;
+        }
+        *output = minAmount + *input * currentSignal * amount * maxAmount; //mod a signal or parameter (e.g. delay size)
+    }
     
     
 };

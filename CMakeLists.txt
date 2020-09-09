@@ -46,6 +46,8 @@ set(VSTPLUGIN_SOURCE
     src/GainStereo.hpp
     src/ModOperator.cpp
     src/ModOperator.hpp
+    src/VDelay.cpp
+    src/VDelay.hpp
     #resources/again.rc
     #resources/vstplug.def
     ${VSTSDK_PLUGIN_SOURCE}

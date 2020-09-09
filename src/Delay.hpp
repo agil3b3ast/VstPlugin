@@ -16,34 +16,35 @@
 //-------------------------------------------------------------------------------------------------------
 class Delay
 {
-    //delay
-    float *bufferDelayL;
-    float *bufferDelayR;
-    
-    int delayCursorL;
-    int delayCursorR;
-    
-    int delayMaxSize;
-    int delayCurrentSizeL;
-    int delayCurrentSizeR;
-    
-    float delFeedbackL;
-    float delFeedbackR;
-    
-    float maxFeedback;
-    
-    float wetDry;
-    
-    float sampleRate;
+    protected:
+        //delay
+        float *bufferDelayL;
+        float *bufferDelayR;
+        
+        int delayCursorL;
+        int delayCursorR;
+        
+        int delayMaxSize;
+        int delayCurrentSizeL;
+        int delayCurrentSizeR;
+        
+        float delFeedbackL;
+        float delFeedbackR;
+        
+        float maxFeedback;
+        
+        float wetDry;
+        
+        float sampleRate;
 
-    //gain
-    GainStereo gainStereo;
+        //gain
+        GainStereo gainStereo;
 
     
 public:
     explicit Delay(float sampleRate);
     ~Delay();
-    void processDelay(float** inputs, float** outputs, VstInt32 sampleFrames);
+    virtual void processDelay(float** inputs, float** outputs, VstInt32 sampleFrames);
     
     //delay
     void deleteDelayLines();
