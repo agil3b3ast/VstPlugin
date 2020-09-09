@@ -29,6 +29,8 @@ void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames
     for(int i=0; i<sampleFrames;i++){
         modOperator.updateModOperator();
         modOperator.processModOperator(&delayCurrentSizeL, &outCurrDelay);
+        //oscillator.processOscillatorSingle(&buffOutL[i]);
+        //oscillator.processOscillatorSingle(&buffOutR[i]);
         //modOperator.processModOperator(&delayCurrentSizeR, &outCurrDelay); TODO estendere a delay stereo
         
         fout << std::to_string(outCurrDelay) << '\n';
