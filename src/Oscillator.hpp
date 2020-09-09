@@ -44,35 +44,28 @@ class Oscillator{
     float sampleRate;
     float frequencyInHz;
     double stepValue;
-    float amount; //vale da 0 a 1
-    int maxAmount;
+    
     
     float *currentWavetable;
     
-    void incrementCursorTable();
-    
-    void genSignal(float *output, float *wavetable);
-    //void ringModSignal(float *sample, float *wavetable);
-    //void numMod(int *number, float *wavetable);
+    void genSignal(float *output);
     
     public:
         explicit Oscillator(float sampleRate);
         ~Oscillator();
+    
         //wavetables
         void createWavetables();
         void deleteWavetables();
         void createFrequencyTable();
-        void processOscillator(float** outputs, unsigned char feature, VstInt32 sampleFrames);
-        void processOscillatorSingle(float *fl_input, int *i_input, unsigned char feature, VstInt32 sampleFrames);
+        void processOscillator(float** outputs, VstInt32 sampleFrames);
+        void processOscillatorSingle(float *input);
     
         //setters
+        void setFrequencyInHz(float freq);
         void setMaxAmount(int maxAmount);
         void setCurrentWavetable(unsigned char currentWavetable);
-    
-        //templates
-        template <typename inputToMod> void processOscillatorSingle(inputToMod input, unsigned char feature, VstInt32 sampleFrames);
-
-    
+        void updateCursorTable();
 
 };
 

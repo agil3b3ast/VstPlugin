@@ -44,6 +44,8 @@ set(VSTPLUGIN_SOURCE
     src/Oscillator.hpp
     src/GainStereo.cpp
     src/GainStereo.hpp
+    src/ModOperator.cpp
+    src/ModOperator.hpp
     #resources/again.rc
     #resources/vstplug.def
     ${VSTSDK_PLUGIN_SOURCE}

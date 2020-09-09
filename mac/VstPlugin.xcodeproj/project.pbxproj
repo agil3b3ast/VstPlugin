@@ -10,6 +10,7 @@
 		6C6B61C52507E40800FFC50D /* Delay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C6B61C32507E40800FFC50D /* Delay.cpp */; };
 		6C829A822508093200458BDB /* GainStereo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C829A802508093200458BDB /* GainStereo.cpp */; };
 		6C8DDCEC2506365A0034F113 /* BufferFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C8DDCEA2506365A0034F113 /* BufferFactory.cpp */; };
+		6CDBCF832508E9A400F197FC /* ModOperator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6CDBCF812508E9A400F197FC /* ModOperator.cpp */; };
 		6CFC71432507F1FA004B7BF6 /* Oscillator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6CFC71412507F1FA004B7BF6 /* Oscillator.cpp */; };
 		DC029D6D2486DA3D001964D9 /* VstPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC029D6B2486DA3D001964D9 /* VstPlugin.cpp */; };
 		DC71300D22022E0D0021F163 /* audioeffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC71300822022E0D0021F163 /* audioeffect.cpp */; };
@@ -25,6 +26,8 @@
 		6C829A812508093200458BDB /* GainStereo.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GainStereo.hpp; path = ../src/GainStereo.hpp; sourceTree = "<group>"; };
 		6C8DDCEA2506365A0034F113 /* BufferFactory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BufferFactory.cpp; path = ../src/BufferFactory.cpp; sourceTree = "<group>"; };
 		6C8DDCEB2506365A0034F113 /* BufferFactory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = BufferFactory.hpp; path = ../src/BufferFactory.hpp; sourceTree = "<group>"; };
+		6CDBCF812508E9A400F197FC /* ModOperator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ModOperator.cpp; path = ../src/ModOperator.cpp; sourceTree = "<group>"; };
+		6CDBCF822508E9A400F197FC /* ModOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ModOperator.hpp; path = ../src/ModOperator.hpp; sourceTree = "<group>"; };
 		6CFC71412507F1FA004B7BF6 /* Oscillator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Oscillator.cpp; path = ../src/Oscillator.cpp; sourceTree = "<group>"; };
 		6CFC71422507F1FA004B7BF6 /* Oscillator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Oscillator.hpp; path = ../src/Oscillator.hpp; sourceTree = "<group>"; };
 		8D01CCD20486CAD60068D4B7 /* Vst-Plugin.vst */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Vst-Plugin.vst"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -102,6 +105,8 @@
 		F4FF51C30929F9AA00DDED7A /* src */ = {
 			isa = PBXGroup;
 			children = (
+				6CDBCF812508E9A400F197FC /* ModOperator.cpp */,
+				6CDBCF822508E9A400F197FC /* ModOperator.hpp */,
 				6CFC71412507F1FA004B7BF6 /* Oscillator.cpp */,
 				6CFC71422507F1FA004B7BF6 /* Oscillator.hpp */,
 				6C829A802508093200458BDB /* GainStereo.cpp */,
@@ -217,6 +222,7 @@
 			files = (
 				6C8DDCEC2506365A0034F113 /* BufferFactory.cpp in Sources */,
 				6C6B61C52507E40800FFC50D /* Delay.cpp in Sources */,
+				6CDBCF832508E9A400F197FC /* ModOperator.cpp in Sources */,
 				DC71300E22022E0D0021F163 /* audioeffectx.cpp in Sources */,
 				DC71300D22022E0D0021F163 /* audioeffect.cpp in Sources */,
 				DC71300F22022E0D0021F163 /* vstplugmain.cpp in Sources */,

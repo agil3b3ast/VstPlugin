@@ -17,8 +17,6 @@ Oscillator::Oscillator(float sampleRate){
     createWavetables();
     createFrequencyTable();
     stepValue = frequencyInHz*fScale;
-    amount = 1.0;
-    maxAmount = 1;
 
     currentWavetable = sine;
     
@@ -30,9 +28,11 @@ Oscillator::~Oscillator(){
 }
 
 //-------------------------------------------------------------------------------------------------------
-void Oscillator::setMaxAmount(int maxAmount){
-    this->maxAmount = maxAmount;
+void Oscillator::setFrequencyInHz(float freq){
+    frequencyInHz = freq;
+    stepValue = frequencyInHz*fScale;
 }
+
 
 //-------------------------------------------------------------------------------------------------------
 void Oscillator::setCurrentWavetable(unsigned char currentWavetable){
@@ -112,63 +112,34 @@ void Oscillator::deleteWavetables(){
 }
 
 //-------------------------------------------------------------------------------------------------------
-void Oscillator::processOscillator(float** outputs, unsigned char feature, VstInt32 sampleFrames){
+void Oscillator::processOscillator(float** outputs, VstInt32 sampleFrames){
     float *outL = outputs[0]; // buffer output left
     float *outR = outputs[1]; // buffer output right
     
     for(int i=0; i<sampleFrames;i++){
-        processOscillatorSingle(&outL[i], feature, sampleFrames);
-        processOscillatorSingle(&outR[i], feature, sampleFrames);
+        processOscillatorSingle(&outL[i]);
+        processOscillatorSingle(&outR[i]);
+        updateCursorTable();
     }
-
 }
 
 //-------------------------------------------------------------------------------------------------------
-template <typename inputToMod> void Oscillator::processOscillatorSingle(inputToMod input, unsigned char feature, VstInt32 sampleFrames){
-
+void Oscillator::processOscillatorSingle(float *input){
+    
         if (input == nullptr){
             std::cerr << "An input must be provided!\n";
             return;
         }
-
-        switch (feature) {
-            case Gen:
-                genSignal(input, currentWavetable);
-                break;
-            //TODO add to modulator
-            /*case RingMod:
-                ringModSignal(input, currentWavetable);
-                break;
-            case NumMod:
-                numMod(input, currentWavetable);
-                break;*/
-            default:
-                break;
-        }
-    
+        genSignal(input);
 }
 
 //-------------------------------------------------------------------------------------------------------
-void Oscillator::genSignal(float* output, float *wavetable){
-    *output = wavetable[(int) cursorTable];
-    incrementCursorTable();
+void Oscillator::genSignal(float* output){
+    *output = currentWavetable[(int) cursorTable];
 }
 
 //-------------------------------------------------------------------------------------------------------
-//TODO add to modulator
-/*void Oscillator::ringModSignal(float *sample, float *wavetable){
-    *sample = *sample * wavetable[(int) cursorTable] * amount; //ring mod
-    incrementCursorTable();
-}
-
-//-------------------------------------------------------------------------------------------------------
-void Oscillator::numMod(int *number, float *wavetable){
-    *number = *number * wavetable[(int) cursorTable] * amount * maxAmount; //mod a numeric parameter
-    incrementCursorTable();
-}*/
-
-//-------------------------------------------------------------------------------------------------------
-void Oscillator::incrementCursorTable(){
+void Oscillator::updateCursorTable(){
     cursorTable = cursorTable + stepValue;
     if (cursorTable > (WAVETABLE_SIZE-1))
         cursorTable = cursorTable - WAVETABLE_SIZE;
