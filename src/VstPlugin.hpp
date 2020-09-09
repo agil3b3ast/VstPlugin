@@ -4,7 +4,7 @@
 #include "../vstsdk2.4/public.sdk/source/vst2.x/audioeffectx.h"
 #include "BufferFactory.hpp"
 #include "Oscillator.hpp"
-#include "Delay.hpp"
+#include "VDelay.hpp"
 
 
 
@@ -52,7 +52,7 @@ class VstPlugin : public AudioEffectX
     Oscillator oscillator;
     
     //delay
-    Delay delay;
+    VDelay delay;
     
     //presets
     void initPresets();

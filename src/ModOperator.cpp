@@ -12,6 +12,7 @@ ModOperator::ModOperator(Oscillator *oscillator){
     currentSignal = 0.0;
     amount = 1.0;
     maxAmount = 1;
+    minAmount = 0;
 }
 
 //getters
@@ -19,6 +20,10 @@ Oscillator *ModOperator::getOscillator(){
     return oscillator;
 }
 //setters
+void ModOperator::setMinAmount(int minAmount){
+    this->minAmount = minAmount;
+}
+
 //-------------------------------------------------------------------------------------------------------
 void ModOperator::setMaxAmount(int maxAmount){
     this->maxAmount = maxAmount;
@@ -39,14 +44,4 @@ void ModOperator::updateModOperator(){
 
 //-------------------------------------------------------------------------------------------------------
 
-template <typename inputToMod> void ModOperator::processModOperator(inputToMod input){
-    
-    if (input == nullptr){
-        std::cerr << "An input must be provided!\n";
-        return;
-    }
 
-    *input = *input * currentSignal * amount * maxAmount; //mod a signal or parameter (e.g. delay size)
-
-    
-}
