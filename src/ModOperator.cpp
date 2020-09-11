@@ -12,7 +12,7 @@ ModOperator::ModOperator(Oscillator *oscillator){
     currentSignal = 0.0;
     amount = 1.0;
     maxAmount = 1;
-    minAmount = 0;
+    minAmount = 0.0;
 }
 
 //getters
@@ -38,7 +38,7 @@ void ModOperator::setOscillator(Oscillator *oscillator){
 //-------------------------------------------------------------------------------------------------------
 
 void ModOperator::updateModOperator(){
-    oscillator->processOscillatorSingle(&currentSignal);
+    oscillator->processOscillatorSingleDouble(&currentSignal);
     oscillator->updateCursorTable();
 }
 
