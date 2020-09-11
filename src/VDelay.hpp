@@ -22,6 +22,13 @@ class VDelay : public Delay{
     int writeCursor;
     double currentFractDelay;
     
+    //double previousOutL;
+    //double previousOutR;
+    
+    double BL;
+    double FF;
+    double FB;
+    
     const float NU = 0.5;
     
     public:

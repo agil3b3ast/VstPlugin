@@ -12,6 +12,11 @@ VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), mod
     modOperator.setMinAmount(currentFractDelay);
     writeCursor = 0; //cannot set writeCursor to max/2 due to precision errors
     readCursor = delayMaxSize-currentFractDelay; //it is necessary to start here to avoid writeCursor precision errors
+    //previousOutL = 0.0;
+    //previousOutR = 0.0;
+    BL = 0.5;
+    FF=0.5;
+    FB=0;
 }
 
 double VDelay::getFrequencyInHz(){
@@ -42,15 +47,17 @@ void VDelay::calcOldestSample(float *oldestSampleL, float *oldestSampleR){
     int int_part = previous;
     double fract_part = readCursor-int_part;
     
-    if(previous < 0){ //realign previous
-        previous = delayMaxSize -1;
-    }
+    //if(previous < 0){ //realign previous
+    //    previous = delayMaxSize -1;
+    //}
     if(next == delayMaxSize){ //realign next
         next = 0;
     }
-    *oldestSampleL = (1-fract_part)*bufferDelayL[previous] + fract_part*bufferDelayL[next];
-    *oldestSampleR = (1-fract_part)*bufferDelayR[previous] + fract_part*bufferDelayR[next];
-
+    *oldestSampleL = fract_part*bufferDelayL[next] + (1-fract_part)*bufferDelayL[previous];// - (1-fract_part)*previousOutL;
+    *oldestSampleR = fract_part*bufferDelayR[next] + (1-fract_part)*bufferDelayR[previous];// - (1-fract_part)*previousOutR;
+    
+    //previousOutL = *oldestSampleL; //all-pass interp
+    //previousOutR = *oldestSampleR; //all-pass interp
 }
 
 void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames){
@@ -66,8 +73,8 @@ void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames
     float oldestSampleL = 0.0;
     float oldestSampleR = 0.0;
     
-    std::fstream fout;
-    fout.open("/Users/alessandro_fazio/Desktop/output.csv", std::ios::out | std::ios::app);
+    //std::fstream fout;
+    //fout.open("/Users/alessandro_fazio/Desktop/output.csv", std::ios::out | std::ios::app);
     
     for(int i=0; i<sampleFrames;i++){
         modOperator.updateModOperator();
@@ -75,12 +82,18 @@ void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames
         //oscillator.processOscillatorSingle(&buffOutL[i]);
         //oscillator.processOscillatorSingle(&buffOutR[i]);
         //modOperator.processModOperator(&delayCurrentSizeR, &outCurrDelay); TODO estendere a delay stereo
+        
+        //fout << "Iteration " << i << ":\n\t-Actual read cursor: " << std::to_string(readCursor)
+        //<< "\n\t-Actual write cursor: " << std::to_string(writeCursor)
+        //<< "\n\t-Actual out delay: " << std::to_string(outCurrDelay);
+
         readCursor = ((double)writeCursor) - outCurrDelay;
+        
+        //fout << ":\n\t-Actual updated read cursor: " << std::to_string(readCursor) << '\n';
         
         
         realignReadCursor();
         
-        fout << std::to_string(readCursor) << '\n';
 
         
         calcOldestSample(&oldestSampleL, &oldestSampleR);
@@ -89,8 +102,8 @@ void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames
         //float oldestSampleR = bufferDelayR[delayCurrentSizeR];
         
         
-        bufferDelayL[writeCursor] = buffL[i]+oldestSampleL*delFeedbackL;
-        bufferDelayR[writeCursor] = buffR[i]+oldestSampleR*delFeedbackR;
+        bufferDelayL[writeCursor] = buffL[i]+oldestSampleL*FB;
+        bufferDelayR[writeCursor] = buffR[i]+oldestSampleR*FB;
 
         writeCursor++;
         
@@ -104,17 +117,17 @@ void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames
             delayCursorR = 0;
         }*/
         
-        wetDryBalance = wetDry*buffL[i]+(1-wetDry)*oldestSampleL;
+        wetDryBalance = BL*buffL[i]+FF*oldestSampleL;
         gainStereo.processGainL(&wetDryBalance);
         buffOutL[i] = wetDryBalance;
         
-        wetDryBalance = wetDry*buffR[i]+(1-wetDry)*oldestSampleR;
+        wetDryBalance = BL*buffR[i]+FF*oldestSampleR;
         gainStereo.processGainR(&wetDryBalance);
         buffOutR[i] = wetDryBalance;
         
         
     }
     
-    fout.close();
+    //fout.close();
 
 }
