@@ -6,10 +6,48 @@
 //
 
 #include "VDelay.hpp"
-#include <fstream>
 
 VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), modOperator(&oscillator){
-    modOperator.setMinAmount((this->delayMaxSize/2) - 1);
+    currentFractDelay = ((float)delayMaxSize)/2.0;
+    modOperator.setMinAmount(currentFractDelay);
+    writeCursor = 0; //cannot set writeCursor to max/2 due to precision errors
+    readCursor = delayMaxSize-currentFractDelay; //it is necessary to start here to avoid writeCursor precision errors
+}
+
+float VDelay::getFrequencyInHz(){
+    return modOperator.getOscillator()->getFrequencyInHz();
+}
+
+void VDelay::setFrequencyInHz(float frequencyInHz){
+    modOperator.getOscillator()->setFrequencyInHz(frequencyInHz);
+}
+
+void VDelay::realignReadCursor(){
+    if (readCursor < 0.0){
+        while (readCursor < 0.0){
+            readCursor = readCursor + ((float)delayMaxSize);
+        }
+    }
+    else if (readCursor >= ((float)delayMaxSize)){
+        while (readCursor >= ((float)delayMaxSize)){
+            readCursor = readCursor - ((float)delayMaxSize);
+        }
+    }
+}
+
+void VDelay::calcOldestSample(float *oldestSampleL, float *oldestSampleR){
+    int previous = floor(readCursor);
+    int next = ceil(readCursor);
+    
+    if(previous < 0){ //realign previous
+        previous = delayMaxSize -1;
+    }
+    if(next == delayMaxSize){ //realign next
+        next = 0;
+    }
+    *oldestSampleL = NU*bufferDelayL[previous] + (1.0-NU)*bufferDelayL[next];
+    *oldestSampleR = NU*bufferDelayR[previous] + (1.0-NU)*bufferDelayR[next];
+
 }
 
 void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames){
@@ -21,39 +59,45 @@ void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames
     
     float wetDryBalance;
     
-    int outCurrDelay = 0;
+    float outCurrDelay = 0.0;
+    float oldestSampleL = 0.0;
+    float oldestSampleR = 0.0;
     
     std::fstream fout;
     fout.open("/Users/alessandro_fazio/Desktop/output.csv", std::ios::out | std::ios::app);
     
     for(int i=0; i<sampleFrames;i++){
         modOperator.updateModOperator();
-        modOperator.processModOperator(&delayCurrentSizeL, &outCurrDelay);
+        modOperator.processModOperator(&currentFractDelay, &outCurrDelay);
         //oscillator.processOscillatorSingle(&buffOutL[i]);
         //oscillator.processOscillatorSingle(&buffOutR[i]);
         //modOperator.processModOperator(&delayCurrentSizeR, &outCurrDelay); TODO estendere a delay stereo
+        readCursor = ((float)writeCursor) - outCurrDelay;
         
-        fout << std::to_string(outCurrDelay) << '\n';
+        fout << std::to_string(readCursor) << '\n';
+        
+        realignReadCursor();
+        
+        calcOldestSample(&oldestSampleL, &oldestSampleR);
+        
+        //float oldestSampleL = bufferDelayL[delayCurrentSizeL];
+        //float oldestSampleR = bufferDelayR[delayCurrentSizeR];
+        
+        
+        bufferDelayL[writeCursor] = buffL[i]+oldestSampleR*delFeedbackL;
+        bufferDelayR[writeCursor] = buffR[i]+oldestSampleL*delFeedbackR;
 
-        
-        float oldestSampleL = bufferDelayL[delayCursorL];
-        float oldestSampleR = bufferDelayR[delayCursorR];
-        
-        
-        bufferDelayL[delayCursorL] = buffL[i]+oldestSampleR*delFeedbackL;
-        bufferDelayR[delayCursorR] = buffR[i]+oldestSampleL*delFeedbackR;
-
-        delayCursorL++;
-        delayCursorR++;
+        writeCursor++;
         
         //TODO estendere a delay stereo
-        if (delayCursorL >= outCurrDelay){
-            delayCursorL = 0;
+        if (writeCursor >= delayMaxSize){
+            writeCursor = 0;
         }
         
+        /*
         if (delayCursorR >= outCurrDelay){
             delayCursorR = 0;
-        }
+        }*/
         
         wetDryBalance = wetDry*buffL[i]+(1-wetDry)*oldestSampleL;
         gainStereo.processGainL(&wetDryBalance);
