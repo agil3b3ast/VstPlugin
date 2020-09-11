@@ -38,6 +38,8 @@ class Oscillator{
     float sampleRate;
     
     const int WAVETABLE_SIZE = 441000;
+    const float NU = 0.5;
+    
     double freqTable[128];
     double cursorTable;
     double fScale;
@@ -62,6 +64,8 @@ class Oscillator{
         void processOscillator(float** outputs, VstInt32 sampleFrames);
         void processOscillatorSingle(float *input);
         void processOscillatorSingleDouble(double *input);
+        void genSignalDoubleWithInterp(double* output);
+
 
         //getters
         double getFrequencyInHz();
