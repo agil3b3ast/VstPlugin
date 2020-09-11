@@ -18,7 +18,7 @@ class ModOperator{
     
     float amount; //vale da 0 a 1
     int maxAmount;
-    int minAmount;
+    float minAmount;
     
 public:
     explicit ModOperator(Oscillator *oscillator);
@@ -30,7 +30,7 @@ public:
     //setters
     void setOscillator(Oscillator *oscillator);
     void setMaxAmount(int maxAmount);
-    void setMinAmount(int minAmount);
+    void setMinAmount(float minAmount);
     
     //templates
     template <typename inputToMod, typename outputToMod> void processModOperator(inputToMod input, outputToMod *output){

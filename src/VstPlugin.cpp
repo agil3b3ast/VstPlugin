@@ -39,9 +39,10 @@ void VstPlugin::initPlugin()
 void VstPlugin::initPresets(){
     programs[0].delayTimeL = 0.3;
     programs[0].delayTimeR = 0.3;
-    programs[0].feedbackL = 0.3;
-    programs[0].feedbackR = 0.3;
+    programs[0].feedbackL = 0;
+    programs[0].feedbackR = 0;
     programs[0].wetDry = 0.5;
+    programs[0].frequencyInHz = 0.1;
     strcpy(programs[0].name, "Default");
 
     programs[1].delayTimeL = 0.5;
@@ -49,6 +50,7 @@ void VstPlugin::initPresets(){
     programs[1].feedbackL = 0.5;
     programs[1].feedbackR = 0.5;
     programs[1].wetDry = 0.5;
+    programs[0].frequencyInHz = 0.1;
     strcpy(programs[1].name, "Half Delay");
 
     programs[2].delayTimeL = 0.1;
@@ -56,6 +58,7 @@ void VstPlugin::initPresets(){
     programs[2].feedbackL = 0.1;
     programs[2].feedbackR = 0.1;
     programs[2].wetDry = 0.5;
+    programs[0].frequencyInHz = 0.1;
     strcpy(programs[2].name, "Short Delay");
 
     programs[3].delayTimeL = 0.8;
@@ -63,6 +66,7 @@ void VstPlugin::initPresets(){
     programs[3].feedbackL = 0.8;
     programs[3].feedbackR = 0.8;
     programs[3].wetDry = 0.4;
+    programs[0].frequencyInHz = 0.1;
     strcpy(programs[3].name, "Long Delay");
 
     programs[4].delayTimeL = 0.8;
@@ -70,6 +74,7 @@ void VstPlugin::initPresets(){
     programs[4].feedbackL = 0.8;
     programs[4].feedbackR = 0;
     programs[4].wetDry = 0.5;
+    programs[0].frequencyInHz = 0.1;
     strcpy(programs[4].name, "Full Left Delay");
 }
 
@@ -156,6 +161,9 @@ void VstPlugin::setParameter (VstInt32 index, float value){
         case WetDry:
             delay.setWetDry(value);
             break;
+        case FrequencyInHz:
+            delay.setFrequencyInHz(value);
+            break;
         default:
             break;
     }
@@ -185,6 +193,9 @@ float VstPlugin::getParameter (VstInt32 index){
             break;
         case WetDry:
             valueToReturn = delay.getWetDry();
+            break;
+        case FrequencyInHz:
+            valueToReturn = delay.getFrequencyInHz();
             break;
         default:
             break;
@@ -236,6 +247,9 @@ void VstPlugin::getParameterLabel (VstInt32 index, char* label){
         case WetDry:
             vst_strncpy(label, " ", kVstMaxParamStrLen);
             break;
+        case FrequencyInHz:
+            vst_strncpy(label, "Hz", kVstMaxParamStrLen);
+            break;
         default:
             break;
     }
@@ -269,6 +283,9 @@ void VstPlugin::getParameterDisplay (VstInt32 index, char* text) {
         case WetDry:
             float2string(delay.getWetDry(), text, kVstMaxParamStrLen);
             break;
+        case FrequencyInHz:
+            float2string(delay.getFrequencyInHz(), text, kVstMaxParamStrLen);
+            break;
         default:
             break;
     }
@@ -298,6 +315,9 @@ void VstPlugin::getParameterName (VstInt32 index, char* text) {
             break;
         case WetDry:
             vst_strncpy(text, "Wet/Dry", kVstMaxParamStrLen);
+            break;
+        case FrequencyInHz:
+            vst_strncpy(text, "Rate", kVstMaxParamStrLen);
             break;
         default:
             break;

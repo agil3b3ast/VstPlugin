@@ -36,7 +36,7 @@ class Oscillator{
     float *sine;
 
     
-    const int WAVETABLE_SIZE = 88200;
+    const int WAVETABLE_SIZE = 441000;
     float pwm; // determina la simmetria dell'onda quadra
     double freqTable[128];
     double cursorTable;
@@ -60,6 +60,9 @@ class Oscillator{
         void createFrequencyTable();
         void processOscillator(float** outputs, VstInt32 sampleFrames);
         void processOscillatorSingle(float *input);
+    
+        //getters
+        float getFrequencyInHz();
     
         //setters
         void setFrequencyInHz(float freq);

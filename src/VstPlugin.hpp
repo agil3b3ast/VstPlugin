@@ -10,7 +10,7 @@
 
 #include <memory>
 
-#define PROGS_COUNT 5
+#define PROGS_COUNT 6
 
 struct Preset{
     char name[24];
@@ -19,6 +19,7 @@ struct Preset{
     float delayTimeL;
     float delayTimeR;
     float wetDry;
+    float frequencyInHz;
 };
 
 
@@ -32,6 +33,7 @@ enum EfxParameter {
     DelayFeedbackL,
     DelayFeedbackR,
     WetDry,
+    FrequencyInHz,
     ParamCOUNT
 };
 

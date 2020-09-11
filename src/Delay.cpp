@@ -117,7 +117,7 @@ float Delay::getMaxFeedback(){
 //-------------------------------------------------------------------------------------------------------
 void Delay::createDelayLines()
 {
-    float delayLineInSec = 15.0/1000.0; //15 ms of audio
+    float delayLineInSec = 0.015; //15 ms of audio
     float numberOfSamples = delayLineInSec*sampleRate;
     float numberOfBytes = numberOfSamples*sizeof(float);
     

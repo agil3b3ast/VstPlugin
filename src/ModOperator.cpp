@@ -20,7 +20,7 @@ Oscillator *ModOperator::getOscillator(){
     return oscillator;
 }
 //setters
-void ModOperator::setMinAmount(int minAmount){
+void ModOperator::setMinAmount(float minAmount){
     this->minAmount = minAmount;
 }
 

@@ -11,7 +11,7 @@
 Oscillator::Oscillator(float sampleRate){
     pwm = 0.3;
     cursorTable = 0;
-    frequencyInHz = 1.0;
+    frequencyInHz = 0.1;
     this->sampleRate = sampleRate;
     fScale = WAVETABLE_SIZE/sampleRate;
     createWavetables();
@@ -25,6 +25,10 @@ Oscillator::Oscillator(float sampleRate){
 //-------------------------------------------------------------------------------------------------------
 Oscillator::~Oscillator(){
     deleteWavetables();
+}
+
+float Oscillator::getFrequencyInHz(){
+    return frequencyInHz;
 }
 
 //-------------------------------------------------------------------------------------------------------

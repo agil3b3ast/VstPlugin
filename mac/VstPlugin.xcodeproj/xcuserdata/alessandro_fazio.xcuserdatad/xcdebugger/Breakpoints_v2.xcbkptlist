@@ -10,7 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../src/VstPlugin.cpp"
-            timestampString = "621367739.642349"
+            timestampString = "621470887.9548039"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "151"
@@ -26,12 +26,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../src/VstPlugin.cpp"
-            timestampString = "621367739.642399"
+            timestampString = "621470887.954849"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "313"
             endingLineNumber = "313"
-            landmarkName = "VstPlugin::setProgram (VstInt32 program)"
+            landmarkName = "VstPlugin::getParameterName (VstInt32 index, char* text)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -42,7 +42,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../src/VstPlugin.cpp"
-            timestampString = "621367739.642435"
+            timestampString = "621470887.954883"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "91"
@@ -58,7 +58,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../src/Delay.cpp"
-            timestampString = "621367739.64247"
+            timestampString = "621470887.954916"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "170"
@@ -74,11 +74,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../src/Oscillator.cpp"
-            timestampString = "621338600.9228719"
+            timestampString = "621466714.450177"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "167"
-            endingLineNumber = "167">
+            startingLineNumber = "147"
+            endingLineNumber = "147"
+            landmarkName = "Oscillator::updateCursorTable()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -88,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../src/VDelay.cpp"
-            timestampString = "621376149.487512"
+            timestampString = "621470887.954963"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "12"
-            endingLineNumber = "12"
+            startingLineNumber = "11"
+            endingLineNumber = "11"
             landmarkName = "VDelay::VDelay(float sampleRate)"
             landmarkType = "7">
          </BreakpointContent>
@@ -104,11 +106,59 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../src/VDelay.cpp"
-            timestampString = "621376149.4878401"
+            timestampString = "621470887.955207"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "16"
-            endingLineNumber = "16"
+            startingLineNumber = "15"
+            endingLineNumber = "15"
+            landmarkName = "VDelay::VDelay(float sampleRate)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../src/VDelay.cpp"
+            timestampString = "621470887.955402"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "VDelay::realignReadCursor()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../src/VDelay.cpp"
+            timestampString = "621470887.955595"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
+            landmarkName = "VDelay::realignReadCursor()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../src/VDelay.cpp"
+            timestampString = "621470887.955781"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "61"
+            endingLineNumber = "61"
             landmarkName = "VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames)"
             landmarkType = "7">
          </BreakpointContent>
@@ -120,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../src/VDelay.cpp"
-            timestampString = "621376149.489029"
+            timestampString = "621470887.955966"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "31"
-            endingLineNumber = "31"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
             landmarkName = "VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames)"
             landmarkType = "7">
          </BreakpointContent>
@@ -136,11 +186,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../src/VDelay.cpp"
-            timestampString = "621376149.489233"
+            timestampString = "621470887.956138"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "27"
-            endingLineNumber = "27"
+            startingLineNumber = "86"
+            endingLineNumber = "86"
             landmarkName = "VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames)"
             landmarkType = "7">
          </BreakpointContent>
