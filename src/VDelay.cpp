@@ -39,14 +39,17 @@ void VDelay::calcOldestSample(float *oldestSampleL, float *oldestSampleR){
     int previous = floor(readCursor);
     int next = ceil(readCursor);
     
+    int int_part = previous;
+    double fract_part = readCursor-int_part;
+    
     if(previous < 0){ //realign previous
         previous = delayMaxSize -1;
     }
     if(next == delayMaxSize){ //realign next
         next = 0;
     }
-    *oldestSampleL = NU*bufferDelayL[previous] + (1.0-NU)*bufferDelayL[next];
-    *oldestSampleR = NU*bufferDelayR[previous] + (1.0-NU)*bufferDelayR[next];
+    *oldestSampleL = (1-fract_part)*bufferDelayL[previous] + fract_part*bufferDelayL[next];
+    *oldestSampleR = (1-fract_part)*bufferDelayR[previous] + fract_part*bufferDelayR[next];
 
 }
 
