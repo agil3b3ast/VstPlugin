@@ -29,8 +29,8 @@ class VDelay : public Delay{
         void processDelay(float** inputs, float** outputs, VstInt32 sampleFrames) override;
         void realignReadCursor(); //this function is necessary to align read cursor in range 0-maxDelayLine
         void calcOldestSample(float *oldestSampleL, float *oldestSampleR);
-        void setFrequencyInHz(float frequencyInHz);
-        float getFrequencyInHz();
+        void setFrequencyInHz(double frequencyInHz);
+        double getFrequencyInHz();
 };
 
 #endif /* VDelay_hpp */

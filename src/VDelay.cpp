@@ -14,11 +14,11 @@ VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), mod
     readCursor = delayMaxSize-currentFractDelay; //it is necessary to start here to avoid writeCursor precision errors
 }
 
-float VDelay::getFrequencyInHz(){
+double VDelay::getFrequencyInHz(){
     return modOperator.getOscillator()->getFrequencyInHz();
 }
 
-void VDelay::setFrequencyInHz(float frequencyInHz){
+void VDelay::setFrequencyInHz(double frequencyInHz){
     modOperator.getOscillator()->setFrequencyInHz(frequencyInHz);
 }
 

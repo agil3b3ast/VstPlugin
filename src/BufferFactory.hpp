@@ -15,6 +15,10 @@ class BufferFactory{
     public:
         static void deleteBuffer(float *buffer);
         static float* createBuffer(float numberOfBytes);
+        static void deleteBufferDouble(double *buffer);
+        static double* createBufferDouble(double numberOfBytes);
+
+
 };
 
 

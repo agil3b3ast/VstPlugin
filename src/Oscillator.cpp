@@ -27,12 +27,12 @@ Oscillator::~Oscillator(){
     deleteWavetables();
 }
 
-float Oscillator::getFrequencyInHz(){
+double Oscillator::getFrequencyInHz(){
     return frequencyInHz;
 }
 
 //-------------------------------------------------------------------------------------------------------
-void Oscillator::setFrequencyInHz(float freq){
+void Oscillator::setFrequencyInHz(double freq){
     frequencyInHz = freq;
     stepValue = frequencyInHz*fScale;
 }
@@ -74,11 +74,11 @@ void Oscillator::createFrequencyTable()
 //-------------------------------------------------------------------------------------------------------
 void Oscillator::createWavetables()
 {
-    float numberOfBytes = WAVETABLE_SIZE*sizeof(float);
+    double numberOfBytes = WAVETABLE_SIZE*sizeof(double);
     
-    sawtooth = BufferFactory::createBuffer(numberOfBytes);
-    pulse = BufferFactory::createBuffer(numberOfBytes);
-    sine = BufferFactory::createBuffer(numberOfBytes);
+    sawtooth = BufferFactory::createBufferDouble(numberOfBytes);
+    pulse = BufferFactory::createBufferDouble(numberOfBytes);
+    sine = BufferFactory::createBufferDouble(numberOfBytes);
 
     
     
@@ -89,9 +89,9 @@ void Oscillator::createWavetables()
         else
             pulse[i] = 1;
         
-        sawtooth[i] = 2*((float)i/(float) WAVETABLE_SIZE) - 1;
+        sawtooth[i] = 2.0*((double)i/(double) WAVETABLE_SIZE) - 1.0;
         
-        sine[i] = sin(2*pi*(float)i/(float) WAVETABLE_SIZE);
+        sine[i] = sin(2.0*pi*(double)i/(double) WAVETABLE_SIZE);
 
     }
     
@@ -138,7 +138,22 @@ void Oscillator::processOscillatorSingle(float *input){
 }
 
 //-------------------------------------------------------------------------------------------------------
+void Oscillator::processOscillatorSingleDouble(double *input){
+    
+    if (input == nullptr){
+        std::cerr << "An input must be provided!\n";
+        return;
+    }
+    genSignalDouble(input);
+}
+
+//-------------------------------------------------------------------------------------------------------
 void Oscillator::genSignal(float* output){
+    *output = currentWavetable[(int) cursorTable];
+}
+
+//-------------------------------------------------------------------------------------------------------
+void Oscillator::genSignalDouble(double* output){
     *output = currentWavetable[(int) cursorTable];
 }
 

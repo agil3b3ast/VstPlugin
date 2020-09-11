@@ -20,3 +20,17 @@ float* BufferFactory::createBuffer(float numberOfBytes){
     memset(buffer,0,numberOfBytes);
     return buffer;
 }
+
+void BufferFactory::deleteBufferDouble(double *buffer){
+    
+    if (buffer != nullptr) {
+        delete buffer;
+        buffer = nullptr;
+    }
+}
+
+double* BufferFactory::createBufferDouble(double numberOfBytes){
+    double *buffer = (double *) malloc(numberOfBytes);
+    memset(buffer,0,numberOfBytes);
+    return buffer;
+}

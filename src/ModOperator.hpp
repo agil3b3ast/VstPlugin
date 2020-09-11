@@ -14,10 +14,11 @@
 class ModOperator{
     
     Oscillator *oscillator;
-    float currentSignal;
+    double currentSignal;
+    
+    int maxAmount;
     
     double amount; //vale da 0 a 1
-    int maxAmount;
     double minAmount;
     
 public:
