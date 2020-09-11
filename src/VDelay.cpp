@@ -77,9 +77,11 @@ void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames
         //modOperator.processModOperator(&delayCurrentSizeR, &outCurrDelay); TODO estendere a delay stereo
         readCursor = ((double)writeCursor) - outCurrDelay;
         
-        fout << std::to_string(readCursor) << '\n';
         
         realignReadCursor();
+        
+        fout << std::to_string(readCursor) << '\n';
+
         
         calcOldestSample(&oldestSampleL, &oldestSampleR);
         
@@ -87,8 +89,8 @@ void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames
         //float oldestSampleR = bufferDelayR[delayCurrentSizeR];
         
         
-        bufferDelayL[writeCursor] = buffL[i]+oldestSampleR*delFeedbackL;
-        bufferDelayR[writeCursor] = buffR[i]+oldestSampleL*delFeedbackR;
+        bufferDelayL[writeCursor] = buffL[i]+oldestSampleL*delFeedbackL;
+        bufferDelayR[writeCursor] = buffR[i]+oldestSampleR*delFeedbackR;
 
         writeCursor++;
         
