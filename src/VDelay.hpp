@@ -18,9 +18,9 @@ class VDelay : public Delay{
     Oscillator oscillator;
     ModOperator modOperator;
     
-    float readCursor;
+    double readCursor;
     int writeCursor;
-    float currentFractDelay;
+    double currentFractDelay;
     
     const float NU = 0.5;
     

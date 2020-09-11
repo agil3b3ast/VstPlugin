@@ -8,7 +8,7 @@
 #include "VDelay.hpp"
 
 VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), modOperator(&oscillator){
-    currentFractDelay = ((float)delayMaxSize)/2.0;
+    currentFractDelay = ((double)delayMaxSize)/2.0;
     modOperator.setMinAmount(currentFractDelay);
     writeCursor = 0; //cannot set writeCursor to max/2 due to precision errors
     readCursor = delayMaxSize-currentFractDelay; //it is necessary to start here to avoid writeCursor precision errors
@@ -25,12 +25,12 @@ void VDelay::setFrequencyInHz(float frequencyInHz){
 void VDelay::realignReadCursor(){
     if (readCursor < 0.0){
         while (readCursor < 0.0){
-            readCursor = readCursor + ((float)delayMaxSize);
+            readCursor = readCursor + ((double)delayMaxSize);
         }
     }
-    else if (readCursor >= ((float)delayMaxSize)){
-        while (readCursor >= ((float)delayMaxSize)){
-            readCursor = readCursor - ((float)delayMaxSize);
+    else if (readCursor >= ((double)delayMaxSize)){
+        while (readCursor >= ((double)delayMaxSize)){
+            readCursor = readCursor - ((double)delayMaxSize);
         }
     }
 }
@@ -59,7 +59,7 @@ void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames
     
     float wetDryBalance;
     
-    float outCurrDelay = 0.0;
+    double outCurrDelay = 0.0;
     float oldestSampleL = 0.0;
     float oldestSampleR = 0.0;
     
@@ -72,7 +72,7 @@ void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames
         //oscillator.processOscillatorSingle(&buffOutL[i]);
         //oscillator.processOscillatorSingle(&buffOutR[i]);
         //modOperator.processModOperator(&delayCurrentSizeR, &outCurrDelay); TODO estendere a delay stereo
-        readCursor = ((float)writeCursor) - outCurrDelay;
+        readCursor = ((double)writeCursor) - outCurrDelay;
         
         fout << std::to_string(readCursor) << '\n';
         
