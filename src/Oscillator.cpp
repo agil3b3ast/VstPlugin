@@ -144,7 +144,7 @@ void Oscillator::processOscillatorSingleDouble(double *input){
         std::cerr << "An input must be provided!\n";
         return;
     }
-    genSignalDouble(input);
+    genSignalDoubleWithInterp(input);
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -155,6 +155,20 @@ void Oscillator::genSignal(float* output){
 //-------------------------------------------------------------------------------------------------------
 void Oscillator::genSignalDouble(double* output){
     *output = currentWavetable[(int) cursorTable];
+}
+
+//-------------------------------------------------------------------------------------------------------
+void Oscillator::genSignalDoubleWithInterp(double* output){
+    int next = ceil(cursorTable);
+    int previous = floor(cursorTable);
+    
+    if(previous < 0){ //realign previous
+        previous = WAVETABLE_SIZE -1;
+    }
+    if(next == WAVETABLE_SIZE){ //realign next
+        next = 0;
+    }
+    *output = NU*currentWavetable[previous] + (1.0-NU)*currentWavetable[next];
 }
 
 //-------------------------------------------------------------------------------------------------------
