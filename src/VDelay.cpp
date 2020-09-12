@@ -14,9 +14,9 @@ VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), mod
     readCursor = delayMaxSize-currentFractDelay; //it is necessary to start here to avoid writeCursor precision errors
     previousOutL = 0.0;
     previousOutR = 0.0;
-    BL = 0.5;
-    FF=0.5;
-    FB=0.0;
+    BL = 0.7;
+    FF = 0.7;
+    FB = 0.7;
 }
 
 double VDelay::getFrequencyInHz(){

@@ -10,7 +10,7 @@
 
 Oscillator::Oscillator(float sampleRate){
     pwm = 0.3;
-    cursorTable = 0;
+    cursorTable = 0.0;
     frequencyInHz = 0.1;
     this->sampleRate = sampleRate;
     fScale = WAVETABLE_SIZE/sampleRate;
@@ -162,13 +162,18 @@ void Oscillator::genSignalDoubleWithInterp(double* output){
     int next = ceil(cursorTable);
     int previous = floor(cursorTable);
     
-    if(previous < 0){ //realign previous
-        previous = WAVETABLE_SIZE -1;
-    }
+    int int_part = previous;
+    double fract_part = cursorTable-int_part;
+    
+    //if(previous < 0){ //realign previous
+    //    previous = WAVETABLE_SIZE -1;
+    //}
     if(next == WAVETABLE_SIZE){ //realign next
         next = 0;
     }
-    *output = NU*currentWavetable[previous] + (1.0-NU)*currentWavetable[next];
+    //*output = NU*currentWavetable[previous] + (1.0-NU)*currentWavetable[next]; fixed NU
+    *output = currentWavetable[previous] + (fract_part*(currentWavetable[next]-currentWavetable[previous]));
+
 }
 
 //-------------------------------------------------------------------------------------------------------

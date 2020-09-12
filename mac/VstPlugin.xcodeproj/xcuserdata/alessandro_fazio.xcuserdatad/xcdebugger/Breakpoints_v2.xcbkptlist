@@ -79,7 +79,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "176"
             endingLineNumber = "176"
-            landmarkName = "Oscillator::updateCursorTable()"
+            landmarkName = "Oscillator::genSignalDoubleWithInterp(double* output)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -159,7 +159,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "98"
             endingLineNumber = "98"
-            landmarkName = "VDelay::calcOldestSample(float *oldestSampleL, float *oldestSampleR)"
+            landmarkName = "VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -175,7 +175,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "74"
             endingLineNumber = "74"
-            landmarkName = "VDelay::calcOldestSample(float *oldestSampleL, float *oldestSampleR)"
+            landmarkName = "VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -191,7 +191,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "106"
             endingLineNumber = "106"
-            landmarkName = "VDelay::calcOldestSample(float *oldestSampleL, float *oldestSampleR)"
+            landmarkName = "VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -207,7 +207,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "80"
             endingLineNumber = "80"
-            landmarkName = "VDelay::calcOldestSample(float *oldestSampleL, float *oldestSampleR)"
+            landmarkName = "VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -239,7 +239,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "113"
             endingLineNumber = "113"
-            landmarkName = "VDelay::calcOldestSample(float *oldestSampleL, float *oldestSampleR)"
+            landmarkName = "VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -271,7 +271,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "152"
             endingLineNumber = "152"
-            landmarkName = "VDelay::calcOldestSample(float *oldestSampleL, float *oldestSampleR)"
+            landmarkName = "VDelay::processDelayAlt(float** inputs, float** outputs, VstInt32 sampleFrames)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -287,7 +287,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "184"
             endingLineNumber = "184"
-            landmarkName = "VDelay::calcOldestSample(float *oldestSampleL, float *oldestSampleR)"
+            landmarkName = "VDelay::processDelayAlt(float** inputs, float** outputs, VstInt32 sampleFrames)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -303,7 +303,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "166"
             endingLineNumber = "166"
-            landmarkName = "VDelay::calcOldestSample(float *oldestSampleL, float *oldestSampleR)"
+            landmarkName = "VDelay::processDelayAlt(float** inputs, float** outputs, VstInt32 sampleFrames)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -319,7 +319,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "170"
             endingLineNumber = "170"
-            landmarkName = "VDelay::calcOldestSample(float *oldestSampleL, float *oldestSampleR)"
+            landmarkName = "VDelay::processDelayAlt(float** inputs, float** outputs, VstInt32 sampleFrames)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
