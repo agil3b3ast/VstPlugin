@@ -37,7 +37,7 @@ class Oscillator{
 
     float sampleRate;
     
-    const int WAVETABLE_SIZE = 441000;
+    const int WAVETABLE_SIZE = 960000;
     const float NU = 0.5;
     
     double freqTable[128];
