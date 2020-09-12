@@ -22,8 +22,8 @@ class VDelay : public Delay{
     int writeCursor;
     double currentFractDelay;
     
-    //double previousOutL;
-    //double previousOutR;
+    float previousOutL;
+    float previousOutR;
     
     double BL;
     double FF;
@@ -34,6 +34,7 @@ class VDelay : public Delay{
     public:
         explicit VDelay(float sampleRate);
         void processDelay(float** inputs, float** outputs, VstInt32 sampleFrames) override;
+        void processDelayAlt(float** inputs, float** outputs, VstInt32 sampleFrames);
         void realignReadCursor(); //this function is necessary to align read cursor in range 0-maxDelayLine
         void calcOldestSample(float *oldestSampleL, float *oldestSampleR);
         void setFrequencyInHz(double frequencyInHz);

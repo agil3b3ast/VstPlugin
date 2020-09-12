@@ -12,11 +12,11 @@ VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), mod
     modOperator.setMinAmount(currentFractDelay);
     writeCursor = 0; //cannot set writeCursor to max/2 due to precision errors
     readCursor = delayMaxSize-currentFractDelay; //it is necessary to start here to avoid writeCursor precision errors
-    //previousOutL = 0.0;
-    //previousOutR = 0.0;
+    previousOutL = 0.0;
+    previousOutR = 0.0;
     BL = 0.5;
     FF=0.5;
-    FB=0;
+    FB=0.0;
 }
 
 double VDelay::getFrequencyInHz(){
@@ -28,15 +28,16 @@ void VDelay::setFrequencyInHz(double frequencyInHz){
 }
 
 void VDelay::realignReadCursor(){
-    if (readCursor < 0.0){
-        while (readCursor < 0.0){
-            readCursor = readCursor + ((double)delayMaxSize);
-        }
+    double dlength = static_cast<double>(delayMaxSize);
+    if (readCursor <= 0.0){
+        //while (readCursor < 0.0){
+        readCursor = readCursor + dlength;
+        //}
     }
-    else if (readCursor >= ((double)delayMaxSize)){
-        while (readCursor >= ((double)delayMaxSize)){
-            readCursor = readCursor - ((double)delayMaxSize);
-        }
+    else if (readCursor == dlength){
+        //while (readCursor >= delayMaxSize){
+        readCursor = readCursor - dlength;
+        //}
     }
 }
 
@@ -53,12 +54,17 @@ void VDelay::calcOldestSample(float *oldestSampleL, float *oldestSampleR){
     if(next == delayMaxSize){ //realign next
         next = 0;
     }
-    *oldestSampleL = fract_part*bufferDelayL[next] + (1-fract_part)*bufferDelayL[previous];// - (1-fract_part)*previousOutL;
-    *oldestSampleR = fract_part*bufferDelayR[next] + (1-fract_part)*bufferDelayR[previous];// - (1-fract_part)*previousOutR;
+
+    //*oldestSampleL = bufferDelayL[previous] + (fract_part*(bufferDelayL[next]-bufferDelayL[previous]));// - (1-fract_part)*previousOutL;
+    //*oldestSampleR = bufferDelayR[previous] + (fract_part*(bufferDelayR[next]-bufferDelayR[previous]));// - (1-fract_part)*previousOutR;
+
+    *oldestSampleL = bufferDelayL[previous] + (fract_part*(bufferDelayL[next]-previousOutL));// - (1-fract_part)*previousOutL;
+    *oldestSampleR = bufferDelayR[previous] + (fract_part*(bufferDelayR[next]-previousOutR));// - (1-fract_part)*previousOutR;
     
-    //previousOutL = *oldestSampleL; //all-pass interp
-    //previousOutR = *oldestSampleR; //all-pass interp
+    previousOutL = *oldestSampleL; //all-pass interp
+    previousOutR = *oldestSampleR; //all-pass interp
 }
+
 
 void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames){
     float *buffL = inputs[0]; // buffer input left
@@ -87,7 +93,7 @@ void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames
         //<< "\n\t-Actual write cursor: " << std::to_string(writeCursor)
         //<< "\n\t-Actual out delay: " << std::to_string(outCurrDelay);
 
-        readCursor = ((double)writeCursor) - outCurrDelay;
+        readCursor = writeCursor - outCurrDelay;
         
         //fout << ":\n\t-Actual updated read cursor: " << std::to_string(readCursor) << '\n';
         
@@ -108,7 +114,7 @@ void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames
         writeCursor++;
         
         //TODO estendere a delay stereo
-        if (writeCursor >= delayMaxSize){
+        if (writeCursor == delayMaxSize){
             writeCursor = 0;
         }
         
@@ -130,4 +136,70 @@ void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames
     
     //fout.close();
 
+}
+
+void VDelay::processDelayAlt(float** inputs, float** outputs, VstInt32 sampleFrames){
+    float *buffL = inputs[0]; // buffer input left
+    float *buffR = inputs[1]; // buffer input right
+    
+    float *buffOutL = outputs[0]; // buffer output left
+    float *buffOutR = outputs[1]; // buffer output right
+    
+    float wetDryBalance;
+    
+    double outCurrDelay = 0.0;
+    float oldestSampleL = 0.0;
+    float oldestSampleR = 0.0;
+    
+    //std::fstream fout;
+    //fout.open("/Users/alessandro_fazio/Desktop/output.csv", std::ios::out | std::ios::app);
+    
+    for(int i=0; i<sampleFrames;i++){
+        modOperator.updateModOperator();
+        modOperator.processModOperator(&currentFractDelay, &outCurrDelay);
+        
+
+        double dlength = static_cast<double>(delayMaxSize);
+        // read pointer is vlength ~behind~ write pointer
+        double vlength = dlength -  outCurrDelay;
+        // clip vdelayb to max del length
+        vlength = vlength < dlength ? vlength : dlength;
+        
+        double readpos = writeCursor + vlength;
+        unsigned long base_readpos = static_cast<unsigned long>(readpos);
+        if(base_readpos >= delayMaxSize)
+            base_readpos -= delayMaxSize;
+        
+        unsigned long next_index = base_readpos + 1;
+        if(next_index >= delayMaxSize)
+            next_index -= delayMaxSize;
+        // basic interp of variable delay pos
+        double frac = readpos - static_cast<int>(readpos);
+        double outputL = bufferDelayL[base_readpos]+((bufferDelayL[next_index]
+                                             - bufferDelayL[base_readpos]) * frac);
+        double outputR = bufferDelayR[base_readpos]+((bufferDelayR[next_index]
+                                                      - bufferDelayR[base_readpos]) * frac);
+        // add in new sample + fraction of ouput, unscaled,
+        // for minimum decay at max feedback
+        bufferDelayL[writeCursor] = static_cast<float>(buffL[i]
+                                                  + (FB * outputL));
+        bufferDelayR[writeCursor] = static_cast<float>(buffR[i]
+                                                         + (FB * outputR));
+        writeCursor++;
+        if(writeCursor == delayMaxSize)
+            writeCursor = 0;
+        
+        
+        wetDryBalance = BL*buffL[i]+FF*static_cast<float>(outputL);
+        gainStereo.processGainL(&wetDryBalance);
+        buffOutL[i] = wetDryBalance;
+        
+        wetDryBalance = BL*buffR[i]+FF*static_cast<float>(outputR);
+        gainStereo.processGainR(&wetDryBalance);
+        buffOutR[i] = wetDryBalance;
+        
+    }
+    
+    //fout.close();
+    
 }
