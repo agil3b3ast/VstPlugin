@@ -45,6 +45,8 @@ class VDelay : public Delay{
 
     public:
         explicit VDelay(float sampleRate);
+        float getOldestSampleL();
+        float getOldestSampleR();
         void processDelay(float** inputs, float** outputs, VstInt32 sampleFrames) override;
         void processDelayBySample(float *inputL,float *inputR , float *outputL,float *outputR);
         void tick(float *inputL,float *inputR) override;
