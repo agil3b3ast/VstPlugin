@@ -7,10 +7,35 @@
 
 #include "Chorus.hpp"
 
-Chorus::Chorus(float sampleRate, VDelay *vd1, VDelay *vd2): gainStereo(){
+Chorus::Chorus(float sampleRate): gainStereo(){
     wetDry = 0.0;
-    vdelay1 = vd1;
-    vdelay2 = vd2;
+    vdelay1 = new VDelay(sampleRate);
+    vdelay2 = new VDelay(sampleRate);
+    vdelay3 = new VDelay(sampleRate);
+    vdelay4 = new VDelay(sampleRate);
+
+    vdelay3->setFrequencyInHz(0.14);
+    vdelay4->setFrequencyInHz(0.17);
+
+}
+
+Chorus::~Chorus(){
+    if(vdelay1 != nullptr){
+        delete vdelay1;
+        vdelay1 = nullptr;
+    }
+    else if(vdelay2 != nullptr){
+        delete vdelay2;
+        vdelay2 = nullptr;
+    }
+    else if(vdelay3 != nullptr){
+        delete vdelay3;
+        vdelay3 = nullptr;
+    }
+    else if(vdelay4 != nullptr){
+        delete vdelay4;
+        vdelay4 = nullptr;
+    }
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -114,7 +139,7 @@ void Chorus::processChorus(float** inputs, float** outputs, VstInt32 sampleFrame
 
     float wetDryBalance;
 
-    float in1L,in1R,in2L,in2R = 0.0;
+    float in1L,in1R,in2L,in2R,in3L,in3R,in4L,in4R = 0.0;
 
     //std::fstream fout;
     //std::fstream fout2;
@@ -124,16 +149,24 @@ void Chorus::processChorus(float** inputs, float** outputs, VstInt32 sampleFrame
     for(int i=0; i<sampleFrames;i++){
         in1L = buffL[i];
         in2L = in1L;
+        in3L = in1L;
+        in4L = in1L;
         in1R = buffR[i];
         in2R = in1R;
+        in3R = in1R;
+        in4R = in1R;
         vdelay1->tick(&in1L, &in1R);
         vdelay2->tick(&in2L, &in2R);
+        vdelay3->tick(&in3L, &in3R);
+        vdelay4->tick(&in4L, &in4R);
 
-        wetDryBalance = (1.0-wetDry)*(in1L+in2L)+wetDry*(vdelay1->getOldestSampleL()+vdelay2->getOldestSampleL());
+        wetDryBalance = (1.0-wetDry)*in1L + wetDry*(0.25*vdelay1->getOldestSampleL()+0.25*vdelay2->getOldestSampleL()\
+                                                    +0.25*vdelay3->getOldestSampleL()+0.25*vdelay4->getOldestSampleL());
         gainStereo.processGainL(&wetDryBalance);
         buffOutL[i] = wetDryBalance;
 
-        wetDryBalance = (1.0-wetDry)*(in1R+in2R)+wetDry*(vdelay1->getOldestSampleR()+vdelay2->getOldestSampleR());
+        wetDryBalance = (1.0-wetDry)*in1R + wetDry*(0.25*vdelay1->getOldestSampleR()+0.25*vdelay2->getOldestSampleR()\
+                                                    +0.25*vdelay3->getOldestSampleR()+0.25*vdelay4->getOldestSampleR());
         gainStereo.processGainR(&wetDryBalance);
         buffOutR[i] = wetDryBalance;
 

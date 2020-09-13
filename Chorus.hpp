@@ -16,12 +16,16 @@
 class Chorus{
     VDelay *vdelay1;
     VDelay *vdelay2;
+    VDelay *vdelay3;
+    VDelay *vdelay4;
     GainStereo gainStereo;
 
     float wetDry;
 
 public:
-    explicit Chorus(float sampleRate, VDelay *vd1, VDelay *vd2);
+    explicit Chorus(float sampleRate);
+    ~Chorus();
+    
     void processChorus(float** inputs, float** outputs, VstInt32 sampleFrames);
 
     //getters
