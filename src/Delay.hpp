@@ -45,6 +45,7 @@ public:
     explicit Delay(float sampleRate);
     ~Delay();
     virtual void processDelay(float** inputs, float** outputs, VstInt32 sampleFrames);
+    virtual void tick(float *inputL, float *inputR);
     
     //delay
     void deleteDelayLines();

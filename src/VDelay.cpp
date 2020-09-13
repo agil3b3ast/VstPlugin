@@ -14,6 +14,10 @@ VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), mod
     readCursor = delayMaxSize-currentFractDelay; //it is necessary to start here to avoid writeCursor precision errors
     previousOutL = 0.0;
     previousOutR = 0.0;
+    
+    outCurrDelay = 0.0;
+    oldestSampleL = 0.0;
+    oldestSampleR = 0.0;
     //BL = 0.7;
     //FF = 0.7;
     //FB = 0.7;
@@ -88,52 +92,13 @@ void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames
     
     float wetDryBalance;
     
-    double outCurrDelay = 0.0;
-    float oldestSampleL = 0.0;
-    float oldestSampleR = 0.0;
-    
     //std::fstream fout;
     //std::fstream fout2;
     //fout.open("/Users/alessandro_fazio/Desktop/output_in.csv", std::ios::out | std::ios::app);
     //fout2.open("/Users/alessandro_fazio/Desktop/output_out.csv", std::ios::out | std::ios::app);
     
     for(int i=0; i<sampleFrames;i++){
-        modOperator.updateModOperator();
-        modOperator.processModOperator(&currentFractDelay, &outCurrDelay);
-        //outCurrDelay = currentFractDelay + currentFractDelay*sin(2*pi*getFrequencyInHz());
-        
-        //oscillator.processOscillatorSingle(&buffOutL[i]);
-        //oscillator.processOscillatorSingle(&buffOutR[i]);
-        //modOperator.processModOperator(&delayCurrentSizeR, &outCurrDelay); TODO estendere a delay stereo
-        
-        //fout << "Iteration " << i << ":\n\t-Actual read cursor: " << std::to_string(readCursor)
-        //<< "\n\t-Actual write cursor: " << std::to_string(writeCursor)
-        //<< "\n\t-Actual out delay: " << std::to_string(outCurrDelay);
-        
-        readCursor = writeCursor - outCurrDelay;
-        
-        //fout << ":\n\t-Actual updated read cursor: " << std::to_string(readCursor) << '\n';
-        
-        
-        realignReadCursor();
-        
-        nu = (1.0-outCurrDelay)/(1.0+outCurrDelay);
-        
-        calcOldestSample(&oldestSampleL, &oldestSampleR);
-        
-        //float oldestSampleL = bufferDelayL[delayCurrentSizeL];
-        //float oldestSampleR = bufferDelayR[delayCurrentSizeR];
-        
-        
-        bufferDelayL[writeCursor] = buffL[i]+oldestSampleL*delFeedbackL;
-        bufferDelayR[writeCursor] = buffR[i]+oldestSampleR*delFeedbackR;
-
-        writeCursor++;
-        
-        //TODO estendere a delay stereo
-        if (writeCursor == delayMaxSize){
-            writeCursor = 0;
-        }
+        tick(&buffL[i], &buffR[i]);
         
         /*
         if (delayCursorR >= outCurrDelay){
@@ -161,6 +126,36 @@ void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames
 
 }
 
+void VDelay::tick(float *inputL,float *inputR){
+    modOperator.updateModOperator();
+    modOperator.processModOperator(&currentFractDelay, &outCurrDelay);
+    
+    
+    readCursor = writeCursor - outCurrDelay;
+    
+    
+    
+    realignReadCursor();
+    
+    nu = (1.0-outCurrDelay)/(1.0+outCurrDelay);
+    
+    calcOldestSample(&oldestSampleL, &oldestSampleR);
+    
+    
+    bufferDelayL[writeCursor] = *inputL+oldestSampleL*delFeedbackL;
+    bufferDelayR[writeCursor] = *inputR+oldestSampleR*delFeedbackR;
+    
+    writeCursor++;
+    
+    //TODO estendere a delay stereo
+    if (writeCursor == delayMaxSize){
+        writeCursor = 0;
+    }
+    
+}
+
+
+/*
 void VDelay::processDelayAlt(float** inputs, float** outputs, VstInt32 sampleFrames){
     float *buffL = inputs[0]; // buffer input left
     float *buffR = inputs[1]; // buffer input right
@@ -206,8 +201,7 @@ void VDelay::processDelayAlt(float** inputs, float** outputs, VstInt32 sampleFra
         
         
         
-        //to add if want to debug
-        /*bufferDelayL[writeCursor] = static_cast<float>(buffL[i]
+        bufferDelayL[writeCursor] = static_cast<float>(buffL[i]
                                                   + (FB * outputL));
         bufferDelayR[writeCursor] = static_cast<float>(buffR[i]
                                                          + (FB * outputR));
@@ -224,10 +218,11 @@ void VDelay::processDelayAlt(float** inputs, float** outputs, VstInt32 sampleFra
         wetDryBalance = BL*buffR[i]+FF*static_cast<float>(outputR);
         wetDryBalance=wetDryBalance*c;
         gainStereo.processGainR(&wetDryBalance);
-        buffOutR[i] = wetDryBalance;*/
+        buffOutR[i] = wetDryBalance;
         
     }
     
     //fout.close();
     
 }
+*/

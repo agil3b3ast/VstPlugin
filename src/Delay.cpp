@@ -137,6 +137,10 @@ void Delay::deleteDelayLines(){
     BufferFactory::deleteBuffer(bufferDelayR);
 }
 
+//-------------------------------------------------------------------------------------------------------
+void Delay::tick(float *inputL,float *inputR){}
+
+
 //-----------------------------------------------------------------------------------------
 void Delay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames)
 {
