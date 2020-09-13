@@ -83,9 +83,13 @@ class VstPlugin : public AudioEffectX
 
     //chorus
     Chorus chorus;
+<<<<<<< HEAD
     VDelay vd1;
     VDelay vd2;
 
+=======
+    
+>>>>>>> 40e8ab4... Added 4 voices chorus
     //presets
     void initPresets();
     void initSmoothParams();

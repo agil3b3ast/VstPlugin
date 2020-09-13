@@ -9,7 +9,7 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster)
 
 //-------------------------------------------------------------------------------------------------------
 VstPlugin::VstPlugin(audioMasterCallback audioMaster)
-: AudioEffectX(audioMaster, PROGS_COUNT, ParamCOUNT), vd1(sampleRate), vd2(sampleRate), chorus(getSampleRate(),&vd1,&vd2) 	// n program, n parameters
+: AudioEffectX(audioMaster, PROGS_COUNT, ParamCOUNT), chorus(getSampleRate()) 	// n program, n parameters
 {
     setNumInputs(2);		// stereo in
     setNumOutputs(2);		// stereo out
