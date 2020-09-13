@@ -5,6 +5,7 @@
 #include "BufferFactory.hpp"
 #include "Oscillator.hpp"
 #include "VDelay.hpp"
+#include "Smooth.h"
 
 
 
@@ -58,6 +59,9 @@ class VstPlugin : public AudioEffectX
     //delay
     VDelay delay;
     
+    //smooth
+    Smooth *smooths[ParamCOUNT];
+    
     //presets
     void initPresets();
 
@@ -70,6 +74,8 @@ public:
 	void processReplacing(float** inputs, float** outputs, VstInt32 sampleFrames) override;
     void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames) override;
     void setParameter (VstInt32 index, float value) override;
+    void setSmoothParameter(VstInt32 index, float value);
+
     float getParameter (VstInt32 index) override;
 
     bool getEffectName (char* name) override;
