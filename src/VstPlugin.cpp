@@ -50,7 +50,7 @@ void VstPlugin::initPresets(){
     programs[1].feedbackL = 0.5;
     programs[1].feedbackR = 0.5;
     programs[1].wetDry = 0.5;
-    programs[0].frequencyInHz = 0.1;
+    programs[1].frequencyInHz = 0.1;
     strcpy(programs[1].name, "Half Delay");
 
     programs[2].delayTimeL = 0.1;
@@ -58,7 +58,7 @@ void VstPlugin::initPresets(){
     programs[2].feedbackL = 0.1;
     programs[2].feedbackR = 0.1;
     programs[2].wetDry = 0.5;
-    programs[0].frequencyInHz = 0.1;
+    programs[2].frequencyInHz = 0.1;
     strcpy(programs[2].name, "Short Delay");
 
     programs[3].delayTimeL = 0.8;
@@ -66,7 +66,7 @@ void VstPlugin::initPresets(){
     programs[3].feedbackL = 0.8;
     programs[3].feedbackR = 0.8;
     programs[3].wetDry = 0.4;
-    programs[0].frequencyInHz = 0.1;
+    programs[3].frequencyInHz = 0.1;
     strcpy(programs[3].name, "Long Delay");
 
     programs[4].delayTimeL = 0.8;
@@ -74,7 +74,7 @@ void VstPlugin::initPresets(){
     programs[4].feedbackL = 0.8;
     programs[4].feedbackR = 0;
     programs[4].wetDry = 0.5;
-    programs[0].frequencyInHz = 0.1;
+    programs[4].frequencyInHz = 0.1;
     strcpy(programs[4].name, "Full Left Delay");
 }
 
