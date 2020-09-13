@@ -32,6 +32,10 @@ class VDelay : public Delay{
     float oldestSampleR;
     float minV;
     
+    double outCurrDelay;
+    float oldestSampleL;
+    float oldestSampleR;
+    
     //double BL;
     //double FF;
     //double FB;
@@ -46,6 +50,7 @@ class VDelay : public Delay{
     public:
         explicit VDelay(float sampleRate);
         void processDelay(float** inputs, float** outputs, VstInt32 sampleFrames) override;
+        void processDelayBySample(float *inputL,float *inputR , float *outputL,float *outputR);
         void tick(float *inputL,float *inputR) override;
         void processDelayAlt(float** inputs, float** outputs, VstInt32 sampleFrames);
         void realignReadCursor(); //this function is necessary to align read cursor in range 0-maxDelayLine

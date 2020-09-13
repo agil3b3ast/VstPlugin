@@ -30,9 +30,14 @@ void VstPlugin::initPlugin()
 
     // INIT DELAY
 
-    
+
     initPresets();
-    setProgram(0);
+    //setProgram(0);
+
+    for (int i=0;i<ParamCOUNT;i++){
+        smooths[i] = new Smooth(10.0/getSampleRate());
+    }
+
 }
 
 //Preset
@@ -91,19 +96,35 @@ void VstPlugin::processReplacing(float** inputs, float** outputs, VstInt32 sampl
 {
     // PROCESS SINGLE PRECISION - processa audio
 
-    //float *inL = inputs[0]; // buffer input left
-    //float *inR = inputs[1]; // buffer input right
+    float *inL = inputs[0]; // buffer input left
+    float *inR = inputs[1]; // buffer input right
 
-    //float *outL = outputs[0]; // buffer output left
-    //float *outR = outputs[1]; // buffer output right
+    float *outL = outputs[0]; // buffer output left
+    float *outR = outputs[1]; // buffer output right
+
+    //update params
+
 
     //PROCESS EFX
-    delay.processDelay(inputs, outputs, sampleFrames);
-    /*for (int i=0; i< sampleFrames;i++){
-        outL[i] = inL[i];
-        outR[i] = inR[i];
-    }*/
-    
+
+    std::fstream fout;
+    fout.open("/Users/alessandro_fazio/Desktop/output_in.csv", std::ios::out | std::ios::app);
+
+
+    for(int i=0; i<sampleFrames;i++){
+        for (int j=0;j<ParamCOUNT;j++){
+            float toSmooth = 0.0;
+            if (smooths[j]->process(&toSmooth)){
+
+                fout << std::to_string(toSmooth) << '\n';
+                setSmoothParameter(j, toSmooth);
+            }
+        }
+
+        delay.processDelayBySample(&inL[i], &inR[i], &outL[i], &outR[i]);
+    }
+
+    fout.close();
 
 }
 
@@ -145,9 +166,8 @@ void VstPlugin::setSampleRate (float sampleRate)
      */
 }
 
-
 //-----------------------------------------------------------------------------------------
-void VstPlugin::setParameter (VstInt32 index, float value){
+void VstPlugin::setSmoothParameter(VstInt32 index, float value){
     switch (index) {
         case GainLeft:
             delay.setDelayGain(value,delay.getDelayGain().getGainR());
@@ -182,29 +202,85 @@ void VstPlugin::setParameter (VstInt32 index, float value){
 };
 
 //-----------------------------------------------------------------------------------------
+void VstPlugin::setParameter (VstInt32 index, float value){
+    //float paramToChange = 0.0;
+    switch (index) {
+        case GainLeft:
+            smooths[GainLeft]->setEnd(value);
+            //paramToChange = smooths[GainLeft]->process(value);
+            //delay.setDelayGain(paramToChange,delay.getDelayGain().getGainR());
+            break;
+        case GainRight:
+            smooths[GainRight]->setEnd(value);
+            //paramToChange = smooths[GainRight]->process(value);
+            //delay.setDelayGain(delay.getDelayGain().getGainL(),paramToChange);
+            break;
+        case DelaySizeL:
+            smooths[DelaySizeL]->setEnd(value);
+            //paramToChange = smooths[DelaySizeL]->process(value);
+            //delay.setDelayCurrentSizeL(paramToChange*delay.getDelayMaxSize());
+            break;
+        case DelaySizeR:
+            smooths[DelaySizeR]->setEnd(value);
+            //paramToChange = smooths[DelaySizeR]->process(value);
+            //delay.setDelayCurrentSizeR(paramToChange*delay.getDelayMaxSize());
+            break;
+        case DelayFeedbackL:
+            smooths[DelayFeedbackL]->setEnd(value);
+            //paramToChange = smooths[DelayFeedbackL]->process(value);
+            //delay.setDelFeedbackL(paramToChange*delay.getMaxFeedback());
+            break;
+        case DelayFeedbackR:
+            smooths[DelayFeedbackR]->setEnd(value);
+            //paramToChange = smooths[DelayFeedbackR]->process(value);
+            //delay.setDelFeedbackR(paramToChange*delay.getMaxFeedback());
+            break;
+        case WetDry:
+            smooths[WetDry]->setEnd(value);
+            //paramToChange = smooths[WetDry]->process(value);
+            //delay.setWetDry(paramToChange);
+            break;
+        case FrequencyInHz:
+            smooths[FrequencyInHz]->setEnd(value);
+            //paramToChange = smooths[FrequencyInHz]->process(value);
+            //delay.setFrequencyInHz(paramToChange);
+            break;
+        default:
+            break;
+    }
+};
+
+//-----------------------------------------------------------------------------------------
 float VstPlugin::getParameter (VstInt32 index){
     float valueToReturn = 0.0;
     switch (index) {
         case GainLeft:
-            valueToReturn = delay.getDelayGain().getGainL();
+            valueToReturn = smooths[GainLeft]->getEnd();
+            //valueToReturn = delay.getDelayGain().getGainL();
             break;
         case GainRight:
-            valueToReturn = delay.getDelayGain().getGainR();
+            valueToReturn = smooths[GainLeft]->getEnd();
+            //valueToReturn = delay.getDelayGain().getGainR();
             break;
         case DelaySizeL:
-            valueToReturn = (float) delay.getDelayCurrentSizeL()/ (float) delay.getDelayMaxSize();
+            valueToReturn = smooths[DelaySizeL]->getEnd()/ (float) delay.getDelayMaxSize();
+            //valueToReturn = (float) delay.getDelayCurrentSizeL()/ (float) delay.getDelayMaxSize();
             break;
         case DelaySizeR:
-            valueToReturn = (float) delay.getDelayCurrentSizeR()/ (float) delay.getDelayMaxSize();
+            valueToReturn = smooths[DelaySizeR]->getEnd()/ (float) delay.getDelayMaxSize();
+            //valueToReturn = (float) delay.getDelayCurrentSizeR()/ (float) delay.getDelayMaxSize();
             break;
         case DelayFeedbackL:
-            valueToReturn = delay.getDelFeedbackL()/delay.getMaxFeedback();
+            valueToReturn = smooths[DelayFeedbackL]->getEnd()/delay.getMaxFeedback();
+            //valueToReturn = delay.getDelFeedbackL()/delay.getMaxFeedback();
             break;
         case DelayFeedbackR:
-            valueToReturn = delay.getDelFeedbackR()/delay.getMaxFeedback();
+            valueToReturn = smooths[DelayFeedbackR]->getEnd()/delay.getMaxFeedback();
+            //valueToReturn = delay.getDelFeedbackR()/delay.getMaxFeedback();
             break;
         case WetDry:
-            valueToReturn = delay.getWetDry();
+            valueToReturn = smooths[WetDry]->getEnd();
+            //valueToReturn = delay.getWetDry();
             break;
         case Amount:
             valueToReturn = delay.getAmount();
@@ -281,25 +357,25 @@ void VstPlugin::getParameterDisplay (VstInt32 index, char* text) {
 
     switch (index) {
         case GainLeft:
-            dB2string(delay.getDelayGain().getGainL(), text, kVstMaxParamStrLen);
+            dB2string(smooths[GainLeft]->getEnd(), text, kVstMaxParamStrLen);
             break;
         case GainRight:
-            dB2string(delay.getDelayGain().getGainR(), text, kVstMaxParamStrLen);
+            dB2string(smooths[GainRight]->getEnd(), text, kVstMaxParamStrLen);
             break;
         case DelaySizeL:
-            float2string(delay.getDelayCurrentSizeL()/getSampleRate(), text, kVstMaxParamStrLen);
+            float2string(smooths[DelaySizeL]->getEnd()/getSampleRate(), text, kVstMaxParamStrLen);
             break;
         case DelaySizeR:
-            float2string(delay.getDelayCurrentSizeR()/getSampleRate(), text, kVstMaxParamStrLen);
+            float2string(smooths[DelaySizeR]->getEnd()/getSampleRate(), text, kVstMaxParamStrLen);
             break;
         case DelayFeedbackL:
-            float2string(delay.getDelFeedbackL(), text, kVstMaxParamStrLen);
+            float2string(smooths[DelayFeedbackL]->getEnd(), text, kVstMaxParamStrLen);
             break;
         case DelayFeedbackR:
-            float2string(delay.getDelFeedbackR(), text, kVstMaxParamStrLen);
+            float2string(smooths[DelayFeedbackR]->getEnd(), text, kVstMaxParamStrLen);
             break;
         case WetDry:
-            float2string(delay.getWetDry(), text, kVstMaxParamStrLen);
+            float2string(smooths[WetDry]->getEnd(), text, kVstMaxParamStrLen);
             break;
         case Amount:
             //int2string((int) 1000 * delay.getAmount()*delay.getDelayMaxSize()/(2.0*getSampleRate()), text, kVstMaxParamStrLen);
@@ -362,9 +438,9 @@ void VstPlugin::setProgram (VstInt32 program){
     setParameter(DelayFeedbackR, programs[curProgram].feedbackR);
 
     setParameter(WetDry, programs[curProgram].wetDry);
-    
+
     setParameter(FrequencyInHz, programs[curProgram].frequencyInHz);
-    
+
     setParameter(Amount, programs[curProgram].amount);
 
 }
