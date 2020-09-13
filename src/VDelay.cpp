@@ -43,6 +43,14 @@ void VDelay::setAmount(double amount){
     modOperator.setAmount(amount);
 }
 
+float VDelay::getOldestSampleL(){
+    return oldestSampleL;
+}
+
+float VDelay::getOldestSampleR(){
+    return oldestSampleR;
+}
+
 double VDelay::getFrequencyInHz(){
     return modOperator.getOscillator()->getFrequencyInHz();
 }

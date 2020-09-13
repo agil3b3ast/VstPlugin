@@ -4,6 +4,7 @@
 #include "../vstsdk2.4/public.sdk/source/vst2.x/audioeffectx.h"
 #include "BufferFactory.hpp"
 #include "Oscillator.hpp"
+#include "Chorus.hpp"
 #include "VDelay.hpp"
 #include "Smooth.hpp"
 
@@ -14,6 +15,19 @@
 #define PROGS_COUNT 5
 
 const unsigned char numCharDisplay = 4;
+struct Preset{
+    char name[24];
+    float feedbackL;
+    float feedbackR;
+    float delayTimeL;
+    float delayTimeR;
+    float wetDry;
+    float minAmount;
+    float maxAmount;
+    float frequencyInHz1;
+    float frequencyInHz2;
+};
+
 
 //-------------------------------------------------------------------------------------------------------
 
@@ -24,7 +38,10 @@ enum EfxParameter {
     DelayFeedbackR,
     WetDry,
     Amount,
-    FrequencyInHz,
+    MinAmount,
+    MaxAmount,
+    FrequencyInHz1,
+    FrequencyInHz2,
     ParamCOUNT
 };
 //-------------------------------------------------------------------------------------------------------
@@ -47,7 +64,7 @@ struct SmoothParams{
 class VstPlugin : public AudioEffectX
 {
 
-    //gain is inside delay
+    //gain is inside chorus
 
 
     //Presets
@@ -58,14 +75,17 @@ class VstPlugin : public AudioEffectX
 
     //oscillators
     Oscillator oscillator;
-    
-    //delay
-    VDelay delay;
-    
+
     //smooth
     Smooth *smooths[ParamCOUNT];
     SmoothParams smoothParams;
     
+
+    //chorus
+    Chorus chorus;
+    VDelay vd1;
+    VDelay vd2;
+
     //presets
     void initPresets();
     void initSmoothParams();
@@ -92,10 +112,10 @@ public:
 
 
     void getParameterLabel (VstInt32 index, char* label) override;
-    
+
     void getParameterDisplay (VstInt32 index, char* text) override;
     void getSmoothParameterDisplay (VstInt32 index, char* text);
-    
+
     void getParameterName (VstInt32 index, char* text) override;
 
     void setSampleRate (float sampleRate) override;
