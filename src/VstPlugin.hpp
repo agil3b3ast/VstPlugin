@@ -10,7 +10,7 @@
 
 #include <memory>
 
-#define PROGS_COUNT 6
+#define PROGS_COUNT 5
 
 struct Preset{
     char name[24];

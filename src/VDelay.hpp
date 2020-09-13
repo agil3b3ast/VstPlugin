@@ -25,11 +25,16 @@ class VDelay : public Delay{
     float previousOutL;
     float previousOutR;
     
-    double BL;
-    double FF;
-    double FB;
+    //double BL;
+    //double FF;
+    //double FB;
     
-    const float NU = 0.5;
+    //double L;
+    //double c;
+    
+    double nu;
+    
+    //const float NU = 0.5;
     
     public:
         explicit VDelay(float sampleRate);
