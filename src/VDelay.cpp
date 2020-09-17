@@ -30,8 +30,14 @@ VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), mod
     //L=1.0/(1.0-abs(FF)); //L_inf
     //c = 1/L;
     nu=0.0;
+    
+    minV = 0.1;
 
     interp.setMax(delayMaxSize);
+}
+
+float VDelay::getMinV(){
+    return minV;
 }
 
 double VDelay::getMinAmount(){
