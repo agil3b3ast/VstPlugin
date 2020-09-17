@@ -19,6 +19,7 @@ struct Preset{
     float delayTimeL;
     float delayTimeR;
     float wetDry;
+    float amount;
     float frequencyInHz;
 };
 
@@ -33,6 +34,7 @@ enum EfxParameter {
     DelayFeedbackL,
     DelayFeedbackR,
     WetDry,
+    Amount,
     FrequencyInHz,
     ParamCOUNT
 };

@@ -28,10 +28,12 @@ public:
     
     //getters
     Oscillator *getOscillator();
+    double getAmount();
     //setters
     void setOscillator(Oscillator *oscillator);
     void setMaxAmount(int maxAmount);
     void setMinAmount(double minAmount);
+    void setAmount(double amount);
     
     //templates
     template <typename inputToMod, typename outputToMod> void processModOperator(inputToMod input, outputToMod *output){
