@@ -1,63 +1,98 @@
 //
 //  Smooth.h
-//  VstPlugin
+//  VstPlugin-test
 //
-//  Created by Alessandro Fazio on 14/09/2020.
+//  Created by Alessandro Fazio on 16/09/2020.
+//  Copyright © 2020 Alessandro Fazio. All rights reserved.
 //
 
 #ifndef Smooth_h
 #define Smooth_h
 
-class Smooth { //one-pole lp
+class Smooth { //ramp from start to end in delaytime
     float start;
     float end;
+    float delaytime;
+    float sampleRate;
     bool isSmooth;
-    float delay;
+    int samples;
+    int currentIndex;
+    float currentSampleInPath;
+    float delta;
     
 public:
-    Smooth() {a0 = 1.0; b1 = 0.0; z1 = 0.0; start=0.0; end=0.0;isSmooth=false;};
-    Smooth(double cutoff) {z1 = 0.0; setCutoff(cutoff);};
+    Smooth(float delaytime, float sampleRate) {
+        this->delaytime = delaytime;
+        start=0.0;
+        end=0.0;
+        isSmooth=false;
+        this->sampleRate=sampleRate;
+        samples=delaytime*sampleRate;
+        currentIndex=1;
+        currentSampleInPath = 0.0;
+        delta = 0.0;
+    };
     ~Smooth();
     float smooth(float input);
-    void setCutoff(double cutoff);
     bool process(float *input);
     void setStart(float input);
     void setEnd(float input);
+    void startSmoothPath(float start, float end);
+    void setOtherSmoothPath(float input);
+    bool getIsSmooth();
+    void setIsSmooth(bool isSmooth);
     float getStart();
     float getEnd();
     
-    
-protected:
-    double a0, b1, z1;
 };
 
-inline void Smooth::setCutoff(double cutoff) {
-    //b1 = exp(-2.0 * M_PI * cutoff);
-    //a0 = 1.0 - b1;
-    delay = (float)cutoff;
+inline void Smooth::startSmoothPath(float start, float end){
+    setStart(start);
+    setEnd(end);
+}
+
+inline void Smooth::setOtherSmoothPath(float input){ //continue smoooth path with other end
+    setStart(currentSampleInPath);
+    setEnd(input);
 }
 
 inline float Smooth::smooth(float input) {
-    //z1 = input * a0 + z1 * b1;
-    //return z1;
+    float currentStep = currentIndex/(float)samples;
     
+    currentIndex++;
+    
+    currentSampleInPath = end < start ? start - currentStep*(delta) : start + currentStep*(delta);
+    return currentSampleInPath;
 }
 
 inline void Smooth::setStart(float input){
     start = input;
+    currentSampleInPath = start;
 }
 
 inline void Smooth::setEnd(float input){
     end = input;
+    currentIndex = 1;
     isSmooth = true;
+    delta = abs(end - start); //this is the absolute distance between start and end
+}
+
+inline void Smooth::setIsSmooth(bool isSmooth){
+    this->isSmooth = isSmooth;
 }
 
 inline bool Smooth::process(float *input) {
+    bool processed = isSmooth;
     if(isSmooth){
-        start = smooth(end);
-        *input=start;
-        if (abs(start) >= abs(end)){start = end;isSmooth=false;}
+        *input = smooth(end);
+        if (currentIndex == samples+1){
+            isSmooth=false;
+        }
     }
+    return processed;
+}
+
+inline bool Smooth::getIsSmooth(){
     return isSmooth;
 }
 

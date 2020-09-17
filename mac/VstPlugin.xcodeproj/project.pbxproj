@@ -22,6 +22,7 @@
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		6C052B1B2515F7C10090BC09 /* Interp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Interp.hpp; path = ../src/Interp.hpp; sourceTree = "<group>"; };
+		6C2CF2192511FC1E0004E947 /* Smooth.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Smooth.h; path = ../src/Smooth.h; sourceTree = "<group>"; };
 		6C6B61C32507E40800FFC50D /* Delay.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Delay.cpp; path = ../src/Delay.cpp; sourceTree = "<group>"; };
 		6C6B61C42507E40800FFC50D /* Delay.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Delay.hpp; path = ../src/Delay.hpp; sourceTree = "<group>"; };
 		6C77E662250927FD0053BDEE /* VDelay.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = VDelay.cpp; path = ../src/VDelay.cpp; sourceTree = "<group>"; };
@@ -30,7 +31,7 @@
 		6C829A812508093200458BDB /* GainStereo.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GainStereo.hpp; path = ../src/GainStereo.hpp; sourceTree = "<group>"; };
 		6C8DDCEA2506365A0034F113 /* BufferFactory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BufferFactory.cpp; path = ../src/BufferFactory.cpp; sourceTree = "<group>"; };
 		6C8DDCEB2506365A0034F113 /* BufferFactory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = BufferFactory.hpp; path = ../src/BufferFactory.hpp; sourceTree = "<group>"; };
-		6CA865F8250F3A490092FD33 /* Smooth.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Smooth.h; path = ../src/Smooth.h; sourceTree = "<group>"; };
+		6CA865F8250F3A490092FD33 /* SmoothV22.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SmoothV22.h; path = ../src/SmoothV22.h; sourceTree = "<group>"; };
 		6CDBCF812508E9A400F197FC /* ModOperator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ModOperator.cpp; path = ../src/ModOperator.cpp; sourceTree = "<group>"; };
 		6CDBCF822508E9A400F197FC /* ModOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ModOperator.hpp; path = ../src/ModOperator.hpp; sourceTree = "<group>"; };
 		6CFC71412507F1FA004B7BF6 /* Oscillator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Oscillator.cpp; path = ../src/Oscillator.cpp; sourceTree = "<group>"; };
@@ -125,7 +126,8 @@
 				DC029D6C2486DA3D001964D9 /* VstPlugin.hpp */,
 				6C8DDCEA2506365A0034F113 /* BufferFactory.cpp */,
 				6C8DDCEB2506365A0034F113 /* BufferFactory.hpp */,
-				6CA865F8250F3A490092FD33 /* Smooth.h */,
+				6CA865F8250F3A490092FD33 /* SmoothV22.h */,
+				6C2CF2192511FC1E0004E947 /* Smooth.h */,
 			);
 			name = src;
 			sourceTree = "<group>";
