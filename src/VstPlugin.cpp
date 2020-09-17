@@ -18,7 +18,6 @@ VstPlugin::VstPlugin(audioMasterCallback audioMaster)
     isSynth(false);
 
     initPlugin();
-
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -30,11 +29,10 @@ void VstPlugin::initPlugin()
 
     // INIT DELAY
 
-
     initPresets();
     setProgram(0);
 
-    float smoothDelayTime = 0.01; //suppose 10ms delay
+    float smoothDelayTime = 0.01; //suppose 1ms delay
 
     for (int i=0;i<ParamCOUNT;i++){
         smooths[i] = new Smooth(smoothDelayTime,getSampleRate());
@@ -70,7 +68,10 @@ void VstPlugin::initPlugin()
 
     smooths[WetDry]->setStart(delay.getWetDry());
 
-    smooths[FrequencyInHz]->setStart(delay.getFrequencyInHz());;
+    smooths[Amount]->setStart(delay.getAmount());
+
+    smooths[FrequencyInHz]->setStart(delay.getFrequencyInHz() - \
+    delay.getMinFreq())/(delay.getMaxFreq()-delay.getMinFreq());
 
     for (int i=0;i<ParamCOUNT;i++){
         smooths[i]->setEnd(smooths[i]->getStart());
@@ -278,10 +279,13 @@ void VstPlugin::setParameter (VstInt32 index, float value){
             //paramToChange = smooths[WetDry]->process(value);
             //delay.setWetDry(paramToChange);
             break;
+        case Amount:
+            smooths[Amount]->setOtherSmoothPath(value);
+            break;
         case FrequencyInHz:
-            smooths[FrequencyInHz]->setOtherSmoothPath(value);
+            //smooths[FrequencyInHz]->setOtherSmoothPath(value);
             //paramToChange = smooths[FrequencyInHz]->process(value);
-            //delay.setFrequencyInHz(value);
+            delay.setFrequencyInHz(value);
             break;
         default:
             break;
@@ -321,7 +325,7 @@ float VstPlugin::getParameter (VstInt32 index){
             //valueToReturn = delay.getWetDry();
             break;
         case Amount:
-            valueToReturn = delay.getAmount();
+            valueToReturn = smooths[Amount]->getEnd();
             break;
         case FrequencyInHz:
             valueToReturn = (delay.getFrequencyInHz() - delay.getMinFreq())/(delay.getMaxFreq()-delay.getMinFreq());
@@ -417,7 +421,7 @@ void VstPlugin::getParameterDisplay (VstInt32 index, char* text) {
             break;
         case Amount:
             //int2string((int) 1000 * delay.getAmount()*delay.getDelayMaxSize()/(2.0*getSampleRate()), text, kVstMaxParamStrLen);
-            float2string(delay.getAmount(), text, kVstMaxParamStrLen);
+            float2string(smooths[Amount]->getEnd(), text, kVstMaxParamStrLen);
             break;
         case FrequencyInHz:
             float2string(delay.getFrequencyInHz(), text, kVstMaxParamStrLen);
@@ -475,9 +479,9 @@ void VstPlugin::setProgram (VstInt32 program){
     setSmoothParameter(DelayFeedbackL, programs[curProgram].feedbackL);
     setSmoothParameter(DelayFeedbackR, programs[curProgram].feedbackR);
 
-    setParameter(WetDry, programs[curProgram].wetDry);
+    setSmoothParameter(WetDry, programs[curProgram].wetDry);
 
-    setParameter(FrequencyInHz, programs[curProgram].frequencyInHz);
+    //setParameter(FrequencyInHz, programs[curProgram].frequencyInHz);
 
     setParameter(Amount, programs[curProgram].amount);
 

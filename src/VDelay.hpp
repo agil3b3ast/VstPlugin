@@ -19,34 +19,31 @@ class VDelay : public Delay{
     Oscillator oscillator;
     ModOperator modOperator;
     Interp interp;
-    
+
     double readCursor;
     int writeCursor;
     //double currentFractDelay;
-    
+
     //float previousOutL;
     //float previousOutR;
-    
+
     double outCurrDelay;
     float oldestSampleL;
     float oldestSampleR;
     float minV;
-    
-    double outCurrDelay;
-    float oldestSampleL;
-    float oldestSampleR;
-    
+
+    float minV;
     //double BL;
     //double FF;
     //double FB;
-    
+
     //double L;
     //double c;
-    
+
     double nu;
-    
+
     //const float NU = 0.5;
-    
+
     public:
         explicit VDelay(float sampleRate);
         void processDelay(float** inputs, float** outputs, VstInt32 sampleFrames) override;
