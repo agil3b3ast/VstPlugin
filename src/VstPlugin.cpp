@@ -32,10 +32,49 @@ void VstPlugin::initPlugin()
 
 
     initPresets();
-    //setProgram(0);
+    setProgram(0);
+
+    float smoothDelayTime = 0.01; //suppose 10ms delay
 
     for (int i=0;i<ParamCOUNT;i++){
-        smooths[i] = new Smooth(10.0/getSampleRate());
+        smooths[i] = new Smooth(smoothDelayTime,getSampleRate());
+    }
+
+    /*smooths[GainLeft] = new Smooth(smoothDelayTime,getSampleRate());
+
+    smooths[GainRight] = new Smooth(smoothDelayTime,getSampleRate());
+
+    smooths[DelaySizeL] = new Smooth(smoothDelayTime,getSampleRate());
+
+    smooths[DelaySizeR] = new Smooth(smoothDelayTime,getSampleRate());
+
+    smooths[DelayFeedbackL] = new Smooth(smoothDelayTime,getSampleRate());
+
+    smooths[DelayFeedbackR] = new Smooth(smoothDelayTime,getSampleRate());
+
+    smooths[WetDry] = new Smooth(smoothDelayTime,getSampleRate());
+
+    smooths[FrequencyInHz] = new Smooth(smoothDelayTime,getSampleRate());*/
+
+    smooths[GainLeft]->setStart(delay.getDelayGain().getGainL());
+
+    smooths[GainRight]->setStart(delay.getDelayGain().getGainR());
+
+    smooths[DelaySizeL]->setStart(delay.getDelayCurrentSizeL());
+
+    smooths[DelaySizeR]->setStart(delay.getDelayCurrentSizeR());
+
+    smooths[DelayFeedbackL]->setStart(delay.getDelFeedbackL());
+
+    smooths[DelayFeedbackR]->setStart(delay.getDelFeedbackR());
+
+    smooths[WetDry]->setStart(delay.getWetDry());
+
+    smooths[FrequencyInHz]->setStart(delay.getFrequencyInHz());;
+
+    for (int i=0;i<ParamCOUNT;i++){
+        smooths[i]->setEnd(smooths[i]->getStart());
+        smooths[i]->setIsSmooth(false);
     }
 
 }
@@ -115,7 +154,6 @@ void VstPlugin::processReplacing(float** inputs, float** outputs, VstInt32 sampl
         for (int j=0;j<ParamCOUNT;j++){
             float toSmooth = 0.0;
             if (smooths[j]->process(&toSmooth)){
-
                 fout << std::to_string(toSmooth) << '\n';
                 setSmoothParameter(j, toSmooth);
             }
@@ -131,8 +169,8 @@ void VstPlugin::processReplacing(float** inputs, float** outputs, VstInt32 sampl
 //-----------------------------------------------------------------------------------------
 void VstPlugin::processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames){
     // PROCESS SINGLE PRECISION
-    /*
-    double *inL = inputs[0]; // buffer input left
+
+    /*double *inL = inputs[0]; // buffer input left
     double *inR = inputs[1]; // buffer input right
 
     double *outL = outputs[0]; // buffer output left
@@ -206,44 +244,44 @@ void VstPlugin::setParameter (VstInt32 index, float value){
     //float paramToChange = 0.0;
     switch (index) {
         case GainLeft:
-            smooths[GainLeft]->setEnd(value);
+            smooths[GainLeft]->setOtherSmoothPath(value);
             //paramToChange = smooths[GainLeft]->process(value);
             //delay.setDelayGain(paramToChange,delay.getDelayGain().getGainR());
             break;
         case GainRight:
-            smooths[GainRight]->setEnd(value);
+            smooths[GainRight]->setOtherSmoothPath(value);
             //paramToChange = smooths[GainRight]->process(value);
             //delay.setDelayGain(delay.getDelayGain().getGainL(),paramToChange);
             break;
         case DelaySizeL:
-            smooths[DelaySizeL]->setEnd(value);
+            smooths[DelaySizeL]->setOtherSmoothPath(value);
             //paramToChange = smooths[DelaySizeL]->process(value);
             //delay.setDelayCurrentSizeL(paramToChange*delay.getDelayMaxSize());
             break;
         case DelaySizeR:
-            smooths[DelaySizeR]->setEnd(value);
+            smooths[DelaySizeR]->setOtherSmoothPath(value);
             //paramToChange = smooths[DelaySizeR]->process(value);
             //delay.setDelayCurrentSizeR(paramToChange*delay.getDelayMaxSize());
             break;
         case DelayFeedbackL:
-            smooths[DelayFeedbackL]->setEnd(value);
+            smooths[DelayFeedbackL]->setOtherSmoothPath(value);
             //paramToChange = smooths[DelayFeedbackL]->process(value);
             //delay.setDelFeedbackL(paramToChange*delay.getMaxFeedback());
             break;
         case DelayFeedbackR:
-            smooths[DelayFeedbackR]->setEnd(value);
+            smooths[DelayFeedbackR]->setOtherSmoothPath(value);
             //paramToChange = smooths[DelayFeedbackR]->process(value);
             //delay.setDelFeedbackR(paramToChange*delay.getMaxFeedback());
             break;
         case WetDry:
-            smooths[WetDry]->setEnd(value);
+            smooths[WetDry]->setOtherSmoothPath(value);
             //paramToChange = smooths[WetDry]->process(value);
             //delay.setWetDry(paramToChange);
             break;
         case FrequencyInHz:
-            smooths[FrequencyInHz]->setEnd(value);
+            smooths[FrequencyInHz]->setOtherSmoothPath(value);
             //paramToChange = smooths[FrequencyInHz]->process(value);
-            //delay.setFrequencyInHz(paramToChange);
+            //delay.setFrequencyInHz(value);
             break;
         default:
             break;
@@ -431,11 +469,11 @@ void VstPlugin::setProgram (VstInt32 program){
     AudioEffect::setProgram(program);
 
 
-    setParameter(DelaySizeL, programs[curProgram].delayTimeL);
-    setParameter(DelaySizeR, programs[curProgram].delayTimeR);
+    setSmoothParameter(DelaySizeL, programs[curProgram].delayTimeL);
+    setSmoothParameter(DelaySizeR, programs[curProgram].delayTimeR);
 
-    setParameter(DelayFeedbackL, programs[curProgram].feedbackL);
-    setParameter(DelayFeedbackR, programs[curProgram].feedbackR);
+    setSmoothParameter(DelayFeedbackL, programs[curProgram].feedbackL);
+    setSmoothParameter(DelayFeedbackR, programs[curProgram].feedbackR);
 
     setParameter(WetDry, programs[curProgram].wetDry);
 
