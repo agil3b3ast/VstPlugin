@@ -19,7 +19,18 @@ ModOperator::ModOperator(Oscillator *oscillator){
 Oscillator *ModOperator::getOscillator(){
     return oscillator;
 }
+
+double ModOperator::getAmount(){
+    return amount;
+}
+
 //setters
+void ModOperator::setAmount(double amount){
+    this->amount = amount;
+}
+
+//-------------------------------------------------------------------------------------------------------
+
 void ModOperator::setMinAmount(double minAmount){
     this->minAmount = minAmount;
 }

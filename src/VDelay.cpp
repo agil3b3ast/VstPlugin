@@ -26,6 +26,14 @@ VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), mod
     nu=0.0;
 }
 
+double VDelay::getAmount(){
+    return modOperator.getAmount();
+}
+
+void VDelay::setAmount(double amount){
+    modOperator.setAmount(amount);
+}
+
 double VDelay::getFrequencyInHz(){
     return modOperator.getOscillator()->getFrequencyInHz();
 }
