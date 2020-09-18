@@ -24,7 +24,8 @@ enum OscFeatures{
 enum Waveforms{
     Sine = 0,
     Saw,
-    Pulse
+    Pulse,
+    Triangle
 };
 
 
@@ -34,6 +35,7 @@ class Oscillator{
     double *sawtooth;
     double *pulse;
     double *sine;
+    double *triangle;
 
     float sampleRate;
     

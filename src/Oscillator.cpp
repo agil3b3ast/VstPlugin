@@ -22,7 +22,7 @@ Oscillator::Oscillator(float sampleRate){
     createFrequencyTable();
     stepValue = frequencyInHz*fScale;
 
-    currentWavetable = sine;
+    currentWavetable = triangle;
     
 }
 
@@ -68,6 +68,9 @@ void Oscillator::setCurrentWavetable(unsigned char currentWavetable){
         case Pulse:
             this->currentWavetable = pulse;
             break;
+        case Triangle:
+            this->currentWavetable = triangle;
+            break;
         default:
             break;
     }
@@ -97,6 +100,7 @@ void Oscillator::createWavetables()
     sawtooth = BufferFactory::createBufferDouble(numberOfBytes);
     pulse = BufferFactory::createBufferDouble(numberOfBytes);
     sine = BufferFactory::createBufferDouble(numberOfBytes);
+    triangle = BufferFactory::createBufferDouble(numberOfBytes);
 
     
     
@@ -107,10 +111,13 @@ void Oscillator::createWavetables()
         else
             pulse[i] = 1;
         
-        sawtooth[i] = 2.0*((double)i/(double) WAVETABLE_SIZE) - 1.0;
+        double currentI = (double)i/(double) WAVETABLE_SIZE;
         
-        sine[i] = sin(2.0*pi*(double)i/(double) WAVETABLE_SIZE);
-
+        sawtooth[i] = 2.0*currentI - 1.0;
+        
+        sine[i] = sin(2.0*pi*currentI);
+        
+        i<=(int)((float)WAVETABLE_SIZE/2.0) ? triangle[i] = 4.0*currentI - 1.0: triangle[i] = 3.0 - 4.0*currentI; //halfRamp : 2 - halfRamp
     }
     
 }
@@ -130,6 +137,11 @@ void Oscillator::deleteWavetables(){
     if (sine != nullptr) {
         delete sine;
         sine = nullptr;
+    }
+    
+    if (triangle != nullptr) {
+        delete triangle;
+        triangle = nullptr;
     }
 }
 
