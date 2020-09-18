@@ -11,11 +11,12 @@
 Oscillator::Oscillator(float sampleRate){
     pwm = 0.3;
     cursorTable = 0.0;
-    
+
     frequencyInHz = 0.0;
     minFreq = 0.1;
     maxFreq = 10.0;
-    
+
+    phase = 0.0; //0 degrees
     this->sampleRate = sampleRate;
     fScale = WAVETABLE_SIZE/sampleRate;
     createWavetables();
@@ -23,7 +24,7 @@ Oscillator::Oscillator(float sampleRate){
     stepValue = frequencyInHz*fScale;
 
     currentWavetable = sine;
-    
+
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -45,8 +46,18 @@ double Oscillator::getMinFreq(){
 
 //-------------------------------------------------------------------------------------------------------
 
+float Oscillator::getPhase(){
+    return phase;
+}
+//-------------------------------------------------------------------------------------------------------
+
 double Oscillator::getFrequencyInHz(){
     return frequencyInHz;
+}
+
+//-------------------------------------------------------------------------------------------------------
+void Oscillator::setPhase(float phase){
+    this->phase = phase;
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -84,42 +95,42 @@ void Oscillator::createFrequencyTable()
     a *= k; // Bb
     a *= k; // B
     a *= k; // C
-    
+
     for (int i = 0; i<128; i++){
         freqTable[i] = a;
         a *= k; //next frequency note
     }
-    
+
 }
 
 //-------------------------------------------------------------------------------------------------------
 void Oscillator::createWavetables()
 {
     double numberOfBytes = WAVETABLE_SIZE*sizeof(double);
-    
+
     sawtooth = BufferFactory::createBufferDouble(numberOfBytes);
     pulse = BufferFactory::createBufferDouble(numberOfBytes);
     sine = BufferFactory::createBufferDouble(numberOfBytes);
     triangle = BufferFactory::createBufferDouble(numberOfBytes);
 
-    
-    
+
+
     for(int i=0; i<WAVETABLE_SIZE; i++){
         float max_size = pwm*WAVETABLE_SIZE;
         if (i<max_size)
             pulse[i] = 0;
         else
             pulse[i] = 1;
-        
+
         double currentI = (double)i/(double) WAVETABLE_SIZE;
-        
+
         sawtooth[i] = 2.0*currentI - 1.0;
-        
+
         sine[i] = sin(2.0*pi*currentI);
-        
+
         i<=(int)((float)WAVETABLE_SIZE/2.0) ? triangle[i] = 4.0*currentI - 1.0: triangle[i] = 3.0 - 4.0*currentI; //halfRamp : 2 - halfRamp
     }
-    
+
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -128,17 +139,17 @@ void Oscillator::deleteWavetables(){
         delete sawtooth;
         sawtooth = nullptr;
     }
-    
+
     if (pulse != nullptr) {
         delete pulse;
         pulse = nullptr;
     }
-    
+
     if (sine != nullptr) {
         delete sine;
         sine = nullptr;
     }
-    
+
     if (triangle != nullptr) {
         delete triangle;
         triangle = nullptr;
@@ -149,7 +160,7 @@ void Oscillator::deleteWavetables(){
 void Oscillator::processOscillator(float** outputs, VstInt32 sampleFrames){
     float *outL = outputs[0]; // buffer output left
     float *outR = outputs[1]; // buffer output right
-    
+
     for(int i=0; i<sampleFrames;i++){
         processOscillatorSingle(&outL[i]);
         processOscillatorSingle(&outR[i]);
@@ -159,7 +170,7 @@ void Oscillator::processOscillator(float** outputs, VstInt32 sampleFrames){
 
 //-------------------------------------------------------------------------------------------------------
 void Oscillator::processOscillatorSingle(float *input){
-    
+
         if (input == nullptr){
             std::cerr << "An input must be provided!\n";
             return;
@@ -169,7 +180,7 @@ void Oscillator::processOscillatorSingle(float *input){
 
 //-------------------------------------------------------------------------------------------------------
 void Oscillator::processOscillatorSingleDouble(double *input){
-    
+
     if (input == nullptr){
         std::cerr << "An input must be provided!\n";
         return;
@@ -179,22 +190,25 @@ void Oscillator::processOscillatorSingleDouble(double *input){
 
 //-------------------------------------------------------------------------------------------------------
 void Oscillator::genSignal(float* output){
-    *output = currentWavetable[(int) cursorTable];
+    double index = cursorTable + phase*WAVETABLE_SIZE;
+    *output = currentWavetable[(int) index];
 }
 
 //-------------------------------------------------------------------------------------------------------
 void Oscillator::genSignalDouble(double* output){
-    *output = currentWavetable[(int) cursorTable];
+    double index = cursorTable + phase*WAVETABLE_SIZE;
+    *output = currentWavetable[(int) index];
 }
 
 //-------------------------------------------------------------------------------------------------------
 void Oscillator::genSignalDoubleWithInterp(double* output){
-    int next = ceil(cursorTable);
-    int previous = floor(cursorTable);
-    
+    double index = cursorTable+phase*WAVETABLE_SIZE;
+    int next = ceil(index);
+    int previous = floor(index);
+
     int int_part = previous;
-    double fract_part = cursorTable-int_part;
-    
+    double fract_part = index-int_part;
+
     //if(previous < 0){ //realign previous
     //    previous = WAVETABLE_SIZE -1;
     //}
@@ -209,6 +223,7 @@ void Oscillator::genSignalDoubleWithInterp(double* output){
 //-------------------------------------------------------------------------------------------------------
 void Oscillator::updateCursorTable(){
     cursorTable = cursorTable + stepValue;
-    if (cursorTable > (WAVETABLE_SIZE-1))
+    double index = cursorTable+phase*WAVETABLE_SIZE;
+    if (index > (WAVETABLE_SIZE-1))
         cursorTable = cursorTable - WAVETABLE_SIZE;
 }

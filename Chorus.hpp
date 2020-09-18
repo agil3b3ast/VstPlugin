@@ -17,7 +17,7 @@ class Chorus{
     VDelay *vdelay1;
     VDelay *vdelay2;
     VDelay *vdelay3;
-    VDelay *vdelay4;
+    //VDelay *vdelay4;
     GainStereo gainStereo;
 
     float wetDry;
@@ -31,9 +31,11 @@ public:
     //getters
     VDelay *getDelay1();
     VDelay *getDelay2();
+    VDelay *getDelay3();
     GainStereo getGain();
     double getFrequencyInHz1();
     double getFrequencyInHz2();
+    double getFrequencyInHz3();
     float getWetDry();
     double getMaxAmount();
     double getMinAmount();
@@ -44,6 +46,7 @@ public:
     void setGain(float gainL, float gainR);
     void setFrequencyInHz1(double frequencyInHz);
     void setFrequencyInHz2(double frequencyInHz);
+    void setFrequencyInHz3(double frequencyInHz);
     void setWetDry(float wetDry);
 };
 

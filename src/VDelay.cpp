@@ -63,6 +63,10 @@ double VDelay::getMinFreq(){
     return modOperator.getOscillator()->getMinFreq();
 }
 
+void VDelay::setPhase(float phase){
+    modOperator.getOscillator()->setPhase(phase);
+}
+
 void VDelay::setFrequencyInHz(double frequencyInHz){
     modOperator.getOscillator()->setFrequencyInHz(frequencyInHz);
 }

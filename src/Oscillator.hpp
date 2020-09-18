@@ -30,7 +30,7 @@ enum Waveforms{
 
 
 class Oscillator{
-    
+
     //wavetable
     double *sawtooth;
     double *pulse;
@@ -38,30 +38,32 @@ class Oscillator{
     double *triangle;
 
     float sampleRate;
-    
+
     const int WAVETABLE_SIZE = 441000;
     const float NU = 0.5;
-    
+
     double freqTable[128];
     double cursorTable;
     double fScale;
-    
+
     double frequencyInHz;
     double minFreq;
     double maxFreq;
     double stepValue;
-    
+
+    float phase; //percentage of 2pi
+
     float pwm; // determina la simmetria dell'onda quadra
-    
+
     double *currentWavetable;
-    
+
     void genSignal(float *output);
     void genSignalDouble(double *output);
-    
+
     public:
         explicit Oscillator(float sampleRate);
         ~Oscillator();
-    
+
         //wavetables
         void createWavetables();
         void deleteWavetables();
@@ -77,7 +79,10 @@ class Oscillator{
         double getMinFreq();
         double getMaxFreq();
 
+        float getPhase();
+
         //setters
+        void setPhase(float phase);
         void setFrequencyInHz(double freq);
         void setCurrentWavetable(unsigned char currentWavetable);
         void updateCursorTable();
