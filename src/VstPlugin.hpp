@@ -7,6 +7,7 @@
 #include "Chorus.hpp"
 #include "VDelay.hpp"
 #include "Smooth.hpp"
+#include "AutoPan.hpp"
 
 
 
@@ -25,6 +26,8 @@ struct Preset{
     float frequencyInHz1;
     float frequencyInHz2;
     float frequencyInHz3;
+    float panAmount;
+    float panFrequency;
 };
 
 
@@ -40,6 +43,8 @@ enum EfxParameter {
     FrequencyInHz1,
     FrequencyInHz2,
     FrequencyInHz3,
+    PanAmount,
+    PanFrequency,
     ParamCOUNT
 };
 
@@ -72,6 +77,9 @@ class VstPlugin : public AudioEffectX
 
     //chorus
     Chorus chorus;
+
+    //AutoPan
+    AutoPan autoPan;
 
     //presets
     void initPresets();
