@@ -9,7 +9,7 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster)
 
 //-------------------------------------------------------------------------------------------------------
 VstPlugin::VstPlugin(audioMasterCallback audioMaster)
-: AudioEffectX(audioMaster, PROGS_COUNT, ParamCOUNT), chorus(getSampleRate()) 	// n program, n parameters
+: AudioEffectX(audioMaster, PROGS_COUNT, ParamCOUNT), chorus(getSampleRate()), autoPan(getSampleRate()) 	// n program, n parameters
 {
     setNumInputs(2);		// stereo in
     setNumOutputs(2);		// stereo out
@@ -90,47 +90,57 @@ void VstPlugin::initPresets(){
     programs[0].feedbackL = 0;
     programs[0].feedbackR = 0;
     programs[0].wetDry = 0.5;
-    programs[0].amount = 1.0;
-    programs[0].frequencyInHz1 = 0.1;
-    programs[0].frequencyInHz2 = 0.1;
-    programs[0].frequencyInHz3 = 0.1;
+    programs[0].amount = 0.1;
+    programs[0].frequencyInHz1 = 0.8;
+    programs[0].frequencyInHz2 = 1.0;
+    programs[0].frequencyInHz3 = 0.9;
+    programs[0].panAmount = 1.0;
+    programs[0].panFrequency = 1.0;
     strcpy(programs[0].name, "Default");
 
-    programs[1].feedbackL = 0.5;
-    programs[1].feedbackR = 0.5;
+    programs[1].feedbackL = 0.1;
+    programs[1].feedbackR = 0.1;
     programs[1].wetDry = 0.5;
     programs[1].amount = 0.3;
-    programs[1].frequencyInHz1 = 0.1;
-    programs[1].frequencyInHz2 = 0.12;
-    programs[1].frequencyInHz3 = 0.1;
-    strcpy(programs[1].name, "Half Delay");
+    programs[1].frequencyInHz1 = 0.8;
+    programs[1].frequencyInHz2 = 1.0;
+    programs[1].frequencyInHz3 = 0.9;
+    programs[1].panAmount = 1.0;
+    programs[1].panFrequency = 1.0;
+    strcpy(programs[1].name, "Medium Chorus");
 
-    programs[2].feedbackL = 0.1;
-    programs[2].feedbackR = 0.1;
-    programs[2].wetDry = 0.5;
+    programs[2].feedbackL = 0.3;
+    programs[2].feedbackR = 0.3;
+    programs[2].wetDry = 0.6;
     programs[2].amount = 0.3;
-    programs[2].frequencyInHz1 = 0.1;
-    programs[2].frequencyInHz2 = 0.12;
-    programs[2].frequencyInHz3 = 0.1;
-    strcpy(programs[2].name, "Short Delay");
+    programs[2].frequencyInHz1 = 0.8;
+    programs[2].frequencyInHz2 = 1.0;
+    programs[2].frequencyInHz3 = 0.9;
+    programs[2].panAmount = 1.0;
+    programs[2].panFrequency = 1.0;
+    strcpy(programs[2].name, "High Chorus");
 
-    programs[3].feedbackL = 0.8;
-    programs[3].feedbackR = 0.8;
-    programs[3].wetDry = 0.4;
+    programs[3].feedbackL = 0.7;
+    programs[3].feedbackR = 0.7;
+    programs[3].wetDry = 0.6;
     programs[3].amount = 0.3;
-    programs[3].frequencyInHz1 = 0.1;
-    programs[3].frequencyInHz2 = 0.12;
-    programs[3].frequencyInHz3 = 0.1;
-    strcpy(programs[3].name, "Long Delay");
+    programs[3].frequencyInHz1 = 0.8;
+    programs[3].frequencyInHz2 = 1.0;
+    programs[3].frequencyInHz3 = 0.9;
+    programs[3].panAmount = 1.0;
+    programs[3].panFrequency = 1.0;
+    strcpy(programs[3].name, "Chaos");
 
-    programs[4].feedbackL = 0.8;
+    programs[4].feedbackL = 0;
     programs[4].feedbackR = 0;
     programs[4].wetDry = 0.5;
     programs[4].amount = 0.3;
-    programs[4].frequencyInHz1 = 0.1;
-    programs[4].frequencyInHz2 = 0.12;
-    programs[4].frequencyInHz3 = 0.1;
-    strcpy(programs[4].name, "Full Left Delay");
+    programs[4].frequencyInHz1 = 0.8;
+    programs[4].frequencyInHz2 = 1.0;
+    programs[4].frequencyInHz3 = 0.9;
+    programs[4].panAmount = 0;
+    programs[4].panFrequency = 4.0;
+    strcpy(programs[4].name, "AutoPan");
 }
 
 
@@ -142,11 +152,11 @@ void VstPlugin::processReplacing(float** inputs, float** outputs, VstInt32 sampl
 
     // PROCESS SINGLE PRECISION - processa audio
 
-    float *inL = inputs[0]; // buffer input left
-    float *inR = inputs[1]; // buffer input right
+    float *buffL = inputs[0]; // buffer input left
+    float *buffR = inputs[1]; // buffer input right
 
-    float *outL = outputs[0]; // buffer output left
-    float *outR = outputs[1]; // buffer output right
+    float *buffOutL = outputs[0]; // buffer output left
+    float *buffOutR = outputs[1]; // buffer output right
 
     //update params
 
@@ -165,10 +175,14 @@ void VstPlugin::processReplacing(float** inputs, float** outputs, VstInt32 sampl
         }
 
         //delay.processDelayBySample(&inL[i], &inR[i], &outL[i], &outR[i]);
-        chorus.processChorus(inputs, outputs, sampleFrames);
+        chorus.processChorusBySample(&buffL[i], &buffR[i]);
+        autoPan.processAutoPan(&buffL[i], &buffR[i]);
+        buffOutL[i] = buffL[i];
+        buffOutR[i] = buffR[i];
     }
 
     //fout.close();
+
 
 
 }
@@ -252,6 +266,12 @@ void VstPlugin::setSmoothParameter(VstInt32 index, float value){
             chorus.setFrequencyInHz3(chorus.getDelay3()->getMinFreq() + \
             value*(chorus.getDelay3()->getMaxFreq()-chorus.getDelay3()->getMinFreq()));
             break;
+        case PanAmount:
+            autoPan.setAmount(value);
+            break;
+        case PanFrequency:
+            autoPan.setFreq(value);
+            break;
         default:
             break;
     }
@@ -299,6 +319,12 @@ float VstPlugin::getSmoothParameter (VstInt32 index){
             valueToReturn = (chorus.getFrequencyInHz3() - \
             chorus.getDelay3()->getMinFreq())/(chorus.getDelay3()->getMaxFreq()- \
             chorus.getDelay3()->getMinFreq());
+            break;
+        case PanAmount:
+            valueToReturn = autoPan.getAmount();
+            break;
+        case PanFrequency:
+            valueToReturn = autoPan.getFreq()/autoPan.getMaxFreq();
             break;
         default:
             break;
@@ -361,6 +387,12 @@ void VstPlugin::getParameterLabel (VstInt32 index, char* label){
         case FrequencyInHz3:
             vst_strncpy(label, "Hz", kVstMaxParamStrLen);
             break;
+        case PanAmount:
+            vst_strncpy(label, " ", kVstMaxParamStrLen);
+            break;
+        case PanFrequency:
+            vst_strncpy(label, "Hz", kVstMaxParamStrLen);
+            break;
         default:
             break;
     }
@@ -414,6 +446,12 @@ void VstPlugin::getParameterDisplay (VstInt32 index, char* text) {
             getParameter(FrequencyInHz3)*(chorus.getDelay3()->getMaxFreq() - \
             chorus.getDelay3()->getMinFreq()), text, numCharDisplay);
             break;
+        case PanAmount:
+            float2string(autoPan.getAmount(), text, kVstMaxParamStrLen);
+            break;
+        case PanFrequency:
+            float2string(autoPan.getFreq(), text, kVstMaxParamStrLen);
+            break;
         default:
             break;
     }
@@ -450,6 +488,12 @@ void VstPlugin::getParameterName (VstInt32 index, char* text) {
         case FrequencyInHz3:
             vst_strncpy(text, "Rate3", kVstMaxParamStrLen);
             break;
+        case PanAmount:
+            vst_strncpy(text, "Pan Amnt", kVstMaxParamStrLen);
+            break;
+        case PanFrequency:
+            vst_strncpy(text, "Pan Rate", kVstMaxParamStrLen);
+            break;
         default:
             break;
     }
@@ -470,6 +514,9 @@ void VstPlugin::setProgram (VstInt32 program){
     setSmoothParameter(FrequencyInHz1, programs[curProgram].frequencyInHz1);
     setSmoothParameter(FrequencyInHz2, programs[curProgram].frequencyInHz2);
     setSmoothParameter(FrequencyInHz3, programs[curProgram].frequencyInHz3);
+
+    setParameter(PanAmount, programs[curProgram].panAmount);
+    setParameter(PanFrequency, programs[curProgram].panFrequency);
 
 }
 

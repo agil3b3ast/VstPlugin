@@ -27,6 +27,8 @@ public:
     ~Chorus();
     
     void processChorus(float** inputs, float** outputs, VstInt32 sampleFrames);
+    void processChorusBySample(float* inputL, float* inputR);
+
 
     //getters
     VDelay *getDelay1();
