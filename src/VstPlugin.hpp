@@ -15,17 +15,16 @@
 #define PROGS_COUNT 5
 
 const unsigned char numCharDisplay = 4;
+
 struct Preset{
     char name[24];
     float feedbackL;
     float feedbackR;
-    float delayTimeL;
-    float delayTimeR;
     float wetDry;
-    float minAmount;
-    float maxAmount;
+    float amount;
     float frequencyInHz1;
     float frequencyInHz2;
+    float frequencyInHz3;
 };
 
 
@@ -38,22 +37,12 @@ enum EfxParameter {
     DelayFeedbackR,
     WetDry,
     Amount,
-    MinAmount,
-    MaxAmount,
     FrequencyInHz1,
     FrequencyInHz2,
+    FrequencyInHz3,
     ParamCOUNT
 };
-//-------------------------------------------------------------------------------------------------------
 
-struct Preset{
-    char name[24];
-    float feedbackL;
-    float feedbackR;
-    float wetDry;
-    float amount;
-    float frequencyInHz;
-};
 //-------------------------------------------------------------------------------------------------------
 
 struct SmoothParams{
@@ -79,17 +68,11 @@ class VstPlugin : public AudioEffectX
     //smooth
     Smooth *smooths[ParamCOUNT];
     SmoothParams smoothParams;
-    
+
 
     //chorus
     Chorus chorus;
-<<<<<<< HEAD
-    VDelay vd1;
-    VDelay vd2;
 
-=======
-    
->>>>>>> 40e8ab4... Added 4 voices chorus
     //presets
     void initPresets();
     void initSmoothParams();

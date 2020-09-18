@@ -12,10 +12,14 @@ Chorus::Chorus(float sampleRate): gainStereo(){
     vdelay1 = new VDelay(sampleRate);
     vdelay2 = new VDelay(sampleRate);
     vdelay3 = new VDelay(sampleRate);
-    vdelay4 = new VDelay(sampleRate);
+    //vdelay4 = new VDelay(sampleRate);
 
-    vdelay3->setFrequencyInHz(0.14);
-    vdelay4->setFrequencyInHz(0.17);
+    //vdelay3->setFrequencyInHz(0.14);
+    //vdelay4->setFrequencyInHz(0.17);
+
+    vdelay1->setPhase(0.25);
+    vdelay3->setPhase(0.75);
+
 
 }
 
@@ -32,22 +36,22 @@ Chorus::~Chorus(){
         delete vdelay3;
         vdelay3 = nullptr;
     }
-    else if(vdelay4 != nullptr){
+    /*else if(vdelay4 != nullptr){
         delete vdelay4;
         vdelay4 = nullptr;
-    }
+    }*/
 }
 
 //-------------------------------------------------------------------------------------------------------
 
-double getMaxAmount(){
+double Chorus::getMaxAmount(){
     return vdelay1->getMaxAmount();
 ;
 }
 
 //-------------------------------------------------------------------------------------------------------
 
-double getMinAmount(){
+double Chorus::getMinAmount(){
     return vdelay1->getMinAmount();
 }
 
@@ -66,6 +70,12 @@ VDelay *Chorus::getDelay1(){
 
 VDelay *Chorus::getDelay2(){
     return vdelay2;
+}
+
+//-------------------------------------------------------------------------------------------------------
+
+VDelay *Chorus::getDelay3(){
+    return vdelay3;
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -89,21 +99,26 @@ double Chorus::getFrequencyInHz2(){
 
 //-------------------------------------------------------------------------------------------------------
 
+double Chorus::getFrequencyInHz3(){
+    return vdelay3->getFrequencyInHz();
+}
+
+//-------------------------------------------------------------------------------------------------------
+
 void Chorus::setWetDry(float wetDry){
     this->wetDry = wetDry;
 }
 
 //-------------------------------------------------------------------------------------------------------
 
-void setMaxAmount(double maxAmount){
+void Chorus::setMaxAmount(double maxAmount){
     vdelay1->setMaxAmount(maxAmount);
     vdelay2->setMaxAmount(maxAmount);
     vdelay3->setMaxAmount(maxAmount);
 }
 //-------------------------------------------------------------------------------------------------------
 
-void setMinAmount(double minAmount){
-    this->minAmount = minAmount;
+void Chorus::setMinAmount(double minAmount){
     vdelay1->setMinAmount(minAmount);
     vdelay2->setMinAmount(minAmount);
     vdelay3->setMinAmount(minAmount);
@@ -130,6 +145,12 @@ void Chorus::setFrequencyInHz2(double frequencyInHz){
 
 //-------------------------------------------------------------------------------------------------------
 
+void Chorus::setFrequencyInHz3(double frequencyInHz){
+    vdelay3->setFrequencyInHz(frequencyInHz);
+}
+
+//-------------------------------------------------------------------------------------------------------
+
 void Chorus::processChorus(float** inputs, float** outputs, VstInt32 sampleFrames){
     float *buffL = inputs[0]; // buffer input left
     float *buffR = inputs[1]; // buffer input right
@@ -137,7 +158,11 @@ void Chorus::processChorus(float** inputs, float** outputs, VstInt32 sampleFrame
     float *buffOutL = outputs[0]; // buffer output left
     float *buffOutR = outputs[1]; // buffer output right
 
-    float wetDryBalance;
+    float wetDryBalanceL;
+    float wetDryBalanceR;
+
+    float chorusOutL;
+    float chorusOutR;
 
     float in1L,in1R,in2L,in2R,in3L,in3R,in4L,in4R = 0.0;
 
@@ -156,19 +181,29 @@ void Chorus::processChorus(float** inputs, float** outputs, VstInt32 sampleFrame
         in3R = in1R;
         in4R = in1R;
         vdelay1->tick(&in1L, &in1R);
-        vdelay2->tick(&in2L, &in2R);
+
+        float inSum = 0.5*in2L+0.5*in2R;
+
+        vdelay2->tick(&(inSum), &(inSum));
+
         vdelay3->tick(&in3L, &in3R);
-        vdelay4->tick(&in4L, &in4R);
+        //vdelay4->tick(&in4L, &in4R);
 
-        wetDryBalance = (1.0-wetDry)*in1L + wetDry*(0.25*vdelay1->getOldestSampleL()+0.25*vdelay2->getOldestSampleL()\
-                                                    +0.25*vdelay3->getOldestSampleL()+0.25*vdelay4->getOldestSampleL());
-        gainStereo.processGainL(&wetDryBalance);
-        buffOutL[i] = wetDryBalance;
 
-        wetDryBalance = (1.0-wetDry)*in1R + wetDry*(0.25*vdelay1->getOldestSampleR()+0.25*vdelay2->getOldestSampleR()\
+        chorusOutL = 0.5*vdelay1->getOldestSampleL() + 0.5*vdelay2->getOldestSampleL();
+
+        wetDryBalanceL = (1.0-wetDry)*in1L + wetDry*(chorusOutL);//0.25*vdelay1->getOldestSampleL()+0.25*vdelay2->getOldestSampleL()\
+                                                    +0.25*vdelay3->getOldestSampleL() +0.25*vdelay4->getOldestSampleL());
+        gainStereo.processGainL(&wetDryBalanceL);
+        buffOutL[i] = wetDryBalanceL;
+
+
+        chorusOutR = 0.5*vdelay3->getOldestSampleR() + 0.5*vdelay2->getOldestSampleR();
+
+        wetDryBalanceR = (1.0-wetDry)*in1R + wetDry*(chorusOutR);//0.25*vdelay1->getOldestSampleR()+0.25*vdelay2->getOldestSampleR()\
                                                     +0.25*vdelay3->getOldestSampleR()+0.25*vdelay4->getOldestSampleR());
-        gainStereo.processGainR(&wetDryBalance);
-        buffOutR[i] = wetDryBalance;
+        gainStereo.processGainR(&wetDryBalanceR);
+        buffOutR[i] = wetDryBalanceR;
 
         //fout << std::to_string(buffL[i]) << '\n';
         //fout2 << std::to_string(buffOutL[i]) << '\n';
