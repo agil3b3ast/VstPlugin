@@ -16,10 +16,9 @@ class ModOperator{
     Oscillator *oscillator;
     double currentSignal;
     
-    int maxAmount;
-    
-    double amount; //vale da 0 a 1
+    double maxAmount; //vale da 0 a 1
     double minAmount;
+    double coeff;
     
 public:
     explicit ModOperator(Oscillator *oscillator);
@@ -28,21 +27,23 @@ public:
     
     //getters
     Oscillator *getOscillator();
-    double getAmount();
+    double getMaxAmount();
+    double getMinAmount();
     //setters
     void setOscillator(Oscillator *oscillator);
-    void setMaxAmount(int maxAmount);
+    void setMaxAmount(double maxAmount);
     void setMinAmount(double minAmount);
     void setAmount(double amount);
     
     //templates
-    template <typename inputToMod, typename outputToMod> void processModOperator(inputToMod input, outputToMod *output){
+    template <typename outputToMod> void processModOperator(outputToMod *output){
         
-        if (input == nullptr){
+        if (output == nullptr){
             std::cerr << "An input must be provided!\n";
             return;
         }
-        *output = minAmount + *input * currentSignal * amount * maxAmount; //mod a signal or parameter (e.g. delay size)
+        coeff = (maxAmount-minAmount)/2.0;
+        *output = minAmount + coeff + (currentSignal * coeff); //mod a signal or parameter (e.g. delay size)
     }
     
     

@@ -20,7 +20,7 @@ class VDelay : public Delay{
     
     double readCursor;
     int writeCursor;
-    double currentFractDelay;
+    //double currentFractDelay;
     
     float previousOutL;
     float previousOutR;
@@ -48,9 +48,11 @@ class VDelay : public Delay{
         void realignReadCursor(); //this function is necessary to align read cursor in range 0-maxDelayLine
         void calcOldestSample(float *oldestSampleL, float *oldestSampleR);
         void setFrequencyInHz(double frequencyInHz);
-        void setAmount(double amount);
+        void setMaxAmount(double maxAmount);
+        void setMinAmount(double minAmount);
         double getFrequencyInHz();
-        double getAmount();
+        double getMaxAmount();
+        double getMinAmount();
 };
 
 #endif /* VDelay_hpp */

@@ -8,10 +8,11 @@
 #include "VDelay.hpp"
 
 VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), modOperator(&oscillator){
-    currentFractDelay = ((double)delayMaxSize)/2.0;
-    modOperator.setMinAmount(currentFractDelay);
+    modOperator.setMinAmount(0.0);
+    modOperator.setMaxAmount((double)delayMaxSize);
+    //currentFractDelay = (modOperator.getMaxAmount()-modOperator.getMinAmount())/2.0;
     writeCursor = 0; //cannot set writeCursor to max/2 due to precision errors
-    readCursor = delayMaxSize-currentFractDelay; //it is necessary to start here to avoid writeCursor precision errors
+    readCursor = 0.0;
     previousOutL = 0.0;
     previousOutR = 0.0;
     
@@ -26,12 +27,26 @@ VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), mod
     nu=0.0;
 }
 
-double VDelay::getAmount(){
-    return modOperator.getAmount();
+double VDelay::getMinAmount(){
+    return modOperator.getMinAmount();
 }
 
-void VDelay::setAmount(double amount){
-    modOperator.setAmount(amount);
+double VDelay::getMaxAmount(){
+    return modOperator.getMaxAmount();
+}
+
+void VDelay::setMinAmount(double minAmount){
+    float minV = 0.1;
+    if (minAmount < minV){
+        modOperator.setMinAmount(minV*delayMaxSize);
+    }
+    else{
+        modOperator.setMinAmount(minAmount*delayMaxSize);
+    }
+}
+
+void VDelay::setMaxAmount(double maxAmount){
+    modOperator.setMaxAmount(maxAmount*delayMaxSize);
 }
 
 double VDelay::getFrequencyInHz(){
@@ -136,7 +151,7 @@ void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames
 
 void VDelay::tick(float *inputL,float *inputR){
     modOperator.updateModOperator();
-    modOperator.processModOperator(&currentFractDelay, &outCurrDelay);
+    modOperator.processModOperator(&outCurrDelay);
     
     
     readCursor = writeCursor - outCurrDelay;

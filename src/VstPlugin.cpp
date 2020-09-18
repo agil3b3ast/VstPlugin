@@ -42,7 +42,8 @@ void VstPlugin::initPresets(){
     programs[0].feedbackL = 0;
     programs[0].feedbackR = 0;
     programs[0].wetDry = 0.5;
-    programs[0].amount = 0.3;
+    programs[0].minAmount = 0.3;
+    programs[0].maxAmount = 0.1;
     programs[0].frequencyInHz = 1.0;
     strcpy(programs[0].name, "Default");
 
@@ -51,7 +52,8 @@ void VstPlugin::initPresets(){
     programs[1].feedbackL = 0.5;
     programs[1].feedbackR = 0.5;
     programs[1].wetDry = 0.5;
-    programs[1].amount = 0.3;
+    programs[1].minAmount = 0.1;
+    programs[1].maxAmount = 0.3;
     programs[1].frequencyInHz = 0.1;
     strcpy(programs[1].name, "Half Delay");
 
@@ -60,7 +62,8 @@ void VstPlugin::initPresets(){
     programs[2].feedbackL = 0.1;
     programs[2].feedbackR = 0.1;
     programs[2].wetDry = 0.5;
-    programs[2].amount = 0.3;
+    programs[2].minAmount = 0.1;
+    programs[2].maxAmount = 0.3;
     programs[2].frequencyInHz = 0.1;
     strcpy(programs[2].name, "Short Delay");
 
@@ -69,7 +72,8 @@ void VstPlugin::initPresets(){
     programs[3].feedbackL = 0.8;
     programs[3].feedbackR = 0.8;
     programs[3].wetDry = 0.4;
-    programs[3].amount = 0.3;
+    programs[3].minAmount = 0.1;
+    programs[3].maxAmount = 0.3;
     programs[3].frequencyInHz = 0.1;
     strcpy(programs[3].name, "Long Delay");
 
@@ -78,7 +82,8 @@ void VstPlugin::initPresets(){
     programs[4].feedbackL = 0.8;
     programs[4].feedbackR = 0;
     programs[4].wetDry = 0.5;
-    programs[4].amount = 0.3;
+    programs[4].minAmount = 0.1;
+    programs[4].maxAmount = 0.3;
     programs[4].frequencyInHz = 0.1;
     strcpy(programs[4].name, "Full Left Delay");
 }
@@ -166,8 +171,11 @@ void VstPlugin::setParameter (VstInt32 index, float value){
         case WetDry:
             delay.setWetDry(value);
             break;
-        case Amount:
-            delay.setAmount(value);
+        case MinAmount:
+            delay.setMinAmount(value);
+            break;
+        case MaxAmount:
+            delay.setMaxAmount(value);
             break;
         case FrequencyInHz:
             delay.setFrequencyInHz(value);
@@ -202,8 +210,11 @@ float VstPlugin::getParameter (VstInt32 index){
         case WetDry:
             valueToReturn = delay.getWetDry();
             break;
-        case Amount:
-            valueToReturn = delay.getAmount();
+        case MinAmount:
+            valueToReturn = delay.getMinAmount()/delay.getDelayMaxSize();
+            break;
+        case MaxAmount:
+            valueToReturn = delay.getMaxAmount()/delay.getDelayMaxSize();
             break;
         case FrequencyInHz:
             valueToReturn = delay.getFrequencyInHz();
@@ -258,8 +269,11 @@ void VstPlugin::getParameterLabel (VstInt32 index, char* label){
         case WetDry:
             vst_strncpy(label, " ", kVstMaxParamStrLen);
             break;
-        case Amount:
-            vst_strncpy(label, " ", kVstMaxParamStrLen);
+        case MinAmount:
+            vst_strncpy(label, "ms", kVstMaxParamStrLen);
+            break;
+        case MaxAmount:
+            vst_strncpy(label, "ms", kVstMaxParamStrLen);
             break;
         case FrequencyInHz:
             vst_strncpy(label, "Hz", kVstMaxParamStrLen);
@@ -297,8 +311,11 @@ void VstPlugin::getParameterDisplay (VstInt32 index, char* text) {
         case WetDry:
             float2string(delay.getWetDry(), text, kVstMaxParamStrLen);
             break;
-        case Amount:
-            float2string(delay.getAmount(), text, kVstMaxParamStrLen);
+        case MinAmount:
+            int2string((int) 1000 * delay.getMinAmount()/getSampleRate(), text, kVstMaxParamStrLen);
+            break;
+        case MaxAmount:
+            int2string((int) 1000 * delay.getMaxAmount()/getSampleRate(), text, kVstMaxParamStrLen);
             break;
         case FrequencyInHz:
             float2string(delay.getFrequencyInHz(), text, kVstMaxParamStrLen);
@@ -333,8 +350,11 @@ void VstPlugin::getParameterName (VstInt32 index, char* text) {
         case WetDry:
             vst_strncpy(text, "Wet/Dry", kVstMaxParamStrLen);
             break;
-        case Amount:
-            vst_strncpy(text, "Amount", kVstMaxParamStrLen);
+        case MinAmount:
+            vst_strncpy(text, "MinDelay", kVstMaxParamStrLen);
+            break;
+        case MaxAmount:
+            vst_strncpy(text, "MaxDelay", kVstMaxParamStrLen);
             break;
         case FrequencyInHz:
             vst_strncpy(text, "Rate", kVstMaxParamStrLen);
@@ -360,7 +380,8 @@ void VstPlugin::setProgram (VstInt32 program){
     
     setParameter(FrequencyInHz, programs[curProgram].frequencyInHz);
     
-    setParameter(Amount, programs[curProgram].amount);
+    setParameter(MinAmount, programs[curProgram].minAmount);
+    setParameter(MaxAmount, programs[curProgram].maxAmount);
 
 }
 
