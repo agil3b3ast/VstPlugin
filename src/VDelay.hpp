@@ -13,17 +13,19 @@
 #include "Delay.hpp"
 #include "Oscillator.hpp"
 #include "ModOperator.hpp"
+#include "Interp.hpp"
 
 class VDelay : public Delay{
     Oscillator oscillator;
     ModOperator modOperator;
+    Interp interp;
     
     double readCursor;
     int writeCursor;
     //double currentFractDelay;
     
-    float previousOutL;
-    float previousOutR;
+    //float previousOutL;
+    //float previousOutR;
     
     double outCurrDelay;
     float oldestSampleL;

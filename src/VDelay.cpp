@@ -7,14 +7,14 @@
 
 #include "VDelay.hpp"
 
-VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), modOperator(&oscillator){
+VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), modOperator(&oscillator), interp(2){
     modOperator.setMinAmount(0.0);
     modOperator.setMaxAmount((double)delayMaxSize);
     //currentFractDelay = (modOperator.getMaxAmount()-modOperator.getMinAmount())/2.0;
     writeCursor = 0; //cannot set writeCursor to max/2 due to precision errors
     readCursor = 0.0;
-    previousOutL = 0.0;
-    previousOutR = 0.0;
+    //previousOutL = 0.0;
+    //previousOutR = 0.0;
     
     outCurrDelay = 0.0;
     oldestSampleL = 0.0;
@@ -25,6 +25,8 @@ VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), mod
     //L=1.0/(1.0-abs(FF)); //L_inf
     //c = 1/L;
     nu=0.0;
+    
+    interp.setMax(delayMaxSize);
 }
 
 double VDelay::getMinAmount(){
@@ -72,37 +74,12 @@ void VDelay::realignReadCursor(){
 }
 
 void VDelay::calcOldestSample(float *oldestSampleL, float *oldestSampleR){
-    int previous = floor(readCursor);
-    int next = ceil(readCursor);
     
-    int int_part = previous;
-    double fract_part = readCursor-int_part;
+    interp.setInterp(readCursor);
     
-    //if(previous < 0){ //realign previous
-    //    previous = delayMaxSize -1;
-    //}
-    if(next == delayMaxSize){ //realign next
-        next = 0;
-    }
+    interp.interpAllPass(oldestSampleL, 0, bufferDelayL); //left
+    interp.interpAllPass(oldestSampleR, 1, bufferDelayR); //right
 
-    //*oldestSampleL = bufferDelayL[previous] + (fract_part*(bufferDelayL[next]-bufferDelayL[previous]));
-    //*oldestSampleR = bufferDelayR[previous] + (fract_part*(bufferDelayR[next]-bufferDelayR[previous]));
-
-    *oldestSampleL = bufferDelayL[previous] + (fract_part*(bufferDelayL[next]-previousOutL));// - (1-fract_part)*previousOutL;
-    *oldestSampleR = bufferDelayR[previous] + (fract_part*(bufferDelayR[next]-previousOutR));// - (1-fract_part)*previousOutR;
-    
-    //float lPrev = bufferDelayL[previous];//just for debug
-    //float lNext = bufferDelayL[next];//just for debug
-    
-    //float rPrev = bufferDelayR[previous];//just for debug
-    //float rNext = bufferDelayR[next];//just for debug
-    
-    
-    //*oldestSampleL = lPrev + (nu*(lNext-previousOutL));// just for debug
-    //*oldestSampleR = rPrev + (nu*(rNext-previousOutR));// just for debug
-    
-    previousOutL = *oldestSampleL; //all-pass interp
-    previousOutR = *oldestSampleR; //all-pass interp
 }
 
 
