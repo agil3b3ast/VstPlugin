@@ -22,7 +22,7 @@ Oscillator::Oscillator(float sampleRate){
     createFrequencyTable();
     stepValue = frequencyInHz*fScale;
 
-    currentWavetable = triangle;
+    currentWavetable = sine;
     
 }
 
