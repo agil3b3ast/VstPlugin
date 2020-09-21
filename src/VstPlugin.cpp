@@ -44,7 +44,7 @@ void VstPlugin::initToSmooths(){
     
     smoothParams.toSmooths[DelayFeedbackR] = false;
     
-    smoothParams.toSmooths[WetDry] = false;
+    smoothParams.toSmooths[WetDry] = true;
     
     smoothParams.toSmooths[Amount] = true;
     
@@ -60,7 +60,7 @@ void VstPlugin::initSmoothParamValues(){
     
     //smooths[DelayFeedbackR]->setStart(delay.getDelFeedbackR()*delay.getMaxFeedback());
     
-    //smooths[WetDry]->setStart(delay.getWetDry());
+    smooths[WetDry]->setStart(delay.getWetDry());
     
     smooths[Amount]->setStart(delay.getAmount());
     
