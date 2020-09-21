@@ -19,17 +19,17 @@ class Chorus{
     VDelay *vdelay3;
     //VDelay *vdelay4;
     GainStereo gainStereo;
-
+    
     float wetDry;
-
+    
 public:
     explicit Chorus(float sampleRate);
     ~Chorus();
     
     void processChorus(float** inputs, float** outputs, VstInt32 sampleFrames);
     void processChorusBySample(float* inputL, float* inputR);
-
-
+    
+    
     //getters
     VDelay *getDelay1();
     VDelay *getDelay2();
@@ -41,7 +41,7 @@ public:
     float getWetDry();
     double getMaxAmount();
     double getMinAmount();
-
+    
     //setters
     void setMaxAmount(double maxAmount);
     void setMinAmount(double minAmount);

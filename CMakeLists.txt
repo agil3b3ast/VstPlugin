@@ -36,7 +36,6 @@ set(VSTSDK_PLUGIN_SOURCE
 set(VSTPLUGIN_SOURCE
     src/VstPlugin.cpp
     src/VstPlugin.hpp
-    src/BufferFactory.cpp
     src/BufferFactory.hpp
     src/Delay.cpp
     src/Delay.hpp
@@ -48,6 +47,11 @@ set(VSTPLUGIN_SOURCE
     src/ModOperator.hpp
     src/VDelay.cpp
     src/VDelay.hpp
+    src/Chorus.cpp
+    src/Chorus.hpp
+    src/Interp.hpp
+    src/Smooth.hpp
+    src/AutoPan.hpp
     #resources/again.rc
     #resources/vstplug.def
     ${VSTSDK_PLUGIN_SOURCE}

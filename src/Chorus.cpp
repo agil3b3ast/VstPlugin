@@ -13,14 +13,14 @@ Chorus::Chorus(float sampleRate): gainStereo(){
     vdelay2 = new VDelay(sampleRate);
     vdelay3 = new VDelay(sampleRate);
     //vdelay4 = new VDelay(sampleRate);
-
+    
     //vdelay3->setFrequencyInHz(0.14);
     //vdelay4->setFrequencyInHz(0.17);
-
+    
     vdelay1->setPhase(0.25);
     vdelay3->setPhase(0.75);
-
-
+    
+    
 }
 
 Chorus::~Chorus(){
@@ -37,9 +37,9 @@ Chorus::~Chorus(){
         vdelay3 = nullptr;
     }
     /*else if(vdelay4 != nullptr){
-        delete vdelay4;
-        vdelay4 = nullptr;
-    }*/
+     delete vdelay4;
+     vdelay4 = nullptr;
+     }*/
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -126,30 +126,30 @@ void Chorus::setFrequencyInHz3(double frequencyInHz){
 void Chorus::processChorus(float** inputs, float** outputs, VstInt32 sampleFrames){
     float *buffL = inputs[0]; // buffer input left
     float *buffR = inputs[1]; // buffer input right
-
+    
     float *buffOutL = outputs[0]; // buffer output left
     float *buffOutR = outputs[1]; // buffer output right
-
+    
     //std::fstream fout;
     //std::fstream fout2;
     //fout.open("/Users/alessandro_fazio/Desktop/output_in.csv", std::ios::out | std::ios::app);
     //fout2.open("/Users/alessandro_fazio/Desktop/output_out.csv", std::ios::out | std::ios::app);
-
+    
     for(int i=0; i<sampleFrames;i++){
         processChorusBySample(&buffL[i],&buffR[i]);
         buffOutL[i] = buffL[i];
         buffOutR[i] = buffR[i];
     }
-
+    
     //fout.close();
     //fout2.close();
-
+    
 }
 
 //-------------------------------------------------------------------------------------------------------
 
 void Chorus::processChorusBySample(float* inputL, float* inputR){
-
+    
     float wetDryBalanceL;
     float wetDryBalanceR;
     
