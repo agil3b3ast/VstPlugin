@@ -55,6 +55,8 @@ class VDelay : public Delay{
         void setMinAmount(double minAmount);
         void setAmount(double amount);
         double getFrequencyInHz();
+        double getMaxFreq();
+        double getMinFreq();
         double getMaxAmount();
         double getMinAmount();
         double getAmount();

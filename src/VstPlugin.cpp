@@ -174,7 +174,7 @@ void VstPlugin::setParameter (VstInt32 index, float value){
             delay.setAmount(value);
             break;
         case FrequencyInHz:
-            delay.setFrequencyInHz(value);
+            delay.setFrequencyInHz(delay.getMinFreq() + value*(delay.getMaxFreq()-delay.getMinFreq()));
             break;
         default:
             break;
@@ -210,7 +210,7 @@ float VstPlugin::getParameter (VstInt32 index){
             valueToReturn = delay.getAmount();
             break;
         case FrequencyInHz:
-            valueToReturn = delay.getFrequencyInHz();
+            valueToReturn = (delay.getFrequencyInHz() - delay.getMinFreq())/(delay.getMaxFreq()-delay.getMinFreq());
             break;
         default:
             break;

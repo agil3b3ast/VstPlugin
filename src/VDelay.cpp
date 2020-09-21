@@ -67,6 +67,14 @@ double VDelay::getFrequencyInHz(){
     return modOperator.getOscillator()->getFrequencyInHz();
 }
 
+double VDelay::getMaxFreq(){
+    return modOperator.getOscillator()->getMaxFreq();
+}
+
+double VDelay::getMinFreq(){
+    return modOperator.getOscillator()->getMinFreq();
+}
+
 void VDelay::setFrequencyInHz(double frequencyInHz){
     modOperator.getOscillator()->setFrequencyInHz(frequencyInHz);
 }
