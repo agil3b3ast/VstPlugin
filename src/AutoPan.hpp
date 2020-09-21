@@ -23,7 +23,7 @@ class AutoPan{
     ModOperator modOperator;
     Oscillator oscillator;
     
-    public:
+public:
     inline AutoPan(float sampleRate) : oscillator(sampleRate), modOperator(&oscillator){
         amount = 1.0;
         outCurr = 0.0;
@@ -67,7 +67,7 @@ class AutoPan{
         
         modOperator.updateModOperator();
         modOperator.processModOperator(&outCurr);
-                
+        
         *left = *left*amount + *left*outCurr*(1.0-amount);
         *right = *right*amount + *right*(1.0-outCurr)*(1.0-amount);
         

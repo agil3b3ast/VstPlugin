@@ -21,5 +21,31 @@ class BufferFactory{
 
 };
 
+inline void BufferFactory::deleteBuffer(float *buffer){
+    
+    if (buffer != nullptr) {
+        delete buffer;
+        buffer = nullptr;
+    }
+}
 
+inline float* BufferFactory::createBuffer(float numberOfBytes){
+    float *buffer = (float *) malloc(numberOfBytes);
+    memset(buffer,0,numberOfBytes);
+    return buffer;
+}
+
+inline void BufferFactory::deleteBufferDouble(double *buffer){
+    
+    if (buffer != nullptr) {
+        delete buffer;
+        buffer = nullptr;
+    }
+}
+
+inline double* BufferFactory::createBufferDouble(double numberOfBytes){
+    double *buffer = (double *) malloc(numberOfBytes);
+    memset(buffer,0,numberOfBytes);
+    return buffer;
+}
 #endif /* BufferFactory_hpp */

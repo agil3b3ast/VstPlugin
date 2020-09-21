@@ -32,10 +32,10 @@ enum Waveforms{
 class Oscillator{
 
     //wavetable
-    double *sawtooth;
-    double *pulse;
     double *sine;
-    double *triangle;
+    //double *sawtooth;
+    //double *pulse;
+    //double *triangle;
 
     float sampleRate;
 
@@ -67,7 +67,6 @@ class Oscillator{
         //wavetables
         void createWavetables();
         void deleteWavetables();
-        void createFrequencyTable();
         void processOscillator(float** outputs, VstInt32 sampleFrames);
         void processOscillatorSingle(float *input);
         void processOscillatorSingleDouble(double *input);
