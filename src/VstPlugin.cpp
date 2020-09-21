@@ -48,7 +48,16 @@ void VstPlugin::initToSmooths(){
 
     smoothParams.toSmooths[Amount] = true;
 
-    smoothParams.toSmooths[FrequencyInHz] = false;
+    smoothParams.toSmooths[FrequencyInHz1] = false;
+    
+    smoothParams.toSmooths[FrequencyInHz2] = false;
+
+    smoothParams.toSmooths[FrequencyInHz3] = false;
+    
+    smoothParams.toSmooths[PanAmount] = false;
+
+    smoothParams.toSmooths[PanFrequency] = false;
+
 }
 
 void VstPlugin::initSmoothParamValues(){
@@ -60,9 +69,9 @@ void VstPlugin::initSmoothParamValues(){
 
     //smooths[DelayFeedbackR]->setStart(delay.getDelFeedbackR()*delay.getMaxFeedback());
 
-    smooths[WetDry]->setStart(delay.getWetDry());
+    smooths[WetDry]->setStart(chorus.getWetDry());
 
-    smooths[Amount]->setStart(delay.getAmount());
+    smooths[Amount]->setStart(chorus.getDelay1()->getAmount());
 
     //smooths[FrequencyInHz]->setStart((delay.getFrequencyInHz() - delay.getMinFreq())/(delay.getMaxFreq()-delay.getMinFreq()));
 
@@ -447,10 +456,10 @@ void VstPlugin::getParameterDisplay (VstInt32 index, char* text) {
             chorus.getDelay3()->getMinFreq()), text, numCharDisplay);
             break;
         case PanAmount:
-            float2string(autoPan.getAmount(), text, kVstMaxParamStrLen);
+            float2string(autoPan.getAmount(), text, numCharDisplay);
             break;
         case PanFrequency:
-            float2string(autoPan.getFreq(), text, kVstMaxParamStrLen);
+            float2string(autoPan.getFreq(), text, numCharDisplay);
             break;
         default:
             break;
@@ -515,8 +524,8 @@ void VstPlugin::setProgram (VstInt32 program){
     setSmoothParameter(FrequencyInHz2, programs[curProgram].frequencyInHz2);
     setSmoothParameter(FrequencyInHz3, programs[curProgram].frequencyInHz3);
 
-    setParameter(PanAmount, programs[curProgram].panAmount);
-    setParameter(PanFrequency, programs[curProgram].panFrequency);
+    setSmoothParameter(PanAmount, programs[curProgram].panAmount);
+    setSmoothParameter(PanFrequency, programs[curProgram].panFrequency);
 
 }
 

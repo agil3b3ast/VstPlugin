@@ -43,19 +43,6 @@ Chorus::~Chorus(){
 }
 
 //-------------------------------------------------------------------------------------------------------
-
-double Chorus::getMaxAmount(){
-    return vdelay1->getMaxAmount();
-;
-}
-
-//-------------------------------------------------------------------------------------------------------
-
-double Chorus::getMinAmount(){
-    return vdelay1->getMinAmount();
-}
-
-//-------------------------------------------------------------------------------------------------------
 float Chorus::getWetDry(){
     return wetDry;
 }
@@ -107,21 +94,6 @@ double Chorus::getFrequencyInHz3(){
 
 void Chorus::setWetDry(float wetDry){
     this->wetDry = wetDry;
-}
-
-//-------------------------------------------------------------------------------------------------------
-
-void Chorus::setMaxAmount(double maxAmount){
-    vdelay1->setMaxAmount(maxAmount);
-    vdelay2->setMaxAmount(maxAmount);
-    vdelay3->setMaxAmount(maxAmount);
-}
-//-------------------------------------------------------------------------------------------------------
-
-void Chorus::setMinAmount(double minAmount){
-    vdelay1->setMinAmount(minAmount);
-    vdelay2->setMinAmount(minAmount);
-    vdelay3->setMinAmount(minAmount);
 }
 
 //-------------------------------------------------------------------------------------------------------

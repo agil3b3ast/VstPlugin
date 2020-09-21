@@ -68,7 +68,7 @@ class VstPlugin : public AudioEffectX
     void initPlugin();
 
     //oscillators
-    Oscillator oscillator;
+    //Oscillator oscillator;
 
     //smooth
     Smooth *smooths[ParamCOUNT];
