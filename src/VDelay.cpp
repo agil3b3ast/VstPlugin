@@ -8,7 +8,11 @@
 #include "VDelay.hpp"
 
 VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), modOperator(&oscillator), interp(2){
-    modOperator.setMinAmount(0.0);
+    minV = 0.001f * sampleRate; //suppose 1ms min delay
+    //minV = 0.0;
+    
+    
+    modOperator.setMinAmount((double) minV);
     modOperator.setMaxAmount((double)delayMaxSize);
     //currentFractDelay = (modOperator.getMaxAmount()-modOperator.getMinAmount())/2.0;
     writeCursor = 0; //cannot set writeCursor to max/2 due to precision errors
@@ -19,6 +23,7 @@ VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), mod
     outCurrDelay = 0.0;
     oldestSampleL = 0.0;
     oldestSampleR = 0.0;
+
     //BL = 0.7;
     //FF = 0.7;
     //FB = 0.7;
@@ -37,8 +42,15 @@ double VDelay::getMaxAmount(){
     return modOperator.getMaxAmount();
 }
 
+double VDelay::getAmount(){
+    return modOperator.getAmount();
+}
+
+void VDelay::setAmount(double amount){
+    modOperator.setAmount(amount);
+}
+
 void VDelay::setMinAmount(double minAmount){
-    float minV = 0.1;
     if (minAmount < minV){
         modOperator.setMinAmount(minV*delayMaxSize);
     }
@@ -130,11 +142,12 @@ void VDelay::tick(float *inputL,float *inputR){
     modOperator.updateModOperator();
     modOperator.processModOperator(&outCurrDelay);
     
-    
+    //std::fstream fout;
+    //fout.open("/Users/alessandro_fazio/Desktop/output_in.csv", std::ios::out | std::ios::app);
     readCursor = writeCursor - outCurrDelay;
-    
-    
-    
+    //fout << std::to_string(readCursor) << '\n';
+    //fout.close();
+
     realignReadCursor();
     
     nu = (1.0-outCurrDelay)/(1.0+outCurrDelay);
