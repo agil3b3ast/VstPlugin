@@ -70,6 +70,8 @@ public:
     
     //setters
     
+    void setSampleRate(float sampleRate);
+    
     void setDelayGain(float gainL, float gainR);
 
     

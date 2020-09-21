@@ -34,6 +34,10 @@ class AutoPan{
         modOperator.setAmount(1.0);
     }
     
+    inline void setSampleRate(float sampleRate){
+        modOperator.getOscillator()->setSampleRate(sampleRate);
+    }
+    
     inline void setFreq(double freq){
         modOperator.getOscillator()->setFrequencyInHz(freq);
     }

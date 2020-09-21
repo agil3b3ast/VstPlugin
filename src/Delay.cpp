@@ -29,6 +29,12 @@ Delay::~Delay(){
 
 //-------------------------------------------------------------------------------------------------------
 
+void Delay::setSampleRate(float sampleRate){
+    this->sampleRate = sampleRate;
+}
+
+//-------------------------------------------------------------------------------------------------------
+
 void Delay::setDelayGain(float gainL, float gainR){
     gainStereo.setGainL(gainL);
     gainStereo.setGainR(gainR);

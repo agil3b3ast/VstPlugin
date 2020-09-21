@@ -25,10 +25,11 @@ class Smooth { //ramp from start to end in delaytime
 public:
     Smooth(float delaytime, float sampleRate) {
         this->delaytime = delaytime;
+        this->sampleRate=sampleRate;
+
         start=0.0;
         end=0.0;
         isSmooth=false;
-        this->sampleRate=sampleRate;
         samples=delaytime*sampleRate;
         currentIndex=1;
         currentSampleInPath = 0.0;
@@ -37,6 +38,7 @@ public:
         minEnd = 0.0;
     };
     ~Smooth();
+    void setSampleRate(float sampleRate);
     float smooth(float input);
     bool process(float *input);
     void setStart(float input);
@@ -52,6 +54,14 @@ public:
 
     
 };
+
+//-------------------------------------------------------------------------------------------------------
+
+inline void Smooth::setSampleRate(float sampleRate){
+    this->sampleRate = sampleRate;
+    samples = delaytime*sampleRate;
+}
+
 //-------------------------------------------------------------------------------------------------------
 
 inline void Smooth::setStart(float input){

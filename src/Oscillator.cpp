@@ -56,6 +56,14 @@ double Oscillator::getFrequencyInHz(){
 }
 
 //-------------------------------------------------------------------------------------------------------
+void Oscillator::setSampleRate(float sampleRate){
+    this->sampleRate = sampleRate;
+    this->fScale = WAVETABLE_SIZE/sampleRate;
+    stepValue = frequencyInHz*fScale;
+
+}
+
+//-------------------------------------------------------------------------------------------------------
 void Oscillator::setPhase(float phase){
     this->phase = phase;
 }

@@ -8,32 +8,36 @@
 #include "VDelay.hpp"
 
 VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), modOperator(&oscillator), interp(2){
+    initVDelay();
+}
+
+void VDelay::initVDelay(){
     minV = 0.001f * sampleRate; //suppose 1ms min delay
     //minV = 0.0;
-
-
+    
+    
     modOperator.setMinAmount((double) minV);
     modOperator.setMaxAmount((double)delayMaxSize);
+    modOperator.getOscillator()->setSampleRate(sampleRate);
     //currentFractDelay = (modOperator.getMaxAmount()-modOperator.getMinAmount())/2.0;
     writeCursor = 0; //cannot set writeCursor to max/2 due to precision errors
     readCursor = 0.0;
     //previousOutL = 0.0;
     //previousOutR = 0.0;
-
+    
     outCurrDelay = 0.0;
     oldestSampleL = 0.0;
     oldestSampleR = 0.0;
-
+    
     //BL = 0.7;
     //FF = 0.7;
     //FB = 0.7;
     //L=1.0/(1.0-abs(FF)); //L_inf
     //c = 1/L;
     nu=0.0;
-
+    
     interp.setMax(delayMaxSize);
 }
-
 
 double VDelay::getAmount(){
     return modOperator.getAmount();
