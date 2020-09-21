@@ -18,6 +18,7 @@ class AutoPan{
     double freq;
     
     const double MAX_FREQ = 10.0;
+    const double MIN_FREQ = 0.1;
     
     ModOperator modOperator;
     Oscillator oscillator;
@@ -30,10 +31,11 @@ class AutoPan{
         
         modOperator.setMinAmount(0.0);
         modOperator.setMaxAmount(1.0);
+        modOperator.setAmount(1.0);
     }
     
     inline void setFreq(double freq){
-        modOperator.getOscillator()->setFrequencyInHz(freq*MAX_FREQ);
+        modOperator.getOscillator()->setFrequencyInHz(freq);
     }
     
     inline double getFreq(){
@@ -42,6 +44,10 @@ class AutoPan{
     
     inline double getMaxFreq(){
         return MAX_FREQ;
+    }
+    
+    inline double getMinFreq(){
+        return MIN_FREQ;
     }
     
     inline void setAmount(double amount){
