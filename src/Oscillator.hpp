@@ -43,7 +43,10 @@ class Oscillator{
     double freqTable[128];
     double cursorTable;
     double fScale;
+    
     double frequencyInHz;
+    double minFreq;
+    double maxFreq;
     double stepValue;
     
     float pwm; // determina la simmetria dell'onda quadra
@@ -69,6 +72,8 @@ class Oscillator{
 
         //getters
         double getFrequencyInHz();
+        double getMinFreq();
+        double getMaxFreq();
 
         //setters
         void setFrequencyInHz(double freq);
