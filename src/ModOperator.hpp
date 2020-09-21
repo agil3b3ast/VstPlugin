@@ -24,6 +24,7 @@ class ModOperator{
     
 public:
     explicit ModOperator(Oscillator *oscillator);
+    ~ModOperator();
     
     void updateModOperator();
     

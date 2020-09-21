@@ -16,6 +16,14 @@ ModOperator::ModOperator(Oscillator *oscillator){
     coeff = (maxAmount-minAmount)/2.0;
 }
 
+ModOperator::~ModOperator(){
+    if(oscillator != nullptr){
+        delete oscillator;
+        oscillator = nullptr;
+    }
+}
+
+
 //-------------------------------------------------------------------------------------------------------
 
 //getters

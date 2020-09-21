@@ -19,8 +19,7 @@ const unsigned char numCharDisplay = 4;
 
 struct Preset{
     char name[24];
-    float feedbackL;
-    float feedbackR;
+    float feedback;
     float wetDry;
     float amount;
     float frequencyInHz1;
@@ -36,8 +35,7 @@ struct Preset{
 enum EfxParameter {
     GainLeft = 0,
     GainRight,
-    DelayFeedbackL,
-    DelayFeedbackR,
+    DelayFeedback,
     WetDry,
     Amount,
     FrequencyInHz1,
