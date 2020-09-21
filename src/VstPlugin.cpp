@@ -100,9 +100,9 @@ void VstPlugin::initPresets(){
     programs[0].feedbackR = 0;
     programs[0].wetDry = 0.5;
     programs[0].amount = 0.1;
-    programs[0].frequencyInHz1 = 0.8;
-    programs[0].frequencyInHz2 = 1.0;
-    programs[0].frequencyInHz3 = 0.9;
+    programs[0].frequencyInHz1 = 0.08;
+    programs[0].frequencyInHz2 = 0.1;
+    programs[0].frequencyInHz3 = 0.09;
     programs[0].panAmount = 1.0;
     programs[0].panFrequency = 1.0;
     strcpy(programs[0].name, "Default");
@@ -111,9 +111,9 @@ void VstPlugin::initPresets(){
     programs[1].feedbackR = 0.1;
     programs[1].wetDry = 0.5;
     programs[1].amount = 0.3;
-    programs[1].frequencyInHz1 = 0.8;
-    programs[1].frequencyInHz2 = 1.0;
-    programs[1].frequencyInHz3 = 0.9;
+    programs[1].frequencyInHz1 = 0.08;
+    programs[1].frequencyInHz2 = 0.1;
+    programs[1].frequencyInHz3 = 0.09;
     programs[1].panAmount = 1.0;
     programs[1].panFrequency = 1.0;
     strcpy(programs[1].name, "Medium Chorus");
@@ -122,9 +122,9 @@ void VstPlugin::initPresets(){
     programs[2].feedbackR = 0.3;
     programs[2].wetDry = 0.6;
     programs[2].amount = 0.3;
-    programs[2].frequencyInHz1 = 0.8;
-    programs[2].frequencyInHz2 = 1.0;
-    programs[2].frequencyInHz3 = 0.9;
+    programs[2].frequencyInHz1 = 0.08;
+    programs[2].frequencyInHz2 = 0.1;
+    programs[2].frequencyInHz3 = 0.09;
     programs[2].panAmount = 1.0;
     programs[2].panFrequency = 1.0;
     strcpy(programs[2].name, "High Chorus");
@@ -133,9 +133,9 @@ void VstPlugin::initPresets(){
     programs[3].feedbackR = 0.7;
     programs[3].wetDry = 0.6;
     programs[3].amount = 0.3;
-    programs[3].frequencyInHz1 = 0.8;
-    programs[3].frequencyInHz2 = 1.0;
-    programs[3].frequencyInHz3 = 0.9;
+    programs[3].frequencyInHz1 = 0.08;
+    programs[3].frequencyInHz2 = 0.1;
+    programs[3].frequencyInHz3 = 0.09;
     programs[3].panAmount = 1.0;
     programs[3].panFrequency = 1.0;
     strcpy(programs[3].name, "Chaos");
@@ -144,9 +144,9 @@ void VstPlugin::initPresets(){
     programs[4].feedbackR = 0;
     programs[4].wetDry = 0.5;
     programs[4].amount = 0.3;
-    programs[4].frequencyInHz1 = 0.8;
-    programs[4].frequencyInHz2 = 1.0;
-    programs[4].frequencyInHz3 = 0.9;
+    programs[4].frequencyInHz1 = 0.08;
+    programs[4].frequencyInHz2 = 0.1;
+    programs[4].frequencyInHz3 = 0.09;
     programs[4].panAmount = 0;
     programs[4].panFrequency = 4.0;
     strcpy(programs[4].name, "AutoPan");
@@ -279,7 +279,8 @@ void VstPlugin::setSmoothParameter(VstInt32 index, float value){
             autoPan.setAmount(value);
             break;
         case PanFrequency:
-            autoPan.setFreq(value);
+            autoPan.setFreq(autoPan.getMinFreq() + \
+            value*(autoPan.getMaxFreq()-autoPan.getMinFreq()));
             break;
         default:
             break;
@@ -333,7 +334,9 @@ float VstPlugin::getSmoothParameter (VstInt32 index){
             valueToReturn = autoPan.getAmount();
             break;
         case PanFrequency:
-            valueToReturn = autoPan.getFreq()/autoPan.getMaxFreq();
+            valueToReturn = (autoPan.getFreq() - \
+            autoPan.getMinFreq())/(autoPan.getMaxFreq()- \
+            autoPan.getMinFreq());
             break;
         default:
             break;
@@ -456,10 +459,12 @@ void VstPlugin::getParameterDisplay (VstInt32 index, char* text) {
             chorus.getDelay3()->getMinFreq()), text, numCharDisplay);
             break;
         case PanAmount:
-            float2string(autoPan.getAmount(), text, numCharDisplay);
+            float2string(getParameter(PanAmount), text, numCharDisplay);
             break;
         case PanFrequency:
-            float2string(autoPan.getFreq(), text, numCharDisplay);
+            float2string(autoPan.getMinFreq() + \
+            getParameter(PanFrequency)*(autoPan.getMaxFreq() - \
+            autoPan.getMinFreq()), text, numCharDisplay);
             break;
         default:
             break;
