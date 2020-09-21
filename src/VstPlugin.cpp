@@ -219,11 +219,27 @@ void VstPlugin::setSampleRate (float sampleRate)
 {
     //Chiamo setSampleRate definita nella classe parent
     AudioEffect::setSampleRate(sampleRate);
+    
+    chorus.getDelay1()->setSampleRate(sampleRate);
+    chorus.getDelay2()->setSampleRate(sampleRate);
+    chorus.getDelay3()->setSampleRate(sampleRate);
+    
     chorus.getDelay1()->deleteDelayLines();
     chorus.getDelay1()->createDelayLines();
     chorus.getDelay2()->deleteDelayLines();
     chorus.getDelay2()->createDelayLines();
+    chorus.getDelay3()->deleteDelayLines();
+    chorus.getDelay3()->createDelayLines();
+    
+    chorus.getDelay1()->initVDelay();
+    chorus.getDelay2()->initVDelay();
+    chorus.getDelay3()->initVDelay();
 
+    for(int i=0; i<ParamCOUNT;i++){
+        smooths[i] != nullptr ? smooths[i]->setSampleRate(sampleRate) : (void) 0;
+    }
+    
+    autoPan.setSampleRate(sampleRate);
 }
 
 //-------------------------------------------------------------------------------------------------------

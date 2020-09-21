@@ -39,7 +39,7 @@ class Oscillator{
 
     float sampleRate;
 
-    const int WAVETABLE_SIZE = 441000;
+    const int WAVETABLE_SIZE = 960000;
     const float NU = 0.5;
 
     double freqTable[128];
@@ -82,6 +82,7 @@ class Oscillator{
         float getPhase();
 
         //setters
+        void setSampleRate(float sampleRate);
         void setPhase(float phase);
         void setFrequencyInHz(double freq);
         void setCurrentWavetable(unsigned char currentWavetable);
