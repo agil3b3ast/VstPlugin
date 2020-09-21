@@ -15,16 +15,6 @@
 
 const unsigned char numCharDisplay = 4;
 
-struct Preset{
-    char name[24];
-    float feedbackL;
-    float feedbackR;
-    float wetDry;
-    float amount;
-    float frequencyInHz;
-};
-
-
 //-------------------------------------------------------------------------------------------------------
 
 enum EfxParameter {
@@ -36,6 +26,21 @@ enum EfxParameter {
     Amount,
     FrequencyInHz,
     ParamCOUNT
+};
+//-------------------------------------------------------------------------------------------------------
+
+struct Preset{
+    char name[24];
+    float feedbackL;
+    float feedbackR;
+    float wetDry;
+    float amount;
+    float frequencyInHz;
+};
+//-------------------------------------------------------------------------------------------------------
+
+struct SmoothParams{
+    bool toSmooths[ParamCOUNT];
 };
 
 //-------------------------------------------------------------------------------------------------------
@@ -59,9 +64,13 @@ class VstPlugin : public AudioEffectX
     
     //smooth
     Smooth *smooths[ParamCOUNT];
+    SmoothParams smoothParams;
     
     //presets
     void initPresets();
+    void initSmoothParams();
+    void initSmoothParamValues();
+    void initToSmooths();
 
 public:
 
@@ -75,6 +84,7 @@ public:
     void setSmoothParameter(VstInt32 index, float value);
 
     float getParameter (VstInt32 index) override;
+    float getSmoothParameter(VstInt32 index);
 
     bool getEffectName (char* name) override;
     bool getVendorString (char* text) override;
@@ -82,7 +92,10 @@ public:
 
 
     void getParameterLabel (VstInt32 index, char* label) override;
+    
     void getParameterDisplay (VstInt32 index, char* text) override;
+    void getSmoothParameterDisplay (VstInt32 index, char* text);
+    
     void getParameterName (VstInt32 index, char* text) override;
 
     void setSampleRate (float sampleRate) override;
