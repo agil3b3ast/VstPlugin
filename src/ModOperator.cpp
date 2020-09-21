@@ -12,6 +12,7 @@ ModOperator::ModOperator(Oscillator *oscillator){
     currentSignal = 0.0;
     maxAmount = 1.0;
     minAmount = 0.0;
+    amount = 0.0;
     coeff = (maxAmount-minAmount)/2.0;
 }
 
@@ -20,6 +21,12 @@ ModOperator::ModOperator(Oscillator *oscillator){
 //getters
 Oscillator *ModOperator::getOscillator(){
     return oscillator;
+}
+
+//-------------------------------------------------------------------------------------------------------
+
+double ModOperator::getAmount(){
+    return amount;
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -36,25 +43,21 @@ double ModOperator::getMaxAmount(){
 
 //-------------------------------------------------------------------------------------------------------
 
+void ModOperator::setAmount(double amount){
+    this->amount = amount;
+}
+
+//-------------------------------------------------------------------------------------------------------
+
 //setters
 void ModOperator::setMaxAmount(double maxAmount){
-    if (maxAmount < minAmount){
-        this->maxAmount = minAmount;
-    }
-    else{
-        this->maxAmount = maxAmount;
-    }
+    this->maxAmount = maxAmount;
 }
 
 //-------------------------------------------------------------------------------------------------------
 
 void ModOperator::setMinAmount(double minAmount){
-    if (minAmount > maxAmount){
-        this->minAmount = maxAmount;
-    }
-    else{
-        this->minAmount = minAmount;
-    }
+    this->minAmount = minAmount;
 }
 
 //-------------------------------------------------------------------------------------------------------

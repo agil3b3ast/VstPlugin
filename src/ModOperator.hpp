@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include "Oscillator.hpp"
+#include <fstream>
 
 class ModOperator{
     
@@ -18,6 +19,7 @@ class ModOperator{
     
     double maxAmount; //vale da 0 a 1
     double minAmount;
+    double amount;
     double coeff;
     
 public:
@@ -29,6 +31,7 @@ public:
     Oscillator *getOscillator();
     double getMaxAmount();
     double getMinAmount();
+    double getAmount();
     //setters
     void setOscillator(Oscillator *oscillator);
     void setMaxAmount(double maxAmount);
@@ -43,7 +46,13 @@ public:
             return;
         }
         coeff = (maxAmount-minAmount)/2.0;
-        *output = minAmount + coeff + (currentSignal * coeff); //mod a signal or parameter (e.g. delay size)
+        //std::fstream fout2;
+        //fout2.open("/Users/alessandro_fazio/Desktop/output_out.csv", std::ios::out | std::ios::app);
+
+        *output = minAmount + coeff + (currentSignal * amount * coeff); //mod a signal or parameter (e.g. delay size)
+        //fout2 << std::to_string(*output) << '\n';
+
+        //fout2.close();
     }
     
     

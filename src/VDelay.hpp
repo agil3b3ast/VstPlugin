@@ -30,6 +30,7 @@ class VDelay : public Delay{
     double outCurrDelay;
     float oldestSampleL;
     float oldestSampleR;
+    float minV;
     
     //double BL;
     //double FF;
@@ -52,9 +53,11 @@ class VDelay : public Delay{
         void setFrequencyInHz(double frequencyInHz);
         void setMaxAmount(double maxAmount);
         void setMinAmount(double minAmount);
+        void setAmount(double amount);
         double getFrequencyInHz();
         double getMaxAmount();
         double getMinAmount();
+        double getAmount();
 };
 
 #endif /* VDelay_hpp */
