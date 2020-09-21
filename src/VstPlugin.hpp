@@ -13,12 +13,12 @@
 
 #define PROGS_COUNT 5
 
+const unsigned char numCharDisplay = 4;
+
 struct Preset{
     char name[24];
     float feedbackL;
     float feedbackR;
-    float delayTimeL;
-    float delayTimeR;
     float wetDry;
     float amount;
     float frequencyInHz;
@@ -30,8 +30,6 @@ struct Preset{
 enum EfxParameter {
     GainLeft = 0,
     GainRight,
-    DelaySizeL,
-    DelaySizeR,
     DelayFeedbackL,
     DelayFeedbackR,
     WetDry,
