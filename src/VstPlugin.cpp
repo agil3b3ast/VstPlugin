@@ -70,8 +70,7 @@ void VstPlugin::initPlugin()
 
     smooths[Amount]->setStart(delay.getAmount());
 
-    smooths[FrequencyInHz]->setStart(delay.getFrequencyInHz() - \
-    delay.getMinFreq())/(delay.getMaxFreq()-delay.getMinFreq());
+    smooths[FrequencyInHz]->setStart((delay.getFrequencyInHz() - delay.getMinFreq())/(delay.getMaxFreq()-delay.getMinFreq()));
 
     for (int i=0;i<ParamCOUNT;i++){
         smooths[i]->setEnd(smooths[i]->getStart());
@@ -147,15 +146,15 @@ void VstPlugin::processReplacing(float** inputs, float** outputs, VstInt32 sampl
 
     //PROCESS EFX
 
-    std::fstream fout;
-    fout.open("/Users/alessandro_fazio/Desktop/output_in.csv", std::ios::out | std::ios::app);
+    //std::fstream fout;
+    //fout.open("/Users/alessandro_fazio/Desktop/output_in.csv", std::ios::out | std::ios::app);
 
 
     for(int i=0; i<sampleFrames;i++){
         for (int j=0;j<ParamCOUNT;j++){
             float toSmooth = 0.0;
             if (smooths[j]->process(&toSmooth)){
-                fout << std::to_string(toSmooth) << '\n';
+                //fout << std::to_string(toSmooth) << '\n';
                 setSmoothParameter(j, toSmooth);
             }
         }
@@ -163,7 +162,7 @@ void VstPlugin::processReplacing(float** inputs, float** outputs, VstInt32 sampl
         delay.processDelayBySample(&inL[i], &inR[i], &outL[i], &outR[i]);
     }
 
-    fout.close();
+    //fout.close();
 
 }
 
@@ -285,7 +284,8 @@ void VstPlugin::setParameter (VstInt32 index, float value){
         case FrequencyInHz:
             //smooths[FrequencyInHz]->setOtherSmoothPath(value);
             //paramToChange = smooths[FrequencyInHz]->process(value);
-            delay.setFrequencyInHz(value);
+            //smooths[FrequencyInHz]->setOtherSmoothPath(value);
+            setSmoothParameter(FrequencyInHz, value);
             break;
         default:
             break;
@@ -481,9 +481,9 @@ void VstPlugin::setProgram (VstInt32 program){
 
     setSmoothParameter(WetDry, programs[curProgram].wetDry);
 
-    //setParameter(FrequencyInHz, programs[curProgram].frequencyInHz);
+    setSmoothParameter(FrequencyInHz, programs[curProgram].frequencyInHz);
 
-    setParameter(Amount, programs[curProgram].amount);
+    setSmoothParameter(Amount, programs[curProgram].amount);
 
 }
 

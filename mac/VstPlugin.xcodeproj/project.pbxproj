@@ -22,7 +22,7 @@
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		6C052B1B2515F7C10090BC09 /* Interp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Interp.hpp; path = ../src/Interp.hpp; sourceTree = "<group>"; };
-		6C2CF2192511FC1E0004E947 /* Smooth.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Smooth.h; path = ../src/Smooth.h; sourceTree = "<group>"; };
+		6C2CF2192511FC1E0004E947 /* Smooth.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Smooth.hpp; path = ../src/Smooth.hpp; sourceTree = "<group>"; };
 		6C6B61C32507E40800FFC50D /* Delay.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Delay.cpp; path = ../src/Delay.cpp; sourceTree = "<group>"; };
 		6C6B61C42507E40800FFC50D /* Delay.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Delay.hpp; path = ../src/Delay.hpp; sourceTree = "<group>"; };
 		6C77E662250927FD0053BDEE /* VDelay.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = VDelay.cpp; path = ../src/VDelay.cpp; sourceTree = "<group>"; };
@@ -111,7 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				6C052B1B2515F7C10090BC09 /* Interp.hpp */,
-				6C2CF2192511FC1E0004E947 /* Smooth.h */,
+				6C2CF2192511FC1E0004E947 /* Smooth.hpp */,
 				6CDBCF812508E9A400F197FC /* ModOperator.cpp */,
 				6CDBCF822508E9A400F197FC /* ModOperator.hpp */,
 				6CFC71412507F1FA004B7BF6 /* Oscillator.cpp */,

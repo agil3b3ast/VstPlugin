@@ -5,7 +5,7 @@
 #include "BufferFactory.hpp"
 #include "Oscillator.hpp"
 #include "VDelay.hpp"
-#include "Smooth.h"
+#include "Smooth.hpp"
 
 
 

@@ -32,7 +32,6 @@ class VDelay : public Delay{
     float oldestSampleR;
     float minV;
 
-    float minV;
     //double BL;
     //double FF;
     //double FB;
@@ -53,14 +52,10 @@ class VDelay : public Delay{
         void realignReadCursor(); //this function is necessary to align read cursor in range 0-maxDelayLine
         void calcOldestSample(float *oldestSampleL, float *oldestSampleR);
         void setFrequencyInHz(double frequencyInHz);
-        void setMaxAmount(double maxAmount);
-        void setMinAmount(double minAmount);
         void setAmount(double amount);
         double getFrequencyInHz();
         double getMaxFreq();
         double getMinFreq();
-        double getMaxAmount();
-        double getMinAmount();
         double getAmount();
 };
 
