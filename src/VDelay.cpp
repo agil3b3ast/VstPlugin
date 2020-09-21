@@ -31,22 +31,9 @@ VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), mod
     //c = 1/L;
     nu=0.0;
     
-    minV = 0.1;
-
     interp.setMax(delayMaxSize);
 }
 
-float VDelay::getMinV(){
-    return minV;
-}
-
-double VDelay::getMinAmount(){
-    return modOperator.getMinAmount();
-}
-
-double VDelay::getMaxAmount(){
-    return modOperator.getMaxAmount();
-}
 
 double VDelay::getAmount(){
     return modOperator.getAmount();
@@ -54,19 +41,6 @@ double VDelay::getAmount(){
 
 void VDelay::setAmount(double amount){
     modOperator.setAmount(amount);
-}
-
-void VDelay::setMinAmount(double minAmount){
-    if (minAmount < minV){
-        modOperator.setMinAmount(minV*delayMaxSize);
-    }
-    else{
-        modOperator.setMinAmount(minAmount*delayMaxSize);
-    }
-}
-
-void VDelay::setMaxAmount(double maxAmount){
-    modOperator.setMaxAmount(maxAmount*delayMaxSize);
 }
 
 double VDelay::getFrequencyInHz(){

@@ -52,24 +52,63 @@ public:
 
     
 };
+//-------------------------------------------------------------------------------------------------------
+
+inline void Smooth::setStart(float input){
+    minBound ? (input < minEnd ? start=minEnd : start=input) : start=input;
+    currentSampleInPath = start;
+}
+//-------------------------------------------------------------------------------------------------------
+
+inline void Smooth::setEnd(float input){
+    minBound ? (input < minEnd ? end=minEnd : end = input) : end = input;
+    currentIndex = 1;
+    isSmooth = true;
+    delta = abs(end - start); //this is the absolute distance between start and end
+}
+//-------------------------------------------------------------------------------------------------------
 
 inline void Smooth::setMinEnd(float minEnd){
     this->minEnd = minEnd;
 }
+//-------------------------------------------------------------------------------------------------------
 
 inline void Smooth::setMinBound(bool minBound){
     this->minBound = minBound;
 }
+//-------------------------------------------------------------------------------------------------------
+
+inline void Smooth::setIsSmooth(bool isSmooth){
+    this->isSmooth = isSmooth;
+}
+//-------------------------------------------------------------------------------------------------------
+
+inline bool Smooth::getIsSmooth(){
+    return isSmooth;
+}
+//-------------------------------------------------------------------------------------------------------
+
+inline float Smooth::getStart(){
+    return start;
+}
+//-------------------------------------------------------------------------------------------------------
+
+inline float Smooth::getEnd(){
+    return end;
+}
+//-------------------------------------------------------------------------------------------------------
 
 inline void Smooth::startSmoothPath(float start, float end){
     setStart(start);
     setEnd(end);
 }
+//-------------------------------------------------------------------------------------------------------
 
 inline void Smooth::setOtherSmoothPath(float input){ //continue smoooth path with other end
     setStart(currentSampleInPath);
     setEnd(input);
 }
+//-------------------------------------------------------------------------------------------------------
 
 inline float Smooth::smooth(float input) {
     float currentStep = currentIndex/(float)samples;
@@ -79,48 +118,11 @@ inline float Smooth::smooth(float input) {
     currentSampleInPath = end < start ? start - currentStep*(delta) : start + currentStep*(delta);
     return currentSampleInPath;
 }
-
-inline void Smooth::setStart(float input){
-    /*if (minBound){
-        if(start < minEnd){
-            start=minEnd;
-        }
-        else{
-            start=input;
-        }
-    }
-    else{
-        start=input;
-    }*/
-    
-    minBound ? (input < minEnd ? start=minEnd : start=input) : start=input;
-    currentSampleInPath = start;
-}
-
-inline void Smooth::setEnd(float input){
-    /*if (minBound){
-        if(end < minEnd){
-            end=minEnd;
-        }
-        else{
-            end=input;
-        }
-    }
-    else{
-        end=input;
-    }*/
-    minBound ? (input < minEnd ? end=minEnd : end = input) : end = input;
-    currentIndex = 1;
-    isSmooth = true;
-    delta = abs(end - start); //this is the absolute distance between start and end
-}
-
-inline void Smooth::setIsSmooth(bool isSmooth){
-    this->isSmooth = isSmooth;
-}
+//-------------------------------------------------------------------------------------------------------
 
 inline bool Smooth::process(float *input) {
     bool processed = isSmooth;
+    
     if(isSmooth){
         *input = smooth(end);
         if (currentIndex == samples+1){
@@ -128,18 +130,6 @@ inline bool Smooth::process(float *input) {
         }
     }
     return processed;
-}
-
-inline bool Smooth::getIsSmooth(){
-    return isSmooth;
-}
-
-inline float Smooth::getStart(){
-    return start;
-}
-
-inline float Smooth::getEnd(){
-    return end;
 }
 
 #endif /* Smooth_h */
