@@ -37,7 +37,7 @@ public:
         minBound = false;
         minEnd = 0.0;
     };
-    ~Smooth();
+    ~Smooth(){};
     void setSampleRate(float sampleRate);
     float smooth(float input);
     bool process(float *input);
