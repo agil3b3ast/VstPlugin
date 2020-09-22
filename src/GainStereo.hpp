@@ -30,5 +30,44 @@ public:
     void processGainR(float *sample);
     
 };
+//-------------------------------------------------------------------------------------------------------
 
+inline GainStereo::GainStereo(){
+    gainL = 1.0;
+    gainR = 1.0;
+}
+
+//-------------------------------------------------------------------------------------------------------
+
+inline float GainStereo::getGainL(){
+    return gainL;
+}
+
+//-------------------------------------------------------------------------------------------------------
+
+inline float GainStereo::getGainR(){
+    return gainR;
+}
+
+//-------------------------------------------------------------------------------------------------------
+
+inline void GainStereo::setGainL(float gainL){
+    this->gainL = gainL;
+}
+
+//-------------------------------------------------------------------------------------------------------
+
+inline void GainStereo::setGainR(float gainR){
+    this->gainR = gainR;
+}
+//-------------------------------------------------------------------------------------------------------
+
+inline void GainStereo::processGainL(float *sample){
+    *sample = *sample * this->gainL;
+}
+//-------------------------------------------------------------------------------------------------------
+
+inline void GainStereo::processGainR(float *sample){
+    *sample = *sample * this->gainR;
+}
 #endif /* GainStereo_hpp */
