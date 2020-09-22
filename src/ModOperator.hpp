@@ -39,8 +39,8 @@ public:
     void setMinAmount(double minAmount);
     void setAmount(double amount);
     
-    //templates
-    template <typename outputToMod> void processModOperator(outputToMod *output){
+    //templates, only gen
+    template <typename outputMod> void processModOperator(outputMod *output){
         
         if (output == nullptr){
             std::cerr << "An input must be provided!\n";
@@ -56,6 +56,16 @@ public:
         //fout2.close();
     }
     
+    //templates, mod signal
+    template <typename outputMod, typename inputMod> void processModOperator(outputMod *output, inputMod *input){
+        if (output == nullptr or input ==nullptr){
+            std::cerr << "An output/input must be provided!\n";
+            return;
+        }
+        
+        processModOperator(output);
+        *output = *output * *input;
+    }
     
 };
 
