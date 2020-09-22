@@ -17,10 +17,10 @@ ModOperator::ModOperator(Oscillator *oscillator){
 }
 
 ModOperator::~ModOperator(){
-    if(oscillator != nullptr){
-        delete oscillator;
-        oscillator = nullptr;
-    }
+//    if(oscillator != nullptr){
+//        delete oscillator;
+//        oscillator = nullptr;
+//    }
 }
 
 
