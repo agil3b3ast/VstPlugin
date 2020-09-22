@@ -8,7 +8,7 @@
 #include "Oscillator.hpp"
 
 
-Oscillator::Oscillator(float sampleRate){
+Oscillator::Oscillator(float sampleRate) : interp(1){
     pwm = 0.3;
     cursorTable = 0.0;
 
@@ -24,6 +24,7 @@ Oscillator::Oscillator(float sampleRate){
 
     currentWavetable = sine;
 
+    interp.setMax(WAVETABLE_SIZE);
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -194,21 +195,9 @@ void Oscillator::genSignalDouble(double* output){
 //-------------------------------------------------------------------------------------------------------
 void Oscillator::genSignalDoubleWithInterp(double* output){
     double index = cursorTable+phase*WAVETABLE_SIZE;
-    int next = ceil(index);
-    int previous = floor(index);
 
-    int int_part = previous;
-    double fract_part = index-int_part;
-
-    //if(previous < 0){ //realign previous
-    //    previous = WAVETABLE_SIZE -1;
-    //}
-    if(next == WAVETABLE_SIZE){ //realign next
-        next = 0;
-    }
-    //*output = NU*currentWavetable[previous] + (1.0-NU)*currentWavetable[next]; fixed NU
-    *output = currentWavetable[previous] + (fract_part*(currentWavetable[next]-currentWavetable[previous]));
-
+    interp.setInterp(index);
+    interp.interpLinear(output, currentWavetable);
 }
 
 //-------------------------------------------------------------------------------------------------------
