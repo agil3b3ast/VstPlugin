@@ -18,16 +18,16 @@ public:
     explicit GainStereo();
     
     //getters
-    float getGainL();
-    float getGainR();
+    float getGainL() const;
+    float getGainR() const;
     
     //setters
     void setGainL(float gainL);
     void setGainR(float gainR);
     
     //process
-    void processGainL(float *sample);
-    void processGainR(float *sample);
+    void processGainL(float *sample) const;
+    void processGainR(float *sample) const;
     
 };
 //-------------------------------------------------------------------------------------------------------
@@ -39,13 +39,13 @@ inline GainStereo::GainStereo(){
 
 //-------------------------------------------------------------------------------------------------------
 
-inline float GainStereo::getGainL(){
+inline float GainStereo::getGainL() const{
     return gainL;
 }
 
 //-------------------------------------------------------------------------------------------------------
 
-inline float GainStereo::getGainR(){
+inline float GainStereo::getGainR() const{
     return gainR;
 }
 
@@ -62,12 +62,12 @@ inline void GainStereo::setGainR(float gainR){
 }
 //-------------------------------------------------------------------------------------------------------
 
-inline void GainStereo::processGainL(float *sample){
+inline void GainStereo::processGainL(float *sample) const{
     *sample = *sample * this->gainL;
 }
 //-------------------------------------------------------------------------------------------------------
 
-inline void GainStereo::processGainR(float *sample){
+inline void GainStereo::processGainR(float *sample) const{
     *sample = *sample * this->gainR;
 }
 #endif /* GainStereo_hpp */
