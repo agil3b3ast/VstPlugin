@@ -39,7 +39,7 @@ class VDelay : public Delay{
     //double L;
     //double c;
 
-    double nu;
+    //double nu;
 
     //const float NU = 0.5;
 

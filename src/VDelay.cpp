@@ -34,7 +34,7 @@ void VDelay::initVDelay(){
     //FB = 0.7;
     //L=1.0/(1.0-abs(FF)); //L_inf
     //c = 1/L;
-    nu=0.0;
+    //nu=0.0;
     
     interp.setMax(delayMaxSize);
 }
@@ -176,7 +176,7 @@ void VDelay::tick(float *inputL,float *inputR){
 
     realignReadCursor();
 
-    nu = (1.0-outCurrDelay)/(1.0+outCurrDelay);
+    //nu = (1.0-outCurrDelay)/(1.0+outCurrDelay);
 
     calcOldestSample(&oldestSampleL, &oldestSampleR);
 

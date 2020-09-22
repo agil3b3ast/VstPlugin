@@ -112,6 +112,7 @@
 		F4FF51C30929F9AA00DDED7A /* src */ = {
 			isa = PBXGroup;
 			children = (
+				6C8DDCEB2506365A0034F113 /* BufferFactory.hpp */,
 				6C052B1B2515F7C10090BC09 /* Interp.hpp */,
 				6C2CF2192511FC1E0004E947 /* Smooth.hpp */,
 				6CF7AABD251965B50081F705 /* AutoPan.hpp */,
@@ -129,7 +130,6 @@
 				6C6B61C42507E40800FFC50D /* Delay.hpp */,
 				DC029D6B2486DA3D001964D9 /* VstPlugin.cpp */,
 				DC029D6C2486DA3D001964D9 /* VstPlugin.hpp */,
-				6C8DDCEB2506365A0034F113 /* BufferFactory.hpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
