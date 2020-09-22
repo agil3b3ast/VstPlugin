@@ -56,7 +56,7 @@ void VstPlugin::initToSmooths(){
 
     smoothParams.toSmooths[FrequencyInHz3] = false;
     
-    smoothParams.toSmooths[PanAmount] = false;
+    smoothParams.toSmooths[PanAmount] = true;
 
     smoothParams.toSmooths[PanFrequency] = false;
 
@@ -80,6 +80,7 @@ void VstPlugin::initSmoothParamValues(){
 
     //smooths[FrequencyInHz]->setStart((delay.getFrequencyInHz() - delay.getMinFreq())/(delay.getMaxFreq()-delay.getMinFreq()));
 
+    smoothParams.smooths[PanAmount]->setStart(autoPan.getAmount());
 }
 
 void VstPlugin::initSmoothParams(){
