@@ -156,7 +156,7 @@ void VstPlugin::initPresets(){
     programs[4].frequencyInHz2 = 0.1;
     programs[4].frequencyInHz3 = 0.09;
     programs[4].panAmount = 0;
-    programs[4].panFrequency = 4.0;
+    programs[4].panFrequency = 1.0;
     strcpy(programs[4].name, "AutoPan");
 }
 
