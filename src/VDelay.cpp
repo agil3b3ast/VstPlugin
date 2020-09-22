@@ -39,6 +39,10 @@ void VDelay::initVDelay(){
     interp.setMax(delayMaxSize);
 }
 
+double VDelay::getMinV(){
+    return minV;
+}
+
 double VDelay::getAmount(){
     return modOperator.getAmount();
 }

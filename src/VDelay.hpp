@@ -62,6 +62,7 @@ class VDelay : public Delay{
         double getFrequencyInHz();
         double getMaxFreq();
         double getMinFreq();
+        double getMinV();
         double getAmount();
 };
 

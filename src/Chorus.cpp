@@ -156,16 +156,16 @@ void Chorus::processChorusBySample(float* inputL, float* inputR){
     float chorusOutL;
     float chorusOutR;
     
-    float in1L,in1R,in2L,in2R,in3L,in3R,in4L,in4R = 0.0;
+    float in1L,in1R,in2L,in2R,in3L,in3R= 0.0;//,in4L,in4R = 0.0;
     
     in1L = *inputL;
     in2L = in1L;
     in3L = in1L;
-    in4L = in1L;
+    //in4L = in1L;
     in1R = *inputR;
     in2R = in1R;
     in3R = in1R;
-    in4R = in1R;
+    //in4R = in1R;
     vdelay1->tick(&in1L, &in1R);
     
     float inSum = 0.5*in2L+0.5*in2R;
