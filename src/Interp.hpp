@@ -15,8 +15,6 @@ class Interp{
     int int_part;
     double fract_part;
     int max;
-    float *oldestSamples;
-    int channels;
     float *previousOuts;
     
     public:
@@ -66,6 +64,11 @@ class Interp{
 //-------------------------------------------------------------------------------------------------------
 inline Interp::Interp(int channels){
     previousOuts = BufferFactory::createBuffer(channels*sizeof(float));
+    previous = 0;
+    next = 0;
+    int_part = 0;
+    fract_part = 0.0;
+    max = 0;
 }
 //-------------------------------------------------------------------------------------------------------
 inline void Interp::setMax(int max){
