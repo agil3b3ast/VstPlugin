@@ -19,8 +19,8 @@ class Smooth { //ramp from start to end in delaytime
     int currentIndex;
     float currentSampleInPath;
     float delta;
-    bool minBound;
-    float minEnd;
+    //bool minBound;
+    //float minEnd;
     
 public:
     explicit Smooth(float delaytime, float sampleRate);
@@ -36,8 +36,8 @@ public:
     void setIsSmooth(bool isSmooth);
     float getStart() const;
     float getEnd() const;
-    void setMinEnd(float minEnd);
-    void setMinBound(bool minBound);
+    //void setMinEnd(float minEnd);
+    //void setMinBound(bool minBound);
 
     
 };
@@ -53,8 +53,8 @@ inline Smooth::Smooth(float delaytime, float sampleRate) {
     currentIndex=1;
     currentSampleInPath = 0.0;
     delta = 0.0;
-    minBound = false;
-    minEnd = 0.0;
+    //minBound = false;
+    //minEnd = 0.0;
 };
 
 //-------------------------------------------------------------------------------------------------------
@@ -67,27 +67,29 @@ inline void Smooth::setSampleRate(float sampleRate){
 //-------------------------------------------------------------------------------------------------------
 
 inline void Smooth::setStart(float input){
-    minBound ? (input < minEnd ? start=minEnd : start=input) : start=input;
+    //minBound ? (input < minEnd ? start=minEnd : start=input) : start=input;
+    start=input;
     currentSampleInPath = start;
 }
 //-------------------------------------------------------------------------------------------------------
 
 inline void Smooth::setEnd(float input){
-    minBound ? (input < minEnd ? end=minEnd : end = input) : end = input;
+    //minBound ? (input < minEnd ? end=minEnd : end = input) : end = input;
+    end = input;
     currentIndex = 1;
     isSmooth = true;
     delta = abs(end - start); //this is the absolute distance between start and end
 }
 //-------------------------------------------------------------------------------------------------------
 
-inline void Smooth::setMinEnd(float minEnd){
+/*inline void Smooth::setMinEnd(float minEnd){
     this->minEnd = minEnd;
-}
+}*/
 //-------------------------------------------------------------------------------------------------------
 
-inline void Smooth::setMinBound(bool minBound){
+/*inline void Smooth::setMinBound(bool minBound){
     this->minBound = minBound;
-}
+}*/
 //-------------------------------------------------------------------------------------------------------
 
 inline void Smooth::setIsSmooth(bool isSmooth){
