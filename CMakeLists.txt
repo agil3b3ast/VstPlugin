@@ -24,7 +24,8 @@ endif()
 # Build plug-in #
 #################
 
-set(VSTSDK_PATH "/Users/alessandro_fazio/OneDrive - Universita' degli Studi di Roma Tor Vergata/MIS/APD/XCode Projects/VstPlugin/vstsdk2.4" CACHE PATH "Path to VST SDK")
+#set(VSTSDK_PATH "/Users/alessandro_fazio/OneDrive - Universita' degli Studi di Roma Tor Vergata/MIS/APD/XCode Projects/VstPlugin/vstsdk2.4" CACHE PATH "Path to VST SDK")
+set(VSTSDK_PATH "./vstsdk2.4" CACHE PATH "Path to VST SDK")
 set(VSTSDK_INCLUDE_DIR ${VSTSDK_PATH})
 set(VSTSDK_PLUGIN_SOURCE
   ${VSTSDK_PATH}/public.sdk/source/vst2.x/audioeffectx.cpp
