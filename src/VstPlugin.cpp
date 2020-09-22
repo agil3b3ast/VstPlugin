@@ -28,7 +28,7 @@ void VstPlugin::initPlugin()
     //gain is inside delay
 
     // INIT
-    for (int i=0;i<ParamCOUNT;i++){smooths[i] = nullptr;}
+    for (int i=0;i<ParamCOUNT;i++){smoothParams.smooths[i] = nullptr;}
 
     initPresets();
     initToSmooths();
@@ -71,11 +71,11 @@ void VstPlugin::initSmoothParamValues(){
 
     //smooths[DelayFeedbackR]->setStart(delay.getDelFeedbackR()*delay.getMaxFeedback());
 
-    smooths[WetDry]->setStart(chorus.getWetDry());
+    smoothParams.smooths[WetDry]->setStart(chorus.getWetDry());
 
-    smooths[Amount1]->setStart(chorus.getDelay1()->getAmount());
-    smooths[Amount2]->setStart(chorus.getDelay2()->getAmount());
-    smooths[Amount3]->setStart(chorus.getDelay3()->getAmount());
+    smoothParams.smooths[Amount1]->setStart(chorus.getDelay1()->getAmount());
+    smoothParams.smooths[Amount2]->setStart(chorus.getDelay2()->getAmount());
+    smoothParams.smooths[Amount3]->setStart(chorus.getDelay3()->getAmount());
 
 
     //smooths[FrequencyInHz]->setStart((delay.getFrequencyInHz() - delay.getMinFreq())/(delay.getMaxFreq()-delay.getMinFreq()));
@@ -86,15 +86,15 @@ void VstPlugin::initSmoothParams(){
     float smoothDelayTime = 0.01; //suppose 10ms delay
 
     for (int i=0;i<ParamCOUNT;i++){
-        smooths[i] = smoothParams.toSmooths[i] ? new Smooth(smoothDelayTime,getSampleRate()) : nullptr;
+        smoothParams.smooths[i] = smoothParams.toSmooths[i] ? new Smooth(smoothDelayTime,getSampleRate()) : nullptr;
     }
 
     initSmoothParamValues();
 
     for (int i=0;i<ParamCOUNT;i++){
         if(smoothParams.toSmooths[i]){
-            smooths[i]->setEnd(smooths[i]->getStart());
-            smooths[i]->setIsSmooth(false);
+            smoothParams.smooths[i]->setEnd(smoothParams.smooths[i]->getStart());
+            smoothParams.smooths[i]->setIsSmooth(false);
         }
     }
 }
@@ -189,7 +189,7 @@ void VstPlugin::processReplacing(float** inputs, float** outputs, VstInt32 sampl
     for(int i=0; i<sampleFrames;i++){
         for (int j=0;j<ParamCOUNT;j++){
             float toSmooth = 0.0;
-            smoothParams.toSmooths[j] ? (smooths[j]->process(&toSmooth) ? setSmoothParameter(j, toSmooth) : (void) 0) : (void) 0;
+            smoothParams.toSmooths[j] ? (smoothParams.smooths[j]->process(&toSmooth) ? setSmoothParameter(j, toSmooth) : (void) 0) : (void) 0;
             //fout << std::to_string(toSmooth) << '\n';
         }
 
@@ -235,7 +235,7 @@ void VstPlugin::setSampleRate (float sampleRate)
     chorus.getDelay3()->initVDelay();
 
     for(int i=0; i<ParamCOUNT;i++){
-        smooths[i] != nullptr ? smooths[i]->setSampleRate(sampleRate) : (void) 0;
+        smoothParams.smooths[i] != nullptr ? smoothParams.smooths[i]->setSampleRate(sampleRate) : (void) 0;
     }
     
     autoPan.setSampleRate(sampleRate);
@@ -246,9 +246,9 @@ void VstPlugin::setSampleRate (float sampleRate)
  VstPlugin::~VstPlugin()
 {
     for (int i=0;i<ParamCOUNT;i++){
-        if (smooths[i] != nullptr){
-            delete smooths[i];
-            smooths[i] = nullptr;
+        if (smoothParams.smooths[i] != nullptr){
+            delete smoothParams.smooths[i];
+            smoothParams.smooths[i] = nullptr;
         }
     }
 }
@@ -309,7 +309,7 @@ void VstPlugin::setSmoothParameter(VstInt32 index, float value){
 //-----------------------------------------------------------------------------------------
 void VstPlugin::setParameter (VstInt32 index, float value){
     //float paramToChange = 0.0;
-    ((smooths[index] != nullptr) and smoothParams.toSmooths[index]) ? smooths[index]->setOtherSmoothPath(value) : setSmoothParameter(index, value);
+    ((smoothParams.smooths[index] != nullptr) and smoothParams.toSmooths[index]) ? smoothParams.smooths[index]->setOtherSmoothPath(value) : setSmoothParameter(index, value);
 };
 
 //-----------------------------------------------------------------------------------------
@@ -368,7 +368,7 @@ float VstPlugin::getSmoothParameter (VstInt32 index){
 
 //-----------------------------------------------------------------------------------------
 float VstPlugin::getParameter (VstInt32 index){
-    return ((smooths[index] != nullptr) and smoothParams.toSmooths[index]) ?  smooths[index]->getEnd() : getSmoothParameter(index);
+    return ((smoothParams.smooths[index] != nullptr) and smoothParams.toSmooths[index]) ?  smoothParams.smooths[index]->getEnd() : getSmoothParameter(index);
 };
 
 //-----------------------------------------------------------------------------------------
