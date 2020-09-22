@@ -27,11 +27,13 @@ void VstPlugin::initPlugin()
 
     //gain is inside delay
 
-    // INIT DELAY
+    // INIT
+    for (int i=0;i<ParamCOUNT;i++){smooths[i] = nullptr;}
 
     initPresets();
-    setProgram(0);
     initToSmooths();
+
+    setProgram(0);
     initSmoothParams();
 }
 
@@ -307,7 +309,7 @@ void VstPlugin::setSmoothParameter(VstInt32 index, float value){
 //-----------------------------------------------------------------------------------------
 void VstPlugin::setParameter (VstInt32 index, float value){
     //float paramToChange = 0.0;
-    smoothParams.toSmooths[index] ? smooths[index]->setOtherSmoothPath(value) : setSmoothParameter(index, value);
+    ((smooths[index] != nullptr) and smoothParams.toSmooths[index]) ? smooths[index]->setOtherSmoothPath(value) : setSmoothParameter(index, value);
 };
 
 //-----------------------------------------------------------------------------------------
@@ -366,7 +368,7 @@ float VstPlugin::getSmoothParameter (VstInt32 index){
 
 //-----------------------------------------------------------------------------------------
 float VstPlugin::getParameter (VstInt32 index){
-    return smoothParams.toSmooths[index] ?  smooths[index]->getEnd() : getSmoothParameter(index);
+    return ((smooths[index] != nullptr) and smoothParams.toSmooths[index]) ?  smooths[index]->getEnd() : getSmoothParameter(index);
 };
 
 //-----------------------------------------------------------------------------------------
@@ -550,21 +552,21 @@ void VstPlugin::getParameterName (VstInt32 index, char* text) {
 void VstPlugin::setProgram (VstInt32 program){
     AudioEffect::setProgram(program);
 
-    setSmoothParameter(DelayFeedback, programs[curProgram].feedback);
+    setParameter(DelayFeedback, programs[curProgram].feedback);
 
-    setSmoothParameter(WetDry, programs[curProgram].wetDry);
+    setParameter(WetDry, programs[curProgram].wetDry);
 
-    setSmoothParameter(Amount1, programs[curProgram].amount1);
-    setSmoothParameter(Amount2, programs[curProgram].amount2);
-    setSmoothParameter(Amount3, programs[curProgram].amount3);
+    setParameter(Amount1, programs[curProgram].amount1);
+    setParameter(Amount2, programs[curProgram].amount2);
+    setParameter(Amount3, programs[curProgram].amount3);
 
 
-    setSmoothParameter(FrequencyInHz1, programs[curProgram].frequencyInHz1);
-    setSmoothParameter(FrequencyInHz2, programs[curProgram].frequencyInHz2);
-    setSmoothParameter(FrequencyInHz3, programs[curProgram].frequencyInHz3);
+    setParameter(FrequencyInHz1, programs[curProgram].frequencyInHz1);
+    setParameter(FrequencyInHz2, programs[curProgram].frequencyInHz2);
+    setParameter(FrequencyInHz3, programs[curProgram].frequencyInHz3);
 
-    setSmoothParameter(PanAmount, programs[curProgram].panAmount);
-    setSmoothParameter(PanFrequency, programs[curProgram].panFrequency);
+    setParameter(PanAmount, programs[curProgram].panAmount);
+    setParameter(PanFrequency, programs[curProgram].panFrequency);
 
 }
 
