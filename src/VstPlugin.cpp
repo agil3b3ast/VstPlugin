@@ -44,7 +44,9 @@ void VstPlugin::initToSmooths(){
 
     smoothParams.toSmooths[WetDry] = true;
 
-    smoothParams.toSmooths[Amount] = true;
+    smoothParams.toSmooths[Amount1] = true;
+    smoothParams.toSmooths[Amount2] = true;
+    smoothParams.toSmooths[Amount3] = true;
 
     smoothParams.toSmooths[FrequencyInHz1] = false;
     
@@ -69,7 +71,10 @@ void VstPlugin::initSmoothParamValues(){
 
     smooths[WetDry]->setStart(chorus.getWetDry());
 
-    smooths[Amount]->setStart(chorus.getDelay1()->getAmount());
+    smooths[Amount1]->setStart(chorus.getDelay1()->getAmount());
+    smooths[Amount2]->setStart(chorus.getDelay2()->getAmount());
+    smooths[Amount3]->setStart(chorus.getDelay3()->getAmount());
+
 
     //smooths[FrequencyInHz]->setStart((delay.getFrequencyInHz() - delay.getMinFreq())/(delay.getMaxFreq()-delay.getMinFreq()));
 
@@ -96,7 +101,9 @@ void VstPlugin::initSmoothParams(){
 void VstPlugin::initPresets(){
     programs[0].feedback = 0;
     programs[0].wetDry = 0.5;
-    programs[0].amount = 0.15;
+    programs[0].amount1 = 0.15;
+    programs[0].amount2 = 0.16;
+    programs[0].amount3 = 0.14;
     programs[0].frequencyInHz1 = 0.08;
     programs[0].frequencyInHz2 = 0.1;
     programs[0].frequencyInHz3 = 0.09;
@@ -106,7 +113,9 @@ void VstPlugin::initPresets(){
 
     programs[1].feedback = 0.1;
     programs[1].wetDry = 0.5;
-    programs[1].amount = 0.3;
+    programs[1].amount1 = 0.29;
+    programs[1].amount2 = 0.3;
+    programs[1].amount3 = 0.28;
     programs[1].frequencyInHz1 = 0.2;
     programs[1].frequencyInHz2 = 0.19;
     programs[1].frequencyInHz3 = 0.25;
@@ -116,7 +125,9 @@ void VstPlugin::initPresets(){
 
     programs[2].feedback = 0.3;
     programs[2].wetDry = 0.6;
-    programs[2].amount = 0.4;
+    programs[2].amount1 = 0.39;
+    programs[2].amount2 = 0.4;
+    programs[2].amount3 = 0.38;
     programs[2].frequencyInHz1 = 0.45;
     programs[2].frequencyInHz2 = 0.5;
     programs[2].frequencyInHz3 = 0.4;
@@ -126,7 +137,9 @@ void VstPlugin::initPresets(){
 
     programs[3].feedback = 0.7;
     programs[3].wetDry = 0.6;
-    programs[3].amount = 0.8;
+    programs[3].amount1 = 0.79;
+    programs[3].amount2 = 0.8;
+    programs[3].amount3 = 0.78;
     programs[3].frequencyInHz1 = 0.9;
     programs[3].frequencyInHz2 = 1.0;
     programs[3].frequencyInHz3 = 0.9;
@@ -136,7 +149,9 @@ void VstPlugin::initPresets(){
 
     programs[4].feedback = 0;
     programs[4].wetDry = 0.5;
-    programs[4].amount = 0.15;
+    programs[4].amount1 = 0.15;
+    programs[4].amount2 = 0.16;
+    programs[4].amount3 = 0.14;
     programs[4].frequencyInHz1 = 0.08;
     programs[4].frequencyInHz2 = 0.1;
     programs[4].frequencyInHz3 = 0.09;
@@ -256,9 +271,13 @@ void VstPlugin::setSmoothParameter(VstInt32 index, float value){
         case WetDry:
             chorus.setWetDry(value);
             break;
-        case Amount:
+        case Amount1:
             chorus.getDelay1()->setAmount(value);
+            break;
+        case Amount2:
             chorus.getDelay2()->setAmount(value);
+            break;
+        case Amount3:
             chorus.getDelay3()->setAmount(value);
             break;
         case FrequencyInHz1:
@@ -307,8 +326,14 @@ float VstPlugin::getSmoothParameter (VstInt32 index){
         case WetDry:
             valueToReturn = chorus.getWetDry();
             break;
-        case Amount:
+        case Amount1:
             valueToReturn = chorus.getDelay1()->getAmount();
+            break;
+        case Amount2:
+            valueToReturn = chorus.getDelay2()->getAmount();
+            break;
+        case Amount3:
+            valueToReturn = chorus.getDelay3()->getAmount();
             break;
         case FrequencyInHz1:
             valueToReturn = (chorus.getFrequencyInHz1() - \
@@ -379,7 +404,13 @@ void VstPlugin::getParameterLabel (VstInt32 index, char* label){
         case WetDry:
             vst_strncpy(label, " ", kVstMaxParamStrLen);
             break;
-        case Amount:
+        case Amount1:
+            vst_strncpy(label, "ms", kVstMaxParamStrLen);
+            break;
+        case Amount2:
+            vst_strncpy(label, "ms", kVstMaxParamStrLen);
+            break;
+        case Amount3:
             vst_strncpy(label, "ms", kVstMaxParamStrLen);
             break;
         case FrequencyInHz1:
@@ -426,10 +457,20 @@ void VstPlugin::getParameterDisplay (VstInt32 index, char* text) {
             //float2string(smooths[WetDry]->getEnd(), text, numCharDisplay);
             float2string(getParameter(WetDry), text, numCharDisplay);
             break;
-        case Amount:
+        case Amount1:
             //int2string((int) 1000 * delay.getAmount()*delay.getDelayMaxSize()/(2.0*getSampleRate()), text, kVstMaxParamStrLen);
             //float2string(smooths[Amount]->getEnd(), text, numCharDisplay);
-            float2string(1000 * getParameter(Amount)*chorus.getDelay1()->getDelayMaxSize()/getSampleRate(), text, numCharDisplay);
+            float2string(1000 * getParameter(Amount1)*chorus.getDelay1()->getDelayMaxSize()/getSampleRate(), text, numCharDisplay);
+            break;
+        case Amount2:
+            //int2string((int) 1000 * delay.getAmount()*delay.getDelayMaxSize()/(2.0*getSampleRate()), text, kVstMaxParamStrLen);
+            //float2string(smooths[Amount]->getEnd(), text, numCharDisplay);
+            float2string(1000 * getParameter(Amount2)*chorus.getDelay2()->getDelayMaxSize()/getSampleRate(), text, numCharDisplay);
+            break;
+        case Amount3:
+            //int2string((int) 1000 * delay.getAmount()*delay.getDelayMaxSize()/(2.0*getSampleRate()), text, kVstMaxParamStrLen);
+            //float2string(smooths[Amount]->getEnd(), text, numCharDisplay);
+            float2string(1000 * getParameter(Amount3)*chorus.getDelay3()->getDelayMaxSize()/getSampleRate(), text, numCharDisplay);
             break;
         case FrequencyInHz1:
             float2string(chorus.getDelay1()->getMinFreq() + \
@@ -475,8 +516,14 @@ void VstPlugin::getParameterName (VstInt32 index, char* text) {
         case WetDry:
             vst_strncpy(text, "Wet/Dry", kVstMaxParamStrLen);
             break;
-        case Amount:
-            vst_strncpy(text, "Amount", kVstMaxParamStrLen);
+        case Amount1:
+            vst_strncpy(text, "Amount1", kVstMaxParamStrLen);
+            break;
+        case Amount2:
+            vst_strncpy(text, "Amount2", kVstMaxParamStrLen);
+            break;
+        case Amount3:
+            vst_strncpy(text, "Amount3", kVstMaxParamStrLen);
             break;
         case FrequencyInHz1:
             vst_strncpy(text, "Rate1", kVstMaxParamStrLen);
@@ -507,7 +554,10 @@ void VstPlugin::setProgram (VstInt32 program){
 
     setSmoothParameter(WetDry, programs[curProgram].wetDry);
 
-    setSmoothParameter(Amount, programs[curProgram].amount);
+    setSmoothParameter(Amount1, programs[curProgram].amount1);
+    setSmoothParameter(Amount2, programs[curProgram].amount2);
+    setSmoothParameter(Amount3, programs[curProgram].amount3);
+
 
     setSmoothParameter(FrequencyInHz1, programs[curProgram].frequencyInHz1);
     setSmoothParameter(FrequencyInHz2, programs[curProgram].frequencyInHz2);

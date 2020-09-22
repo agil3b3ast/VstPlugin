@@ -21,7 +21,9 @@ struct Preset{
     char name[24];
     float feedback;
     float wetDry;
-    float amount;
+    float amount1;
+    float amount2;
+    float amount3;
     float frequencyInHz1;
     float frequencyInHz2;
     float frequencyInHz3;
@@ -37,7 +39,9 @@ enum EfxParameter {
     GainRight,
     DelayFeedback,
     WetDry,
-    Amount,
+    Amount1,
+    Amount2,
+    Amount3,
     FrequencyInHz1,
     FrequencyInHz2,
     FrequencyInHz3,
