@@ -41,7 +41,6 @@ set(VSTPLUGIN_SOURCE
     src/Delay.hpp
     src/Oscillator.cpp
     src/Oscillator.hpp
-    src/GainStereo.cpp
     src/GainStereo.hpp
     src/ModOperator.cpp
     src/ModOperator.hpp
