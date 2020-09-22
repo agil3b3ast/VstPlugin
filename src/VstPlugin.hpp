@@ -54,6 +54,7 @@ enum EfxParameter {
 
 struct SmoothParams{
     bool toSmooths[ParamCOUNT];
+    Smooth *smooths[ParamCOUNT];
 };
 
 //-------------------------------------------------------------------------------------------------------
@@ -73,7 +74,6 @@ class VstPlugin : public AudioEffectX
     //Oscillator oscillator;
 
     //smooth
-    Smooth *smooths[ParamCOUNT];
     SmoothParams smoothParams;
 
 
