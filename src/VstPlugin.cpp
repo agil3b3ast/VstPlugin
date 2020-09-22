@@ -38,9 +38,9 @@ void VstPlugin::initPlugin()
 }
 
 void VstPlugin::initToSmooths(){
-    smoothParams.toSmooths[GainLeft] = false;
+    smoothParams.toSmooths[GainLeft] = true;
 
-    smoothParams.toSmooths[GainRight] = false;
+    smoothParams.toSmooths[GainRight] = true;
 
     smoothParams.toSmooths[DelayFeedback] = false;
 
@@ -63,9 +63,9 @@ void VstPlugin::initToSmooths(){
 }
 
 void VstPlugin::initSmoothParamValues(){
-    //smooths[GainLeft]->setStart(delay.getDelayGain().getGainL());
+    smoothParams.smooths[GainLeft]->setStart(chorus.getGain().getGainL());
 
-    //smooths[GainRight]->setStart(delay.getDelayGain().getGainR());
+    smoothParams.smooths[GainRight]->setStart(chorus.getGain().getGainR());
 
     //smooths[DelayFeedbackL]->setStart(delay.getDelFeedbackL()*delay.getMaxFeedback());
 
