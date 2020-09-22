@@ -41,7 +41,7 @@ class Interp{
         }
     
 //-------------------------------------------------------------------------------------------------------
-        template <typename toInterp> void interpLinear(toInterp *oldestSample, toInterp *buffer=nullptr){
+        template <typename toInterp> void interpLinear(toInterp *oldestSample, toInterp *buffer=nullptr) const{
             if (buffer != nullptr)
                 *oldestSample = buffer[previous] + (fract_part*(buffer[next]-buffer[previous]));
             else

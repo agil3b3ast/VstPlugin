@@ -32,10 +32,10 @@ public:
     void setEnd(float input);
     void startSmoothPath(float start, float end);
     void setOtherSmoothPath(float input);
-    bool getIsSmooth();
+    bool getIsSmooth() const;
     void setIsSmooth(bool isSmooth);
-    float getStart();
-    float getEnd();
+    float getStart() const;
+    float getEnd() const;
     void setMinEnd(float minEnd);
     void setMinBound(bool minBound);
 
@@ -95,17 +95,17 @@ inline void Smooth::setIsSmooth(bool isSmooth){
 }
 //-------------------------------------------------------------------------------------------------------
 
-inline bool Smooth::getIsSmooth(){
+inline bool Smooth::getIsSmooth() const{
     return isSmooth;
 }
 //-------------------------------------------------------------------------------------------------------
 
-inline float Smooth::getStart(){
+inline float Smooth::getStart() const{
     return start;
 }
 //-------------------------------------------------------------------------------------------------------
 
-inline float Smooth::getEnd(){
+inline float Smooth::getEnd() const{
     return end;
 }
 //-------------------------------------------------------------------------------------------------------
