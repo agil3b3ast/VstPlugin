@@ -24,44 +24,15 @@ class AutoPan{
     Oscillator oscillator;
     
 public:
-    inline AutoPan(float sampleRate) : oscillator(sampleRate), modOperator(&oscillator){
-        amount = 1.0;
-        outCurr = 0.0;
-        freq = 1.0;
-        
-        modOperator.setMinAmount(0.0);
-        modOperator.setMaxAmount(1.0);
-        modOperator.setAmount(1.0);
-    }
-    
-    inline void setSampleRate(float sampleRate){
-        modOperator.getOscillator()->setSampleRate(sampleRate);
-    }
-    
-    inline void setFreq(double freq){
-        modOperator.getOscillator()->setFrequencyInHz(freq);
-    }
-    
-    inline double getFreq(){
-        return modOperator.getOscillator()->getFrequencyInHz();
-    }
-    
-    inline double getMaxFreq(){
-        return MAX_FREQ;
-    }
-    
-    inline double getMinFreq(){
-        return MIN_FREQ;
-    }
-    
-    inline void setAmount(double amount){
-        this->amount = amount;
-    }
-    
-    inline double getAmount(){
-        return amount;
-    }
-    
+    explicit AutoPan(float sampleRate);
+    void setSampleRate(float sampleRate);
+    void setFreq(double freq);
+    double getFreq();
+    double getMaxFreq();
+    double getMinFreq();
+    void setAmount(double amount);
+    double getAmount();
+
     //templates
     template <typename outL,typename outR> void processAutoPan(outL *left, outR *right){
         
@@ -73,5 +44,43 @@ public:
         
     }
 };
+
+inline AutoPan::AutoPan(float sampleRate) : oscillator(sampleRate), modOperator(&oscillator){
+    amount = 1.0;
+    outCurr = 0.0;
+    freq = 1.0;
+    
+    modOperator.setMinAmount(0.0);
+    modOperator.setMaxAmount(1.0);
+    modOperator.setAmount(1.0);
+}
+
+inline void AutoPan::setSampleRate(float sampleRate){
+    modOperator.getOscillator()->setSampleRate(sampleRate);
+}
+
+inline void AutoPan::setFreq(double freq){
+    modOperator.getOscillator()->setFrequencyInHz(freq);
+}
+
+inline double AutoPan::getFreq(){
+    return modOperator.getOscillator()->getFrequencyInHz();
+}
+
+inline double AutoPan::getMaxFreq(){
+    return MAX_FREQ;
+}
+
+inline double AutoPan::getMinFreq(){
+    return MIN_FREQ;
+}
+
+inline void AutoPan::setAmount(double amount){
+    this->amount = amount;
+}
+
+inline double AutoPan::getAmount(){
+    return amount;
+}
 
 #endif /* AutoPan_h */

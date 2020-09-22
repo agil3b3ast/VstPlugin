@@ -20,14 +20,8 @@ class Interp{
     float *previousOuts;
     
     public:
-//-------------------------------------------------------------------------------------------------------
-        inline Interp(int channels){
-            previousOuts = BufferFactory::createBuffer(channels*sizeof(float));
-        }
-//-------------------------------------------------------------------------------------------------------
-        inline void setMax(int max){
-            this->max = max;
-        }
+        explicit Interp(int channels);
+        void setMax(int max);
     
 //-------------------------------------------------------------------------------------------------------
         template <typename toInterp> void setInterp(toInterp tI, bool circular=true){
@@ -68,5 +62,14 @@ class Interp{
             //previousOutR = *oldestSampleR; //all-pass interp
         }
 };
+
+//-------------------------------------------------------------------------------------------------------
+inline Interp::Interp(int channels){
+    previousOuts = BufferFactory::createBuffer(channels*sizeof(float));
+}
+//-------------------------------------------------------------------------------------------------------
+inline void Interp::setMax(int max){
+    this->max = max;
+}
 
 #endif /* Interp_h */
