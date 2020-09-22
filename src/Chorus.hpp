@@ -39,12 +39,8 @@ public:
     double getFrequencyInHz2();
     double getFrequencyInHz3();
     float getWetDry();
-    double getMaxAmount();
-    double getMinAmount();
     
     //setters
-    void setMaxAmount(double maxAmount);
-    void setMinAmount(double minAmount);
     void setGain(float gainL, float gainR);
     void setFrequencyInHz1(double frequencyInHz);
     void setFrequencyInHz2(double frequencyInHz);

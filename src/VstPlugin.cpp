@@ -115,12 +115,12 @@ void VstPlugin::initPresets(){
 
     programs[1].feedback = 0.1;
     programs[1].wetDry = 0.5;
-    programs[1].amount1 = 0.29;
-    programs[1].amount2 = 0.3;
-    programs[1].amount3 = 0.28;
-    programs[1].frequencyInHz1 = 0.2;
-    programs[1].frequencyInHz2 = 0.19;
-    programs[1].frequencyInHz3 = 0.25;
+    programs[1].amount1 = 0.15;
+    programs[1].amount2 = 0.16;
+    programs[1].amount3 = 0.14;
+    programs[1].frequencyInHz1 = 0.45;
+    programs[1].frequencyInHz2 = 0.5;
+    programs[1].frequencyInHz3 = 0.42;
     programs[1].panAmount = 1.0;
     programs[1].panFrequency = 1.0;
     strcpy(programs[1].name, "Medium Chorus");
@@ -132,7 +132,7 @@ void VstPlugin::initPresets(){
     programs[2].amount3 = 0.38;
     programs[2].frequencyInHz1 = 0.45;
     programs[2].frequencyInHz2 = 0.5;
-    programs[2].frequencyInHz3 = 0.4;
+    programs[2].frequencyInHz3 = 0.42;
     programs[2].panAmount = 1.0;
     programs[2].panFrequency = 1.0;
     strcpy(programs[2].name, "High Chorus");
@@ -462,17 +462,17 @@ void VstPlugin::getParameterDisplay (VstInt32 index, char* text) {
         case Amount1:
             //int2string((int) 1000 * delay.getAmount()*delay.getDelayMaxSize()/(2.0*getSampleRate()), text, kVstMaxParamStrLen);
             //float2string(smooths[Amount]->getEnd(), text, numCharDisplay);
-            float2string(1000 * getParameter(Amount1)*chorus.getDelay1()->getDelayMaxSize()/getSampleRate(), text, numCharDisplay);
+            float2string(1000 * getParameter(Amount1)*(chorus.getDelay1()->getDelayMaxSize()-chorus.getDelay1()->getMinV())/getSampleRate(), text, numCharDisplay);
             break;
         case Amount2:
             //int2string((int) 1000 * delay.getAmount()*delay.getDelayMaxSize()/(2.0*getSampleRate()), text, kVstMaxParamStrLen);
             //float2string(smooths[Amount]->getEnd(), text, numCharDisplay);
-            float2string(1000 * getParameter(Amount2)*chorus.getDelay2()->getDelayMaxSize()/getSampleRate(), text, numCharDisplay);
+            float2string(1000 * getParameter(Amount2)*(chorus.getDelay2()->getDelayMaxSize()-chorus.getDelay2()->getMinV())/getSampleRate(), text, numCharDisplay);
             break;
         case Amount3:
             //int2string((int) 1000 * delay.getAmount()*delay.getDelayMaxSize()/(2.0*getSampleRate()), text, kVstMaxParamStrLen);
             //float2string(smooths[Amount]->getEnd(), text, numCharDisplay);
-            float2string(1000 * getParameter(Amount3)*chorus.getDelay3()->getDelayMaxSize()/getSampleRate(), text, numCharDisplay);
+            float2string(1000 * getParameter(Amount3)*(chorus.getDelay3()->getDelayMaxSize()-chorus.getDelay3()->getMinV())/getSampleRate(), text, numCharDisplay);
             break;
         case FrequencyInHz1:
             float2string(chorus.getDelay1()->getMinFreq() + \
