@@ -12,6 +12,7 @@
 #include "../vstsdk2.4/public.sdk/source/vst2.x/audioeffect.h"
 #include <iostream>
 #include <cmath>
+#include "Interp.hpp"
 
 const double pi = 3.14159265358979323846;
 
@@ -56,6 +57,8 @@ class Oscillator{
     float pwm; // determina la simmetria dell'onda quadra
 
     double *currentWavetable;
+    
+    Interp interp;
 
     void genSignal(float *output);
     void genSignalDouble(double *output);

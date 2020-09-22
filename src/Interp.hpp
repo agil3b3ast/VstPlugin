@@ -47,7 +47,7 @@ class Interp{
         }
     
 //-------------------------------------------------------------------------------------------------------
-        template <typename toInterp> void interpLinear(toInterp *oldestSample, int channelIndex=0, toInterp *buffer=nullptr){
+        template <typename toInterp> void interpLinear(toInterp *oldestSample, toInterp *buffer=nullptr){
             if (buffer != nullptr)
                 *oldestSample = buffer[previous] + (fract_part*(buffer[next]-buffer[previous]));
             else
