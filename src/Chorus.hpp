@@ -17,7 +17,7 @@ class Chorus{
     VDelay *vdelay1;
     VDelay *vdelay2;
     VDelay *vdelay3;
-    //VDelay *vdelay4;
+
     GainStereo gainStereo;
     
     float wetDry;

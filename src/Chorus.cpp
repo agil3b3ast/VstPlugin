@@ -12,10 +12,6 @@ Chorus::Chorus(float sampleRate): gainStereo(){
     vdelay1 = new VDelay(sampleRate);
     vdelay2 = new VDelay(sampleRate);
     vdelay3 = new VDelay(sampleRate);
-    //vdelay4 = new VDelay(sampleRate);
-    
-    //vdelay3->setFrequencyInHz(0.14);
-    //vdelay4->setFrequencyInHz(0.17);
     
     vdelay1->setPhase(0.25);
     vdelay3->setPhase(0.75);
@@ -36,10 +32,6 @@ Chorus::~Chorus(){
         delete vdelay3;
         vdelay3 = nullptr;
     }
-    /*else if(vdelay4 != nullptr){
-     delete vdelay4;
-     vdelay4 = nullptr;
-     }*/
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -130,10 +122,6 @@ void Chorus::processChorus(float** inputs, float** outputs, VstInt32 sampleFrame
     float *buffOutL = outputs[0]; // buffer output left
     float *buffOutR = outputs[1]; // buffer output right
     
-    //std::fstream fout;
-    //std::fstream fout2;
-    //fout.open("/Users/alessandro_fazio/Desktop/output_in.csv", std::ios::out | std::ios::app);
-    //fout2.open("/Users/alessandro_fazio/Desktop/output_out.csv", std::ios::out | std::ios::app);
     
     for(int i=0; i<sampleFrames;i++){
         processChorusBySample(&buffL[i],&buffR[i]);
@@ -141,8 +129,6 @@ void Chorus::processChorus(float** inputs, float** outputs, VstInt32 sampleFrame
         buffOutR[i] = buffR[i];
     }
     
-    //fout.close();
-    //fout2.close();
     
 }
 
@@ -156,16 +142,16 @@ void Chorus::processChorusBySample(float* inputL, float* inputR){
     float chorusOutL;
     float chorusOutR;
     
-    float in1L,in1R,in2L,in2R,in3L,in3R= 0.0;//,in4L,in4R = 0.0;
+    float in1L,in1R,in2L,in2R,in3L,in3R= 0.0;
     
     in1L = *inputL;
     in2L = in1L;
     in3L = in1L;
-    //in4L = in1L;
+
     in1R = *inputR;
     in2R = in1R;
     in3R = in1R;
-    //in4R = in1R;
+
     vdelay1->tick(&in1L, &in1R);
     
     float inSum = 0.5*in2L+0.5*in2R;
@@ -173,25 +159,19 @@ void Chorus::processChorusBySample(float* inputL, float* inputR){
     vdelay2->tick(&(inSum), &(inSum));
     
     vdelay3->tick(&in3L, &in3R);
-    //vdelay4->tick(&in4L, &in4R);
     
     
     chorusOutL = 0.5*vdelay1->getOldestSampleL() + 0.5*vdelay2->getOldestSampleL();
     
-    wetDryBalanceL = (1.0-wetDry)*in1L + wetDry*(chorusOutL);//0.25*vdelay1->getOldestSampleL()+0.25*vdelay2->getOldestSampleL()\
-    +0.25*vdelay3->getOldestSampleL() +0.25*vdelay4->getOldestSampleL());
+    wetDryBalanceL = (1.0-wetDry)*in1L + wetDry*(chorusOutL);
     gainStereo.processGainL(&wetDryBalanceL);
     *inputL = wetDryBalanceL;
     
     
     chorusOutR = 0.5*vdelay3->getOldestSampleR() + 0.5*vdelay2->getOldestSampleR();
     
-    wetDryBalanceR = (1.0-wetDry)*in1R + wetDry*(chorusOutR);//0.25*vdelay1->getOldestSampleR()+0.25*vdelay2->getOldestSampleR()\
-    +0.25*vdelay3->getOldestSampleR()+0.25*vdelay4->getOldestSampleR());
+    wetDryBalanceR = (1.0-wetDry)*in1R + wetDry*(chorusOutR);
     gainStereo.processGainR(&wetDryBalanceR);
     *inputR = wetDryBalanceR;
-    
-    //fout << std::to_string(buffL[i]) << '\n';
-    //fout2 << std::to_string(buffOutL[i]) << '\n';
     
 }

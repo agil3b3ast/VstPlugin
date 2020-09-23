@@ -17,10 +17,7 @@ ModOperator::ModOperator(Oscillator *oscillator){
 }
 
 ModOperator::~ModOperator(){
-//    if(oscillator != nullptr){
-//        delete oscillator;
-//        oscillator = nullptr;
-//    }
+    //no need for oscillator destruct
 }
 
 
@@ -80,7 +77,4 @@ void ModOperator::updateModOperator(){
     oscillator->processOscillatorSingleDouble(&currentSignal);
     oscillator->updateCursorTable();
 }
-
-//-------------------------------------------------------------------------------------------------------
-
 

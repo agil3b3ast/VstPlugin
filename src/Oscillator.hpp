@@ -54,7 +54,7 @@ class Oscillator{
 
     float phase; //percentage of 2pi
 
-    float pwm; // determina la simmetria dell'onda quadra
+    float pwm; // pulse width modulation
 
     double *currentWavetable;
     

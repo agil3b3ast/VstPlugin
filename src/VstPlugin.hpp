@@ -61,33 +61,25 @@ struct SmoothParams{
 class VstPlugin : public AudioEffectX
 {
 
-    //gain is inside chorus
-
-
-    //Presets
+    //presets
     Preset programs[PROGS_COUNT];
-
-    //plugin
-    void initPlugin();
-
-    //oscillators
-    //Oscillator oscillator;
 
     //smooth
     SmoothParams smoothParams;
 
-
-    //chorus
+    //chorus (with gain inside)
     Chorus chorus;
 
     //AutoPan
     AutoPan autoPan;
 
-    //presets
     void initPresets();
     void initSmoothParams();
     void initSmoothParamValues();
     void initToSmooths();
+    
+    //plugin
+    void initPlugin();
 
 public:
 

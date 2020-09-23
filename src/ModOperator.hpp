@@ -17,7 +17,7 @@ class ModOperator{
     Oscillator *oscillator;
     double currentSignal;
     
-    double maxAmount; //vale da 0 a 1
+    double maxAmount;
     double minAmount;
     double amount;
     double coeff;
@@ -48,7 +48,7 @@ public:
         }
         coeff = (maxAmount-minAmount)/2.0;
         //std::fstream fout2;
-        //fout2.open("/Users/alessandro_fazio/Desktop/output_out.csv", std::ios::out | std::ios::app);
+        //fout2.open("~/Desktop/output_out.csv", std::ios::out | std::ios::app);
 
         *output = minAmount + coeff + (currentSignal * amount * coeff); //mod a signal or parameter (e.g. delay size)
         //fout2 << std::to_string(*output) << '\n';

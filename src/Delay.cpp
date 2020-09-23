@@ -17,8 +17,6 @@ Delay::Delay(float sampleRate): gainStereo(){
     
     this->sampleRate = sampleRate;
     
-    // gain
-    
     createDelayLines();
 }
 
@@ -150,7 +148,6 @@ void Delay::tick(float *inputL,float *inputR){}
 //-----------------------------------------------------------------------------------------
 void Delay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames)
 {
-    // PROCESS SINGLE PRECISION - processa audio
     
     float *buffL = inputs[0]; // buffer input left
     float *buffR = inputs[1]; // buffer input right

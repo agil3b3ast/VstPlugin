@@ -23,11 +23,8 @@ VstPlugin::VstPlugin(audioMasterCallback audioMaster)
 //-------------------------------------------------------------------------------------------------------
 void VstPlugin::initPlugin()
 {
-    //Nostra funzione che fa da init, chiamata nel costruttore
 
-    //gain is inside delay
-
-    // INIT
+    // Init smooths array
     for (int i=0;i<ParamCOUNT;i++){smoothParams.smooths[i] = nullptr;}
 
     initPresets();
@@ -68,8 +65,6 @@ void VstPlugin::initSmoothParamValues(){
     smoothParams.smooths[GainRight]->setStart(chorus.getGain().getGainR());
 
     smoothParams.smooths[DelayFeedback]->setStart(chorus.getDelay1()->getDelFeedbackL()*chorus.getDelay1()->getMaxFeedback());
-
-    //smooths[DelayFeedbackR]->setStart(delay.getDelFeedbackR()*delay.getMaxFeedback());
 
     smoothParams.smooths[WetDry]->setStart(chorus.getWetDry());
 
@@ -170,8 +165,6 @@ void VstPlugin::initPresets(){
 void VstPlugin::processReplacing(float** inputs, float** outputs, VstInt32 sampleFrames)
 {
 
-    // PROCESS SINGLE PRECISION - processa audio
-
     float *buffL = inputs[0]; // buffer input left
     float *buffR = inputs[1]; // buffer input right
 
@@ -180,30 +173,18 @@ void VstPlugin::processReplacing(float** inputs, float** outputs, VstInt32 sampl
 
     //update params
 
-
-    //PROCESS EFX
-
-    //std::fstream fout;
-    //fout.open("/Users/alessandro_fazio/Desktop/output_in.csv", std::ios::out | std::ios::app);
-
-
     for(int i=0; i<sampleFrames;i++){
         for (int j=0;j<ParamCOUNT;j++){
             float toSmooth = 0.0;
             smoothParams.toSmooths[j] ? (smoothParams.smooths[j]->process(&toSmooth) ? setSmoothParameter(j, toSmooth) : (void) 0) : (void) 0;
-            //fout << std::to_string(toSmooth) << '\n';
         }
 
-        //delay.processDelayBySample(&inL[i], &inR[i], &outL[i], &outR[i]);
+        //process efx
         chorus.processChorusBySample(&buffL[i], &buffR[i]);
         autoPan.processAutoPan(&buffL[i], &buffR[i]);
         buffOutL[i] = buffL[i];
         buffOutR[i] = buffR[i];
     }
-
-    //fout.close();
-
-
 
 }
 
@@ -309,7 +290,6 @@ void VstPlugin::setSmoothParameter(VstInt32 index, float value){
 
 //-----------------------------------------------------------------------------------------
 void VstPlugin::setParameter (VstInt32 index, float value){
-    //float paramToChange = 0.0;
     ((smoothParams.smooths[index] != nullptr) and smoothParams.toSmooths[index]) ? smoothParams.smooths[index]->setOtherSmoothPath(value) : setSmoothParameter(index, value);
 };
 
@@ -442,37 +422,24 @@ void VstPlugin::getParameterLabel (VstInt32 index, char* label){
 void VstPlugin::getParameterDisplay (VstInt32 index, char* text) {
     switch (index) {
         case GainLeft:
-            //toDisplay = smoothParams.toSmooths[index] ? smooths[GainLeft]->getEnd() : delay.getDelayGain().getGainL();
-            //dB2string(smooths[GainLeft]->getEnd(), text, numCharDisplay);
             dB2string(getParameter(GainLeft), text, numCharDisplay);
             break;
         case GainRight:
-            //toDisplay = smoothParams.toSmooths[index] ? smooths[GainRight]->getEnd() : delay.getDelayGain().getGainR();
-            //dB2string(smooths[GainRight]->getEnd(), text, numCharDisplay);
             dB2string(getParameter(GainRight), text, numCharDisplay);
             break;
         case DelayFeedback:
-            //toDisplay = smoothParams.toSmooths[index] ? smooths[DelayFeedbackL]->getEnd() : delay.getDelFeedbackL();
-            //float2string(smooths[DelayFeedbackL]->getEnd()*delay.getMaxFeedback(), text, numCharDisplay);
             float2string(getParameter(DelayFeedback)*chorus.getDelay1()->getMaxFeedback(), text, numCharDisplay);
             break;
         case WetDry:
-            //float2string(smooths[WetDry]->getEnd(), text, numCharDisplay);
             float2string(getParameter(WetDry), text, numCharDisplay);
             break;
         case Amount1:
-            //int2string((int) 1000 * delay.getAmount()*delay.getDelayMaxSize()/(2.0*getSampleRate()), text, kVstMaxParamStrLen);
-            //float2string(smooths[Amount]->getEnd(), text, numCharDisplay);
             float2string(1000 * getParameter(Amount1)*(chorus.getDelay1()->getDelayMaxSize()-chorus.getDelay1()->getMinV())/getSampleRate(), text, numCharDisplay);
             break;
         case Amount2:
-            //int2string((int) 1000 * delay.getAmount()*delay.getDelayMaxSize()/(2.0*getSampleRate()), text, kVstMaxParamStrLen);
-            //float2string(smooths[Amount]->getEnd(), text, numCharDisplay);
             float2string(1000 * getParameter(Amount2)*(chorus.getDelay2()->getDelayMaxSize()-chorus.getDelay2()->getMinV())/getSampleRate(), text, numCharDisplay);
             break;
         case Amount3:
-            //int2string((int) 1000 * delay.getAmount()*delay.getDelayMaxSize()/(2.0*getSampleRate()), text, kVstMaxParamStrLen);
-            //float2string(smooths[Amount]->getEnd(), text, numCharDisplay);
             float2string(1000 * getParameter(Amount3)*(chorus.getDelay3()->getDelayMaxSize()-chorus.getDelay3()->getMinV())/getSampleRate(), text, numCharDisplay);
             break;
         case FrequencyInHz1:

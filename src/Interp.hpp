@@ -29,9 +29,6 @@ class Interp{
             int_part = previous;
             fract_part = tI-int_part;
             
-            //if(previous < 0){ //realign previous
-            //    previous = delayMaxSize -1;
-            //}
             if(circular and next == max){ //realign next
                 next = 0;
             }
@@ -44,20 +41,17 @@ class Interp{
                 *oldestSample = buffer[previous] + (fract_part*(buffer[next]-buffer[previous]));
             else
                 *oldestSample = previous + fract_part*(next-previous); //returns original sample
-            //*oldestSampleR = bufferDelayR[previous] + (fract_part*(bufferDelayR[next]-bufferDelayR[previous]));
         }
     
 //-------------------------------------------------------------------------------------------------------
         template <typename toInterp> void interpAllPass(toInterp *oldestSample, int channelIndex=0, toInterp *buffer=nullptr){
             
             if (buffer != nullptr)
-                *oldestSample = buffer[previous] + (fract_part*(buffer[next]-previousOuts[channelIndex]));// - (1-fract_part)*previousOutL;
+                *oldestSample = buffer[previous] + (fract_part*(buffer[next]-previousOuts[channelIndex]));
             else
-                *oldestSample = previous + fract_part*(next-previousOuts[channelIndex]);// - (1-fract_part)*previousOutL;
-            //*oldestSampleR = bufferDelayR[previous] + (fract_part*(bufferDelayR[next]-previousOutR));// - (1-fract_part)*previousOutR;
+                *oldestSample = previous + fract_part*(next-previousOuts[channelIndex]);
             
             previousOuts[channelIndex] = *oldestSample; //all-pass interp
-            //previousOutR = *oldestSampleR; //all-pass interp
         }
 };
 
