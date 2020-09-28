@@ -171,13 +171,13 @@ void Oscillator::processOscillatorSingle(float *input){
 }
 
 //-------------------------------------------------------------------------------------------------------
-void Oscillator::processOscillatorSingleDouble(double *input){
+void Oscillator::processOscillatorSingle(double *input){
 
     if (input == nullptr){
         std::cerr << "An input must be provided!\n";
         return;
     }
-    genSignalDoubleWithInterp(input);
+    genSignalWithInterp(input);
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -187,13 +187,13 @@ void Oscillator::genSignal(float* output){
 }
 
 //-------------------------------------------------------------------------------------------------------
-void Oscillator::genSignalDouble(double* output){
+void Oscillator::genSignal(double* output){
     double index = cursorTable + phase*WAVETABLE_SIZE;
     *output = currentWavetable[(int) index];
 }
 
 //-------------------------------------------------------------------------------------------------------
-void Oscillator::genSignalDoubleWithInterp(double* output){
+void Oscillator::genSignalWithInterp(double* output){
     double index = cursorTable+phase*WAVETABLE_SIZE;
 
     interp.setInterp(index);

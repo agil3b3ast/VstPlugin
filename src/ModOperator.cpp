@@ -15,6 +15,7 @@ ModOperator::ModOperator(Oscillator *oscillator){
     amount = 0.0;
     coeff = (maxAmount-minAmount)/2.0;
 }
+//-----------------------------------------------------------------------------------------
 
 ModOperator::~ModOperator(){
     //no need for oscillator destruct
@@ -74,7 +75,7 @@ void ModOperator::setOscillator(Oscillator *oscillator){
 //-------------------------------------------------------------------------------------------------------
 
 void ModOperator::updateModOperator(){
-    oscillator->processOscillatorSingleDouble(&currentSignal);
+    oscillator->processOscillatorSingle(&currentSignal);
     oscillator->updateCursorTable();
 }
 

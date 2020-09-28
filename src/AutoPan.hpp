@@ -44,6 +44,7 @@ public:
         
     }
 };
+//-----------------------------------------------------------------------------------------
 
 inline AutoPan::AutoPan(float sampleRate) : oscillator(sampleRate), modOperator(&oscillator){
     amount = 1.0;
@@ -54,30 +55,37 @@ inline AutoPan::AutoPan(float sampleRate) : oscillator(sampleRate), modOperator(
     modOperator.setMaxAmount(1.0);
     modOperator.setAmount(1.0);
 }
+//-----------------------------------------------------------------------------------------
 
 inline void AutoPan::setSampleRate(float sampleRate){
     modOperator.getOscillator()->setSampleRate(sampleRate);
 }
+//-----------------------------------------------------------------------------------------
 
 inline void AutoPan::setFreq(double freq){
     modOperator.getOscillator()->setFrequencyInHz(freq);
 }
+//-----------------------------------------------------------------------------------------
 
 inline double AutoPan::getFreq(){
     return modOperator.getOscillator()->getFrequencyInHz();
 }
+//-----------------------------------------------------------------------------------------
 
 inline double AutoPan::getMaxFreq(){
     return MAX_FREQ;
 }
+//-----------------------------------------------------------------------------------------
 
 inline double AutoPan::getMinFreq(){
     return MIN_FREQ;
 }
+//-----------------------------------------------------------------------------------------
 
 inline void AutoPan::setAmount(double amount){
     this->amount = amount;
 }
+//-----------------------------------------------------------------------------------------
 
 inline double AutoPan::getAmount(){
     return amount;

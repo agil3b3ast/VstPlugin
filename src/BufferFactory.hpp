@@ -14,12 +14,13 @@ class BufferFactory{
     
     public:
         static void deleteBuffer(float *buffer);
-        static float* createBuffer(float numberOfBytes);
-        static void deleteBufferDouble(double *buffer);
-        static double* createBufferDouble(double numberOfBytes);
+        static float* createBuffer(unsigned int numberOfBytes);
+        static void deleteBuffer(double *buffer);
+        static double* createBufferDouble(unsigned int numberOfBytes);
 
 
 };
+//-----------------------------------------------------------------------------------------
 
 inline void BufferFactory::deleteBuffer(float *buffer){
     
@@ -28,22 +29,25 @@ inline void BufferFactory::deleteBuffer(float *buffer){
         buffer = nullptr;
     }
 }
+//-----------------------------------------------------------------------------------------
 
-inline float* BufferFactory::createBuffer(float numberOfBytes){
+inline float* BufferFactory::createBuffer(unsigned int numberOfBytes){
     float *buffer = (float *) malloc(numberOfBytes);
     memset(buffer,0,numberOfBytes);
     return buffer;
 }
+//-----------------------------------------------------------------------------------------
 
-inline void BufferFactory::deleteBufferDouble(double *buffer){
+inline void BufferFactory::deleteBuffer(double *buffer){
     
     if (buffer != nullptr) {
         delete buffer;
         buffer = nullptr;
     }
 }
+//-----------------------------------------------------------------------------------------
 
-inline double* BufferFactory::createBufferDouble(double numberOfBytes){
+inline double* BufferFactory::createBufferDouble(unsigned int numberOfBytes){
     double *buffer = (double *) malloc(numberOfBytes);
     memset(buffer,0,numberOfBytes);
     return buffer;

@@ -37,6 +37,7 @@ public:
 
     
 };
+//-----------------------------------------------------------------------------------------
 
 inline Smooth::Smooth(float delaytime, float sampleRate) {
     this->delaytime = delaytime;

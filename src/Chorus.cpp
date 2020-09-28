@@ -18,6 +18,7 @@ Chorus::Chorus(float sampleRate): gainStereo(){
     
     
 }
+//-----------------------------------------------------------------------------------------
 
 Chorus::~Chorus(){
     if(vdelay1 != nullptr){

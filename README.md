@@ -4,7 +4,7 @@
 
 Inspired from Korg LCR Chorus: VST2 plugin with 3 chorus modules (independent depth and rate) and auto pan.
 
-## Usage:
+## Usage
 Just clone this repo and start your XCode project.
 
 Also you can use CMake to build this project.

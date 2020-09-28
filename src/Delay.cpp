@@ -123,7 +123,7 @@ void Delay::createDelayLines()
 {
     float delayLineInSec = 0.031; //31 ms of audio
     float numberOfSamples = delayLineInSec*sampleRate;
-    float numberOfBytes = numberOfSamples*sizeof(float);
+    unsigned int numberOfBytes = numberOfSamples*sizeof(float);
     
     bufferDelayL = BufferFactory::createBuffer(numberOfBytes);
     bufferDelayR = BufferFactory::createBuffer(numberOfBytes);

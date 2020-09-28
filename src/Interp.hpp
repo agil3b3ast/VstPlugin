@@ -57,7 +57,7 @@ class Interp{
 
 //-------------------------------------------------------------------------------------------------------
 inline Interp::Interp(int channels){
-    previousOuts = BufferFactory::createBuffer(channels*sizeof(float));
+    previousOuts = BufferFactory::createBuffer((unsigned int) channels*sizeof(float));
     previous = 0;
     next = 0;
     int_part = 0;

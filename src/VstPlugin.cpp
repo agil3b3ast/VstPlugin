@@ -33,10 +33,10 @@ void VstPlugin::initPlugin()
     setProgram(0);
     initSmoothParams();
 }
+//-----------------------------------------------------------------------------------------
 
 void VstPlugin::initToSmooths(){
     smoothParams.toSmooths[GainLeft] = true;
-
     smoothParams.toSmooths[GainRight] = true;
 
     smoothParams.toSmooths[DelayFeedback] = true;
@@ -48,9 +48,7 @@ void VstPlugin::initToSmooths(){
     smoothParams.toSmooths[Amount3] = true;
 
     smoothParams.toSmooths[FrequencyInHz1] = false;
-    
     smoothParams.toSmooths[FrequencyInHz2] = false;
-
     smoothParams.toSmooths[FrequencyInHz3] = false;
     
     smoothParams.toSmooths[PanAmount] = true;
@@ -58,10 +56,10 @@ void VstPlugin::initToSmooths(){
     smoothParams.toSmooths[PanFrequency] = false;
 
 }
+//-----------------------------------------------------------------------------------------
 
 void VstPlugin::initSmoothParamValues(){
     smoothParams.smooths[GainLeft]->setStart(chorus.getGain().getGainL());
-
     smoothParams.smooths[GainRight]->setStart(chorus.getGain().getGainR());
 
     smoothParams.smooths[DelayFeedback]->setStart(chorus.getDelay1()->getDelFeedbackL()*chorus.getDelay1()->getMaxFeedback());
@@ -77,6 +75,7 @@ void VstPlugin::initSmoothParamValues(){
 
     smoothParams.smooths[PanAmount]->setStart(autoPan.getAmount());
 }
+//-----------------------------------------------------------------------------------------
 
 void VstPlugin::initSmoothParams(){
     float smoothDelayTime = 0.01; //suppose 10ms delay
@@ -95,7 +94,7 @@ void VstPlugin::initSmoothParams(){
     }
 }
 
-//Preset
+//-----------------------------------------------------------------------------------------
 void VstPlugin::initPresets(){
     programs[0].feedback = 0;
     programs[0].wetDry = 0.5;
@@ -171,9 +170,9 @@ void VstPlugin::processReplacing(float** inputs, float** outputs, VstInt32 sampl
     float *buffOutL = outputs[0]; // buffer output left
     float *buffOutR = outputs[1]; // buffer output right
 
-    //update params
 
     for(int i=0; i<sampleFrames;i++){
+        //update params
         for (int j=0;j<ParamCOUNT;j++){
             float toSmooth = 0.0;
             smoothParams.toSmooths[j] ? (smoothParams.smooths[j]->process(&toSmooth) ? setSmoothParameter(j, toSmooth) : (void) 0) : (void) 0;
@@ -198,7 +197,6 @@ void VstPlugin::processDoubleReplacing (double** inputs, double** outputs, VstIn
 //-------------------------------------------------------------------------------------------------------
 void VstPlugin::setSampleRate (float sampleRate)
 {
-    //Chiamo setSampleRate definita nella classe parent
     AudioEffect::setSampleRate(sampleRate);
     
     chorus.getDelay1()->setSampleRate(sampleRate);

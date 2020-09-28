@@ -10,6 +10,7 @@
 VDelay::VDelay(float sampleRate): Delay(sampleRate), oscillator(sampleRate), modOperator(&oscillator), interp(2){
     initVDelay();
 }
+//-----------------------------------------------------------------------------------------
 
 void VDelay::initVDelay(){
     minV = 0.001f * sampleRate; //suppose 1ms min delay
@@ -28,46 +29,57 @@ void VDelay::initVDelay(){
     
     interp.setMax(delayMaxSize);
 }
+//-----------------------------------------------------------------------------------------
 
 double VDelay::getMinV(){
     return minV;
 }
+//-----------------------------------------------------------------------------------------
 
 double VDelay::getAmount(){
     return modOperator.getAmount();
 }
+//-----------------------------------------------------------------------------------------
 
 void VDelay::setAmount(double amount){
     modOperator.setAmount(amount);
 }
+//-----------------------------------------------------------------------------------------
 
 float VDelay::getOldestSampleL(){
     return oldestSampleL;
 }
+//-----------------------------------------------------------------------------------------
 
 float VDelay::getOldestSampleR(){
     return oldestSampleR;
 }
+//-----------------------------------------------------------------------------------------
 
 double VDelay::getFrequencyInHz(){
     return modOperator.getOscillator()->getFrequencyInHz();
 }
+//-----------------------------------------------------------------------------------------
 
 double VDelay::getMaxFreq(){
     return modOperator.getOscillator()->getMaxFreq();
 }
+//-----------------------------------------------------------------------------------------
 
 double VDelay::getMinFreq(){
     return modOperator.getOscillator()->getMinFreq();
 }
+//-----------------------------------------------------------------------------------------
 
 void VDelay::setPhase(float phase){
     modOperator.getOscillator()->setPhase(phase);
 }
+//-----------------------------------------------------------------------------------------
 
 void VDelay::setFrequencyInHz(double frequencyInHz){
     modOperator.getOscillator()->setFrequencyInHz(frequencyInHz);
 }
+//-----------------------------------------------------------------------------------------
 
 void VDelay::realignReadCursor(){
     double dlength = static_cast<double>(delayMaxSize);
@@ -78,6 +90,7 @@ void VDelay::realignReadCursor(){
         readCursor = readCursor - dlength;
     }
 }
+//-----------------------------------------------------------------------------------------
 
 void VDelay::calcOldestSample(float *oldestSampleL, float *oldestSampleR){
 
@@ -88,6 +101,7 @@ void VDelay::calcOldestSample(float *oldestSampleL, float *oldestSampleR){
 
 }
 
+//-----------------------------------------------------------------------------------------
 
 void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames){
     float *buffL = inputs[0]; // buffer input left
@@ -116,6 +130,7 @@ void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames
 
 
 }
+//-----------------------------------------------------------------------------------------
 
 void VDelay::processDelayBySample(float *inputL,float *inputR , float *outputL,float *outputR){
 
@@ -133,6 +148,7 @@ void VDelay::processDelayBySample(float *inputL,float *inputR , float *outputL,f
 
 
 }
+//-----------------------------------------------------------------------------------------
 
 void VDelay::tick(float *inputL,float *inputR){
     modOperator.updateModOperator();

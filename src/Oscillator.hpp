@@ -15,12 +15,14 @@
 #include "Interp.hpp"
 
 const double pi = 3.14159265358979323846;
+//-----------------------------------------------------------------------------------------
 
 enum OscFeatures{
     Gen = 0,
     RingMod,
     NumMod
 };
+//-----------------------------------------------------------------------------------------
 
 enum Waveforms{
     Sine = 0,
@@ -29,6 +31,7 @@ enum Waveforms{
     Triangle
 };
 
+//-----------------------------------------------------------------------------------------
 
 class Oscillator{
 
@@ -61,7 +64,7 @@ class Oscillator{
     Interp interp;
 
     void genSignal(float *output);
-    void genSignalDouble(double *output);
+    void genSignal(double *output);
 
     public:
         explicit Oscillator(float sampleRate);
@@ -72,8 +75,8 @@ class Oscillator{
         void deleteWavetables();
         void processOscillator(float** outputs, VstInt32 sampleFrames);
         void processOscillatorSingle(float *input);
-        void processOscillatorSingleDouble(double *input);
-        void genSignalDoubleWithInterp(double* output);
+        void processOscillatorSingle(double *input);
+        void genSignalWithInterp(double* output);
 
 
         //getters
