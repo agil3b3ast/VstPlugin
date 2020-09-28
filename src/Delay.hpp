@@ -35,6 +35,9 @@ class Delay
         float wetDry;
         
         float sampleRate;
+    
+        float oldestSampleL;
+        float oldestSampleR;
 
         //gain
         GainStereo gainStereo;
@@ -44,6 +47,7 @@ public:
     explicit Delay(float sampleRate);
     ~Delay();
     virtual void processDelay(float** inputs, float** outputs, VstInt32 sampleFrames);
+    virtual void processDelayBySample(float *inputL,float *inputR , float *outputL,float *outputR);
     virtual void tick(float *inputL, float *inputR);
     
     //delay
@@ -51,6 +55,8 @@ public:
     void createDelayLines();
     
     //getters
+    float getOldestSampleL();
+    float getOldestSampleR();
     
     int getDelayCurrentSizeL();
     int getDelayCurrentSizeR();

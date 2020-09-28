@@ -17,6 +17,9 @@ Delay::Delay(float sampleRate): gainStereo(){
     
     this->sampleRate = sampleRate;
     
+    oldestSampleL = 0.0;
+    oldestSampleR = 0.0;
+    
     createDelayLines();
 }
 
@@ -106,7 +109,16 @@ float Delay::getDelFeedbackL(){
 float Delay::getDelFeedbackR(){
     return delFeedbackR;
 }
+//-----------------------------------------------------------------------------------------
 
+float Delay::getOldestSampleL(){
+    return oldestSampleL;
+}
+//-----------------------------------------------------------------------------------------
+
+float Delay::getOldestSampleR(){
+    return oldestSampleR;
+}
 //-------------------------------------------------------------------------------------------------------
 float Delay::getWetDry(){
     return wetDry;
@@ -142,8 +154,39 @@ void Delay::deleteDelayLines(){
 }
 
 //-------------------------------------------------------------------------------------------------------
-void Delay::tick(float *inputL,float *inputR){}
-
+void Delay::tick(float *inputL,float *inputR){
+    oldestSampleL = bufferDelayL[delayCursorL];
+    oldestSampleR = bufferDelayR[delayCursorR];
+    
+    
+    bufferDelayL[delayCursorL] = *inputL+oldestSampleR*delFeedbackL;
+    bufferDelayR[delayCursorR] = *inputR+oldestSampleL*delFeedbackR;
+    
+    delayCursorL++;
+    delayCursorR++;
+    
+    if (delayCursorL >= delayCurrentSizeL){
+        delayCursorL = 0;
+    }
+    
+    if (delayCursorR >= delayCurrentSizeR){
+        delayCursorR = 0;
+    }
+}
+//-----------------------------------------------------------------------------------------
+void Delay::processDelayBySample(float *inputL,float *inputR , float *outputL,float *outputR){
+    float wetDryBalance;
+    
+    tick(inputL, inputR);
+    
+    wetDryBalance = *inputL*wetDry+(1.0-wetDry)*oldestSampleL;
+    gainStereo.processGainL(&wetDryBalance);
+    *outputL = wetDryBalance;
+    
+    wetDryBalance = *inputR*wetDry+(1.0-wetDry)*oldestSampleR;
+    gainStereo.processGainR(&wetDryBalance);
+    *outputR = wetDryBalance;
+}
 
 //-----------------------------------------------------------------------------------------
 void Delay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames)
@@ -155,36 +198,9 @@ void Delay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames)
     float *buffOutL = outputs[0]; // buffer output left
     float *buffOutR = outputs[1]; // buffer output right
     
-    float wetDryBalance;
-    
     for(int i=0; i<sampleFrames;i++){
+        processDelayBySample(&buffL[i], &buffR[i], &buffOutL[i], &buffOutR[i]);
         
-        float oldestSampleL = bufferDelayL[delayCursorL];
-        float oldestSampleR = bufferDelayR[delayCursorR];
-        
-        
-        bufferDelayL[delayCursorL] = buffL[i]+oldestSampleR*delFeedbackL;
-        bufferDelayR[delayCursorR] = buffR[i]+oldestSampleL*delFeedbackR;
-        
-        delayCursorL++;
-        delayCursorR++;
-        
-        if (delayCursorL >= delayCurrentSizeL){
-            delayCursorL = 0;
-        }
-        
-        if (delayCursorR >= delayCurrentSizeR){
-            delayCursorR = 0;
-        }
-
-        wetDryBalance = wetDry*buffL[i]+(1-wetDry)*oldestSampleL;
-        gainStereo.processGainL(&wetDryBalance);
-        buffOutL[i] = wetDryBalance;
-        
-        wetDryBalance = wetDry*buffR[i]+(1-wetDry)*oldestSampleR;
-        gainStereo.processGainR(&wetDryBalance);
-        buffOutR[i] = wetDryBalance;
-
         
     }
     

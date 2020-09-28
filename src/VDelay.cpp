@@ -24,8 +24,6 @@ void VDelay::initVDelay(){
     readCursor = 0.0;
     
     outCurrDelay = 0.0;
-    oldestSampleL = 0.0;
-    oldestSampleR = 0.0;
     
     interp.setMax(delayMaxSize);
 }
@@ -44,16 +42,7 @@ double VDelay::getAmount(){
 void VDelay::setAmount(double amount){
     modOperator.setAmount(amount);
 }
-//-----------------------------------------------------------------------------------------
 
-float VDelay::getOldestSampleL(){
-    return oldestSampleL;
-}
-//-----------------------------------------------------------------------------------------
-
-float VDelay::getOldestSampleR(){
-    return oldestSampleR;
-}
 //-----------------------------------------------------------------------------------------
 
 double VDelay::getFrequencyInHz(){
@@ -102,76 +91,28 @@ void VDelay::calcOldestSample(float *oldestSampleL, float *oldestSampleR){
 }
 
 //-----------------------------------------------------------------------------------------
-
-void VDelay::processDelay(float** inputs, float** outputs, VstInt32 sampleFrames){
-    float *buffL = inputs[0]; // buffer input left
-    float *buffR = inputs[1]; // buffer input right
-
-    float *buffOutL = outputs[0]; // buffer output left
-    float *buffOutR = outputs[1]; // buffer output right
-
-    float wetDryBalance;
-
-
-    for(int i=0; i<sampleFrames;i++){
-        tick(&buffL[i], &buffR[i]);
-
-
-        wetDryBalance = wetDry*buffL[i]+(1.0-wetDry)*oldestSampleL;
-        gainStereo.processGainL(&wetDryBalance);
-        buffOutL[i] = wetDryBalance;
-
-        wetDryBalance = wetDry*buffR[i]+(1.0-wetDry)*oldestSampleR;
-        gainStereo.processGainR(&wetDryBalance);
-        buffOutR[i] = wetDryBalance;
-
-
-    }
-
-
-}
-//-----------------------------------------------------------------------------------------
-
-void VDelay::processDelayBySample(float *inputL,float *inputR , float *outputL,float *outputR){
-
-    float wetDryBalance;
-
-    tick(inputL, inputR);
-
-    wetDryBalance = *inputL*wetDry+(1.0-wetDry)*oldestSampleL;
-    gainStereo.processGainL(&wetDryBalance);
-    *outputL = wetDryBalance;
-
-    wetDryBalance = *inputR*wetDry+(1.0-wetDry)*oldestSampleR;
-    gainStereo.processGainR(&wetDryBalance);
-    *outputR = wetDryBalance;
-
-
-}
-//-----------------------------------------------------------------------------------------
-
 void VDelay::tick(float *inputL,float *inputR){
     modOperator.updateModOperator();
     modOperator.processModOperator(&outCurrDelay);
-
-
+    
+    
     readCursor = writeCursor - outCurrDelay;
-
-
-
+    
+    
+    
     realignReadCursor();
-
-
+    
+    
     calcOldestSample(&oldestSampleL, &oldestSampleR);
-
-
+    
+    
     bufferDelayL[writeCursor] = *inputL+oldestSampleL*delFeedbackL;
     bufferDelayR[writeCursor] = *inputR+oldestSampleR*delFeedbackR;
-
+    
     writeCursor++;
-
+    
     if (writeCursor == delayMaxSize){
         writeCursor = 0;
     }
-
+    
 }
