@@ -70,7 +70,7 @@ void Oscillator::setPhase(float phase){
 
 //-------------------------------------------------------------------------------------------------------
 void Oscillator::setFrequencyInHz(double freq){
-    freq < 0.1 ? frequencyInHz = 0.1 : frequencyInHz = freq;
+    freq < minFreq ? frequencyInHz = minFreq : frequencyInHz = freq;
     stepValue = frequencyInHz*fScale;
 }
 

@@ -482,7 +482,7 @@ void VstPlugin::getParameterName (VstInt32 index, char* text) {
             vst_strncpy(text, "DelayFb", kVstMaxParamStrLen);
             break;
         case WetDry:
-            vst_strncpy(text, "Wet/Dry", kVstMaxParamStrLen);
+            vst_strncpy(text, "Dry/Wet", kVstMaxParamStrLen);
             break;
         case Amount1:
             vst_strncpy(text, "Amount1", kVstMaxParamStrLen);
