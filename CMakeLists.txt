@@ -24,7 +24,6 @@ endif()
 # Build plug-in #
 #################
 
-#set(VSTSDK_PATH "/Users/alessandro_fazio/OneDrive - Universita' degli Studi di Roma Tor Vergata/MIS/APD/XCode Projects/VstPlugin/vstsdk2.4" CACHE PATH "Path to VST SDK")
 set(VSTSDK_PATH "./vstsdk2.4" CACHE PATH "Path to VST SDK")
 set(VSTSDK_INCLUDE_DIR ${VSTSDK_PATH})
 set(VSTSDK_PLUGIN_SOURCE
@@ -89,7 +88,7 @@ if(APPLE)
   )
 elseif(WIN32)
   install(TARGETS vst_plugin
-    DESTINATION "/Program Files (x86)/Common Files/VST3/"
+    DESTINATION "/Program Files (x86)/Common Files/VST/"
   )
 elseif(UNIX AND NOT APPLE) #Linux
   install(TARGETS vst_plugin

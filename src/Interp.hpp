@@ -51,7 +51,7 @@ class Interp{
             else
                 *oldestSample = previous + fract_part*(next-previousOuts[channelIndex]);
             
-            previousOuts[channelIndex] = *oldestSample; //all-pass interp
+            previousOuts[channelIndex] = *oldestSample;
         }
 };
 
